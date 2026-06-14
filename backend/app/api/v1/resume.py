@@ -2,13 +2,13 @@
 
 合规要点（§15）：上传简历必须经 PII 检测→脱敏→加密存储→脱敏内容传星火 API。
 """
-from fastapi import APIRouter, UploadFile, File
+from fastapi import APIRouter, File, UploadFile
 
 router = APIRouter(prefix="/resume", tags=["简历解析"])
 
 
 @router.post("/upload")
-async def upload_resume(file: UploadFile = File(...)):
+async def upload_resume(file: UploadFile = File(...)):  # noqa: B008
     """上传简历（PDF/Word）。返回解析后的技能列表。
 
     TODO(W9):

@@ -1,5 +1,6 @@
 """集中配置管理（基于 pydantic-settings，从环境变量/.env 读取）。"""
 from functools import lru_cache
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 

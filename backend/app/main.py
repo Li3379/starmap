@@ -4,12 +4,13 @@
 文档：http://localhost:8000/docs （Swagger，自动从路由生成，对应契约一致性校验）
 """
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 
-from app.config import settings
 from app.api.v1.router import api_router
+from app.config import settings
 
 
 @asynccontextmanager

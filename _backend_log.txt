@@ -1,0 +1,194 @@
+契约校验	Set up job	﻿2026-06-14T14:59:56.7467055Z Current runner version: '2.335.1'
+契约校验	Set up job	2026-06-14T14:59:56.7502508Z ##[group]Runner Image Provisioner
+契约校验	Set up job	2026-06-14T14:59:56.7504198Z Hosted Compute Agent
+契约校验	Set up job	2026-06-14T14:59:56.7505251Z Version: 20260527.539
+契约校验	Set up job	2026-06-14T14:59:56.7506376Z Commit: a891dd388383b896fa6ac04a82c0b75cec981078
+契约校验	Set up job	2026-06-14T14:59:56.7507789Z Build Date: 2026-05-27T21:39:57Z
+契约校验	Set up job	2026-06-14T14:59:56.7509193Z Worker ID: {237a90a1-8ce6-458d-ad9b-061c38fad8c5}
+契约校验	Set up job	2026-06-14T14:59:56.7510502Z Azure Region: centralus
+契约校验	Set up job	2026-06-14T14:59:56.7511551Z ##[endgroup]
+契约校验	Set up job	2026-06-14T14:59:56.7514323Z ##[group]Operating System
+契约校验	Set up job	2026-06-14T14:59:56.7515443Z Ubuntu
+契约校验	Set up job	2026-06-14T14:59:56.7516499Z 24.04.4
+契约校验	Set up job	2026-06-14T14:59:56.7517508Z LTS
+契约校验	Set up job	2026-06-14T14:59:56.7518419Z ##[endgroup]
+契约校验	Set up job	2026-06-14T14:59:56.7519523Z ##[group]Runner Image
+契约校验	Set up job	2026-06-14T14:59:56.7520605Z Image: ubuntu-24.04
+契约校验	Set up job	2026-06-14T14:59:56.7521774Z Version: 20260607.184.1
+契约校验	Set up job	2026-06-14T14:59:56.7524090Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260607.184/images/ubuntu/Ubuntu2404-Readme.md
+契约校验	Set up job	2026-06-14T14:59:56.7527288Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260607.184
+契约校验	Set up job	2026-06-14T14:59:56.7529138Z ##[endgroup]
+契约校验	Set up job	2026-06-14T14:59:56.7531413Z ##[group]GITHUB_TOKEN Permissions
+契约校验	Set up job	2026-06-14T14:59:56.7534574Z Contents: read
+契约校验	Set up job	2026-06-14T14:59:56.7535749Z Metadata: read
+契约校验	Set up job	2026-06-14T14:59:56.7536783Z Packages: read
+契约校验	Set up job	2026-06-14T14:59:56.7537750Z ##[endgroup]
+契约校验	Set up job	2026-06-14T14:59:56.7541205Z Secret source: Actions
+契约校验	Set up job	2026-06-14T14:59:56.7542998Z Prepare workflow directory
+契约校验	Set up job	2026-06-14T14:59:56.7910976Z Prepare all required actions
+契约校验	Set up job	2026-06-14T14:59:56.7967258Z Getting action download info
+契约校验	Set up job	2026-06-14T14:59:57.1014740Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+契约校验	Set up job	2026-06-14T14:59:57.1801338Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+契约校验	Set up job	2026-06-14T14:59:57.4062493Z Complete job name: 契约校验
+契约校验	Run actions/checkout@v4	﻿2026-06-14T14:59:57.4815965Z ##[group]Run actions/checkout@v4
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.4816858Z with:
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.4817327Z   submodules: true
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.4817807Z   repository: Li3379/starmap
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.4822137Z   token: ***
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.4822807Z   ssh-strict: true
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.4823268Z   ssh-user: git
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.4823724Z   persist-credentials: true
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.4824215Z   clean: true
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.4824667Z   sparse-checkout-cone-mode: true
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.4825191Z   fetch-depth: 1
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.4825627Z   fetch-tags: false
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.4826084Z   show-progress: true
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.4826530Z   lfs: false
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.4826960Z   set-safe-directory: true
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.4827723Z ##[endgroup]
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.5951729Z Syncing repository: Li3379/starmap
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.5953781Z ##[group]Getting Git version info
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.5954556Z Working directory is '/home/runner/work/starmap/starmap'
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.5955739Z [command]/usr/bin/git version
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6033460Z git version 2.54.0
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6060731Z ##[endgroup]
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6074218Z Temporarily overriding HOME='/home/runner/work/_temp/dd063f00-d0a1-4c63-a762-133b8060de3b' before making global git config changes
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6075724Z Adding repository directory to the temporary git global config as a safe directory
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6088492Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/starmap/starmap
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6133708Z Deleting the contents of '/home/runner/work/starmap/starmap'
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6137694Z ##[group]Initializing the repository
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6142832Z [command]/usr/bin/git init /home/runner/work/starmap/starmap
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6220583Z hint: Using 'master' as the name for the initial branch. This default branch name
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6221890Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6223137Z hint: to use in all of your new repositories, which will suppress this warning,
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6224042Z hint: call:
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6224722Z hint:
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6225266Z hint: 	git config --global init.defaultBranch <name>
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6226058Z hint:
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6227090Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6228261Z hint: 'development'. The just-created branch can be renamed via this command:
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6229077Z hint:
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6229509Z hint: 	git branch -m <name>
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6229995Z hint:
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6230631Z hint: Disable this message with "git config set advice.defaultBranchName false"
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6231968Z Initialized empty Git repository in /home/runner/work/starmap/starmap/.git/
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6237941Z [command]/usr/bin/git remote add origin https://github.com/Li3379/starmap
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6275152Z ##[endgroup]
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6275974Z ##[group]Disabling automatic garbage collection
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6279024Z [command]/usr/bin/git config --local gc.auto 0
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6306252Z ##[endgroup]
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6307006Z ##[group]Setting up auth
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6313487Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6344942Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6656337Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6686241Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6899576Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.6927664Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.7161761Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.7200943Z ##[endgroup]
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.7201752Z ##[group]Fetching the repository
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:57.7213558Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +889c566b3fb3283ff12a102dafcd13d3f595702b:refs/remotes/origin/main
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1203785Z From https://github.com/Li3379/starmap
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1239493Z  * [new ref]         889c566b3fb3283ff12a102dafcd13d3f595702b -> origin/main
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1242521Z ##[endgroup]
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1244362Z ##[group]Determining the checkout info
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1245843Z ##[endgroup]
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1250185Z [command]/usr/bin/git sparse-checkout disable
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1381393Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1385626Z ##[group]Checking out the ref
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1387315Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1434950Z Switched to a new branch 'main'
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1437889Z branch 'main' set up to track 'origin/main'.
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1446775Z ##[endgroup]
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1448075Z ##[group]Setting up auth for fetching submodules
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1452949Z [command]/usr/bin/git config --global http.https://github.com/.extraheader AUTHORIZATION: basic ***
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1492181Z [command]/usr/bin/git config --global --unset-all url.https://github.com/.insteadOf
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1523066Z [command]/usr/bin/git config --global --add url.https://github.com/.insteadOf git@github.com:
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1554947Z [command]/usr/bin/git config --global --add url.https://github.com/.insteadOf org-124577913@github.com:
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1584217Z ##[endgroup]
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1585534Z ##[group]Fetching submodules
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1588116Z [command]/usr/bin/git submodule sync
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.1834116Z [command]/usr/bin/git -c protocol.version=2 submodule update --init --force --depth=1
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.2049134Z Submodule 'starmap-contracts' (https://github.com/Li3379/starmap-contracts.git) registered for path 'starmap-contracts'
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.2073228Z Cloning into '/home/runner/work/starmap/starmap/starmap-contracts'...
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.5337341Z Submodule path 'starmap-contracts': checked out '031880db5d6ad74fe5be8b2fb2b52ea2ede95e05'
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.5348801Z [command]/usr/bin/git submodule foreach git config --local gc.auto 0
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.5554957Z Entering 'starmap-contracts'
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.5655684Z ##[endgroup]
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.5656781Z ##[group]Persisting credentials for submodules
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.5661864Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'url\.https\:\/\/github\.com\/\.insteadOf' && git config --local --unset-all 'url.https://github.com/.insteadOf' || :"
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.5862416Z Entering 'starmap-contracts'
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.5918916Z [command]/usr/bin/git submodule foreach sh -c "git config --local 'http.https://github.com/.extraheader' 'AUTHORIZATION: basic ***' && git config --local --show-origin --name-only --get-regexp remote.origin.url"
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.6121509Z Entering 'starmap-contracts'
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.6161051Z file:/home/runner/work/starmap/starmap/.git/modules/starmap-contracts/config	remote.origin.url
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.6183639Z [command]/usr/bin/git submodule foreach git config --local --add 'url.https://github.com/.insteadOf' 'git@github.com:'
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.6386118Z Entering 'starmap-contracts'
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.6421813Z [command]/usr/bin/git submodule foreach git config --local --add 'url.https://github.com/.insteadOf' 'org-124577913@github.com:'
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.6624828Z Entering 'starmap-contracts'
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.6656034Z ##[endgroup]
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.6691855Z [command]/usr/bin/git log -1 --format=%H
+契约校验	Run actions/checkout@v4	2026-06-14T14:59:58.6713339Z 889c566b3fb3283ff12a102dafcd13d3f595702b
+契约校验	Run actions/setup-python@v5	﻿2026-06-14T14:59:58.6993402Z ##[group]Run actions/setup-python@v5
+契约校验	Run actions/setup-python@v5	2026-06-14T14:59:58.6994409Z with:
+契约校验	Run actions/setup-python@v5	2026-06-14T14:59:58.6995239Z   python-version: 3.11
+契约校验	Run actions/setup-python@v5	2026-06-14T14:59:58.6996081Z   check-latest: false
+契约校验	Run actions/setup-python@v5	2026-06-14T14:59:58.7000042Z   token: ***
+契约校验	Run actions/setup-python@v5	2026-06-14T14:59:58.7000839Z   update-environment: true
+契约校验	Run actions/setup-python@v5	2026-06-14T14:59:58.7001687Z   allow-prereleases: false
+契约校验	Run actions/setup-python@v5	2026-06-14T14:59:58.7002528Z   freethreaded: false
+契约校验	Run actions/setup-python@v5	2026-06-14T14:59:58.7003505Z ##[endgroup]
+契约校验	Run actions/setup-python@v5	2026-06-14T14:59:58.8703616Z ##[group]Installed versions
+契约校验	Run actions/setup-python@v5	2026-06-14T14:59:58.9118506Z Successfully set up CPython (3.11.15)
+契约校验	Run actions/setup-python@v5	2026-06-14T14:59:58.9119394Z ##[endgroup]
+契约校验	安装 pyyaml	﻿2026-06-14T14:59:58.9300466Z ##[group]Run pip install pyyaml
+契约校验	安装 pyyaml	2026-06-14T14:59:58.9300927Z [36;1mpip install pyyaml[0m
+契约校验	安装 pyyaml	2026-06-14T14:59:58.9506064Z shell: /usr/bin/bash -e {0}
+契约校验	安装 pyyaml	2026-06-14T14:59:58.9506424Z env:
+契约校验	安装 pyyaml	2026-06-14T14:59:58.9506762Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.15/x64
+契约校验	安装 pyyaml	2026-06-14T14:59:58.9507285Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.15/x64/lib/pkgconfig
+契约校验	安装 pyyaml	2026-06-14T14:59:58.9507805Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+契约校验	安装 pyyaml	2026-06-14T14:59:58.9508263Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+契约校验	安装 pyyaml	2026-06-14T14:59:58.9508701Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+契约校验	安装 pyyaml	2026-06-14T14:59:58.9509147Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.15/x64/lib
+契约校验	安装 pyyaml	2026-06-14T14:59:58.9509538Z ##[endgroup]
+契约校验	安装 pyyaml	2026-06-14T15:00:01.2728263Z Collecting pyyaml
+契约校验	安装 pyyaml	2026-06-14T15:00:01.3573894Z   Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+契约校验	安装 pyyaml	2026-06-14T15:00:01.3752290Z Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (806 kB)
+契约校验	安装 pyyaml	2026-06-14T15:00:01.4964554Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 806.6/806.6 kB 8.1 MB/s  0:00:00
+契约校验	安装 pyyaml	2026-06-14T15:00:01.5860850Z Installing collected packages: pyyaml
+契约校验	安装 pyyaml	2026-06-14T15:00:01.6448809Z Successfully installed pyyaml-6.0.3
+契约校验	校验契约	﻿2026-06-14T15:00:01.6977808Z ##[group]Run python starmap-contracts/validate.py
+契约校验	校验契约	2026-06-14T15:00:01.6978285Z [36;1mpython starmap-contracts/validate.py[0m
+契约校验	校验契约	2026-06-14T15:00:01.7012505Z shell: /usr/bin/bash -e {0}
+契约校验	校验契约	2026-06-14T15:00:01.7013244Z env:
+契约校验	校验契约	2026-06-14T15:00:01.7013551Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.15/x64
+契约校验	校验契约	2026-06-14T15:00:01.7014022Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.15/x64/lib/pkgconfig
+契约校验	校验契约	2026-06-14T15:00:01.7014475Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+契约校验	校验契约	2026-06-14T15:00:01.7014872Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+契约校验	校验契约	2026-06-14T15:00:01.7015274Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+契约校验	校验契约	2026-06-14T15:00:01.7015669Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.15/x64/lib
+契约校验	校验契约	2026-06-14T15:00:01.7015999Z ##[endgroup]
+契约校验	校验契约	2026-06-14T15:00:01.7551695Z [validate] ✅ 契约校验通过
+契约校验	Post Run actions/setup-python@v5	﻿2026-06-14T15:00:01.7715523Z Post job cleanup.
+契约校验	Post Run actions/checkout@v4	﻿2026-06-14T15:00:01.9460300Z Post job cleanup.
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.0501836Z [command]/usr/bin/git version
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.0533620Z git version 2.54.0
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.0571772Z Temporarily overriding HOME='/home/runner/work/_temp/0135684d-1a19-44b8-b69e-8d6c8fcd5058' before making global git config changes
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.0573219Z Adding repository directory to the temporary git global config as a safe directory
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.0586296Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/starmap/starmap
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.0624816Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.0658729Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.0874063Z Entering 'starmap-contracts'
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.0935239Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.0961253Z http.https://github.com/.extraheader
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.0976148Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.1007949Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.1221184Z Entering 'starmap-contracts'
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.1245687Z http.https://github.com/.extraheader
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.1297871Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.1331055Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.1543779Z Entering 'starmap-contracts'
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.1562315Z file:/home/runner/work/starmap/starmap/.git/modules/starmap-contracts/config	remote.origin.url
+契约校验	Post Run actions/checkout@v4	2026-06-14T15:00:02.1597227Z [command]/usr/bin/git config --file /home/runner/work/starmap/starmap/.git/modules/starmap-contracts/config --name-only --get-regexp ^includeIf\.gitdir:
+契约校验	Complete job	﻿2026-06-14T15:00:02.1749669Z Cleaning up orphan processes
+契约校验	Complete job	2026-06-14T15:00:02.2058915Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, actions/setup-python@v5. Actions will be forced to run with Node.js 24 by default starting June 16th, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

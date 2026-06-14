@@ -4,6 +4,7 @@
 这是 CI 的最基本门禁（§17.8 每日集成）。
 """
 from fastapi.testclient import TestClient
+
 from app.main import app
 
 client = TestClient(app)

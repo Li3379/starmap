@@ -34,6 +34,7 @@
     "openapi-typescript": "^6.7.0",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.23.0",
+    "vue-eslint-parser": "^9.4.0",
     "@typescript-eslint/eslint-plugin": "^7.3.0",
     "@typescript-eslint/parser": "^7.3.0",
     "vitest": "^1.4.0",

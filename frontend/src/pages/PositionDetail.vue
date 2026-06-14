@@ -5,7 +5,11 @@ import MainLayout from '@/layouts/MainLayout.vue'
 
 <template>
   <MainLayout>
-    <el-alert title="岗位详情（占位）" type="info" :closable="false">
+    <el-alert
+      title="岗位详情（占位）"
+      type="info"
+      :closable="false"
+    >
       TODO：能力雷达图、技能列表、演化趋势曲线
     </el-alert>
   </MainLayout>

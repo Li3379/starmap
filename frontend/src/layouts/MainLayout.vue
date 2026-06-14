@@ -18,11 +18,21 @@ const route = useRoute()
         active-text-color="#ffd04b"
         router
       >
-        <el-menu-item index="/">全景图谱</el-menu-item>
-        <el-menu-item index="/match">匹配诊断</el-menu-item>
-        <el-menu-item index="/evolution">演化看板</el-menu-item>
-        <el-menu-item index="/quality">图谱质量</el-menu-item>
-        <el-menu-item index="/admin">管理后台</el-menu-item>
+        <el-menu-item index="/">
+          全景图谱
+        </el-menu-item>
+        <el-menu-item index="/match">
+          匹配诊断
+        </el-menu-item>
+        <el-menu-item index="/evolution">
+          演化看板
+        </el-menu-item>
+        <el-menu-item index="/quality">
+          图谱质量
+        </el-menu-item>
+        <el-menu-item index="/admin">
+          管理后台
+        </el-menu-item>
       </el-menu>
     </el-header>
     <el-main>

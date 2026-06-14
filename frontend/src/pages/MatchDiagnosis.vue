@@ -6,7 +6,11 @@ import MainLayout from '@/layouts/MainLayout.vue'
 
 <template>
   <MainLayout>
-    <el-alert title="匹配诊断（占位）" type="info" :closable="false">
+    <el-alert
+      title="匹配诊断（占位）"
+      type="info"
+      :closable="false"
+    >
       TODO(W9-W10)：简历上传 → 技能雷达图 → 差距报告 → 学习路径时间线
     </el-alert>
   </MainLayout>

@@ -4,8 +4,11 @@ version = "0.1.0"
 description = "星图(StarMap) 人才能力星云导航系统 - 后端"
 authors = [{name = "StarMap Team"}]
 readme = "README.md"
-packages = [{include = "app"}]
 requires-python = ">=3.11,<3.13"
+
+# 应用项目（不发布到 PyPI），关闭打包模式
+[tool.poetry]
+package-mode = false
 
 # ---------- 核心依赖（精确锁定版本，规范3） ----------
 dependencies = [

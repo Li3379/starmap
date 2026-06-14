@@ -60,6 +60,9 @@ frontend/dist-ssr/
 # 前端测试
 frontend/coverage/
 
+# 前端生成产物（从 starmap-contracts 生成，不进版本库）
+frontend/src/api/schema.ts
+
 # ---- IDE ----
 .idea/
 .vscode/

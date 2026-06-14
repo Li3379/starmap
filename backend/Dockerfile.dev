@@ -1,0 +1,31 @@
+# =============================================================================
+# 星图(StarMap) 后端 开发镜像（热重载）
+# =============================================================================
+FROM python:3.11-slim
+
+# 系统依赖（构建 psycopg、爬虫等需要）
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential libpq-dev curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# 先装 Poetry（版本锁定）
+RUN pip install --no-cache-dir poetry==2.4.1
+
+# 配置 Poetry：用虚拟环境在项目内，不创建独立 venv（容器内即可）
+ENV POETRY_VIRTUALENVS_CREATE=false \
+    POETRY_NO_INTERACTION=1 \
+    POETRY_CACHE_DIR=/tmp/poetry_cache
+
+# 先拷依赖文件，利用 Docker 层缓存
+COPY pyproject.toml poetry.lock* ./
+RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
+
+# 再拷源码（挂载会覆盖，这里仅为镜像构建）
+COPY . .
+
+EXPOSE 8000
+
+# 默认命令由 docker-compose.dev.yml 指定（uvicorn --reload）
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

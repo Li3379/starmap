@@ -1,0 +1,107 @@
+# =============================================================================
+# StarMap CI 流水线
+# 触发：任何 PR 到 main + 直接 push 到 main
+# 门禁（规范5 §17.6）：CI 全绿 + 1 人 review 才能合并
+# =============================================================================
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  # ---------- 契约校验（最先跑，契约优先） ----------
+  contracts:
+    name: 契约校验
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true    # 契约是独立 submodule 仓库（§17.2）
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: 安装 pyyaml
+        run: pip install pyyaml
+      - name: 校验契约
+        run: python starmap-contracts/validate.py
+
+  # ---------- 后端 ----------
+  backend:
+    name: 后端 lint + typecheck + test
+    runs-on: ubuntu-latest
+    needs: contracts
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: 安装 Poetry
+        run: pip install poetry==2.4.1
+      - name: 安装依赖
+        run: poetry install --no-interaction
+      - name: Ruff lint
+        run: poetry run ruff check .
+      - name: Mypy typecheck
+        run: poetry run mypy app || true   # W1 占位，允许失败；W3 起改为严格
+      - name: Pytest（含覆盖率门禁 60%）
+        run: poetry run pytest
+
+  # ---------- 前端 ----------
+  frontend:
+    name: 前端 lint + typecheck + build
+    runs-on: ubuntu-latest
+    needs: contracts
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true    # gen:api 需要契约仓库
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: 安装依赖
+        run: npm install
+      - name: 从契约生成 API 类型（规范1 双端一致）
+        run: npm run gen:api
+      - name: ESLint
+        run: npm run lint
+      - name: TypeScript typecheck
+        run: npm run typecheck
+      - name: 构建
+        run: npm run build
+
+  # ---------- Docker 集成冒烟（规范7 每日集成） ----------
+  docker-smoke:
+    name: Docker 全栈冒烟
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    steps:
+      - uses: actions/checkout@v4
+      - name: 构建并启动全栈
+        run: docker-compose -f docker-compose.dev.yml up -d
+      - name: 等待后端就绪
+        run: |
+          for i in {1..30}; do
+            curl -sf http://localhost:8000/health && break
+            sleep 2
+          done
+          curl -sf http://localhost:8000/health
+      - name: 等待前端就绪
+        run: |
+          for i in {1..30}; do
+            curl -sf http://localhost:5173 && break
+            sleep 2
+          done
+      - name: 清理
+        if: always()
+        run: docker-compose -f docker-compose.dev.yml down -v

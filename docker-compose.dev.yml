@@ -1,0 +1,117 @@
+# =============================================================================
+# 星图(StarMap) 开发环境 Docker Compose
+# 规范3（§17.4）：开发也用 Docker，依赖精确锁定。
+# 启动：docker-compose -f docker-compose.dev.yml up
+# =============================================================================
+name: starmap-dev
+
+services:
+  # ---------- 后端 API（热重载） ----------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: starmap-backend
+    volumes:
+      - ./backend:/app           # 代码挂载，支持热重载
+      - ./starmap-contracts:/contracts:ro  # 契约只读挂载，启动校验一致性
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      neo4j:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      chroma:
+        condition: service_started
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    restart: unless-stopped
+
+  # ---------- 前端（Vite HMR） ----------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: starmap-frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules   # 防止宿主 node_modules 覆盖容器内的
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000
+    command: npm run dev -- --host 0.0.0.0
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # ---------- 图数据库 ----------
+  neo4j:
+    image: neo4j:5-community
+    container_name: starmap-neo4j
+    ports:
+      - "7474:7474"   # 浏览器界面 http://localhost:7474
+      - "7687:7687"   # Bolt 协议
+    environment:
+      - NEO4J_AUTH=neo4j/starmap123456
+      - NEO4J_PLUGINS=["apoc"]
+    volumes:
+      - neo4j_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://localhost:7474 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  # ---------- 关系数据库 ----------
+  postgres:
+    image: postgres:16
+    container_name: starmap-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=starmap
+      - POSTGRES_PASSWORD=starmap123456
+      - POSTGRES_DB=starmap
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U starmap"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  # ---------- 缓存 / 消息队列 ----------
+  redis:
+    image: redis:7-alpine
+    container_name: starmap-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  # ---------- 向量数据库 ----------
+  chroma:
+    image: chromadb/chroma:latest
+    container_name: starmap-chroma
+    ports:
+      - "8001:8000"
+    environment:
+      - IS_PERSISTENT=TRUE
+      - PERSIST_DIRECTORY=/chroma/chroma
+    volumes:
+      - chroma_data:/chroma/chroma
+    restart: unless-stopped
+
+volumes:
+  neo4j_data:
+  postgres_data:
+  redis_data:
+  chroma_data:

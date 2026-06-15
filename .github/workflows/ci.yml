@@ -10,7 +10,11 @@ on:
     branches: [main]
   push:
     branches: [main]
-  workflow_dispatch:    # 手动触发：跑 Docker 冒烟（默认 PR 跳过，需 Docker 权限）
+  workflow_dispatch:    # 手动触发：跑 Docker 冒烟
+  schedule:
+    # 每天 UTC 02:00（北京时间 10:00）自动跑全量检查
+    # 规范7 §17.8：每日集成 + 演示就绪
+    - cron: '0 2 * * *'
 
 jobs:
   # ---------- 契约校验（最先跑，契约优先） ----------
@@ -49,9 +53,28 @@ jobs:
       - name: Ruff lint
         run: poetry run ruff check .
       - name: Mypy typecheck
-        run: poetry run mypy app || true   # W1 占位，允许失败；W3 起改为严格
+        run: poetry run mypy app
       - name: Pytest（含覆盖率门禁 60%）
         run: poetry run pytest
+      - name: 契约一致性校验（FastAPI 导出 vs openapi.yaml）
+        run: |
+          poetry run python -c "
+          import json, subprocess, yaml
+          # 导出 FastAPI 的 OpenAPI
+          from app.main import app
+          exported = app.openapi()
+          # 读取契约
+          with open('../starmap-contracts/openapi.yaml') as f:
+              contract = yaml.safe_load(f)
+          # 对比路径数
+          exp_paths = set(exported.get('paths', {}).keys())
+          con_paths = set(contract.get('paths', {}).keys())
+          missing = con_paths - exp_paths
+          if missing:
+              print(f'❌ 契约有但实现缺失的路径: {missing}')
+              exit(1)
+          print(f'✅ 契约一致性通过 ({len(exp_paths)} 路径)')
+          "
 
   # ---------- 前端 ----------
   frontend:

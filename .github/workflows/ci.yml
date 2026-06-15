@@ -43,6 +43,8 @@ jobs:
         working-directory: backend
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: true    # 契约一致性校验需要 openapi.yaml
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -59,21 +61,18 @@ jobs:
       - name: 契约一致性校验（FastAPI 导出 vs openapi.yaml）
         run: |
           poetry run python -c "
-          import json, subprocess, yaml
-          # 导出 FastAPI 的 OpenAPI
+          import yaml
           from app.main import app
           exported = app.openapi()
-          # 读取契约
           with open('../starmap-contracts/openapi.yaml') as f:
               contract = yaml.safe_load(f)
-          # 对比路径数
           exp_paths = set(exported.get('paths', {}).keys())
           con_paths = set(contract.get('paths', {}).keys())
           missing = con_paths - exp_paths
           if missing:
-              print(f'❌ 契约有但实现缺失的路径: {missing}')
+              print(f'FAIL: paths in contract but not in app: {missing}')
               exit(1)
-          print(f'✅ 契约一致性通过 ({len(exp_paths)} 路径)')
+          print(f'OK: contract consistency passed ({len(exp_paths)} paths)')
           "
 
   # ---------- 前端 ----------

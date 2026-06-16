@@ -106,7 +106,10 @@ function handleRemove() {
     >
       <!-- 骨架屏（上传中） -->
       <template v-if="uploading">
-        <el-skeleton :rows="3" animated />
+        <el-skeleton
+          :rows="3"
+          animated
+        />
         <el-progress
           :percentage="Math.round(uploadProgress)"
           :status="uploadProgress === 100 ? 'success' : undefined"
@@ -118,25 +121,46 @@ function handleRemove() {
       <template v-else-if="file">
         <div class="file-info">
           <span style="font-size: 36px">📄</span>
-          <div class="file-name">{{ fileName }}</div>
-          <div class="file-size">{{ fileSize }}</div>
+          <div class="file-name">
+            {{ fileName }}
+          </div>
+          <div class="file-size">
+            {{ fileSize }}
+          </div>
         </div>
         <div class="file-actions">
-          <el-button type="primary" @click="startUpload" :loading="uploading">
+          <el-button
+            type="primary"
+            :loading="uploading"
+            @click="startUpload"
+          >
             开始上传解析
           </el-button>
-          <el-button @click="handleRemove">移除</el-button>
+          <el-button @click="handleRemove">
+            移除
+          </el-button>
         </div>
       </template>
 
       <!-- 空状态 -->
       <template v-else>
-        <div style="font-size: 48px; color: #c0c4cc">📂</div>
-        <div class="upload-text">将简历文件拖到此处</div>
-        <div class="upload-hint">支持 PDF、DOC、DOCX 格式，最大 10MB</div>
+        <div style="font-size: 48px; color: #c0c4cc">
+          📂
+        </div>
+        <div class="upload-text">
+          将简历文件拖到此处
+        </div>
+        <div class="upload-hint">
+          支持 PDF、DOC、DOCX 格式，最大 10MB
+        </div>
         <label class="upload-btn">
           选择文件
-          <input type="file" accept=".pdf,.doc,.docx" hidden @change="handleFileChange" />
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx"
+            hidden
+            @change="handleFileChange"
+          >
         </label>
       </template>
     </div>

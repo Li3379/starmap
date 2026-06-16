@@ -88,14 +88,19 @@ const radarOption = computed(() => {
 
 <template>
   <div class="skill-radar">
-    <div class="radar-title">{{ positionName }} — 技能雷达对比</div>
+    <div class="radar-title">
+      {{ positionName }} — 技能雷达对比
+    </div>
     <VChart
       v-if="data.length"
       :option="radarOption"
       style="height: 400px"
       autoresize
     />
-    <el-empty v-else description="暂无雷达图数据" />
+    <el-empty
+      v-else
+      description="暂无雷达图数据"
+    />
   </div>
 </template>
 

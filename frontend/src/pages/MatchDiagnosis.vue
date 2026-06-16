@@ -25,7 +25,6 @@ const radarData = ref<RadarItem[]>([])
 const radarLoading = ref(false)
 
 const stepTitles = ['上传简历', '选择目标岗位', '技能雷达对比', '差距分析报告', '学习路径规划']
-const stepIcons  = ['Upload', 'Search', 'DataAnalysis', 'Document', 'Guide']
 
 // ── Step 0: 上传简历 ──
 async function handleUpload(file: File) {
@@ -130,13 +129,22 @@ function handleReset() {
     <div class="match-page">
       <div class="page-header">
         <h2>匹配诊断</h2>
-        <p class="page-desc">上传简历或输入技能，智能诊断与目标岗位的匹配度</p>
+        <p class="page-desc">
+          上传简历或输入技能，智能诊断与目标岗位的匹配度
+        </p>
       </div>
 
       <!-- 步骤条 -->
       <div class="steps-wrapper">
-        <el-steps :active="step" finish-status="success" align-center>
-          <el-step v-for="(title, idx) in stepTitles" :key="idx">
+        <el-steps
+          :active="step"
+          finish-status="success"
+          align-center
+        >
+          <el-step
+            v-for="(title, idx) in stepTitles"
+            :key="idx"
+          >
             <template #title>
               <span class="step-title">{{ idx + 1 }}. {{ title }}</span>
             </template>
@@ -145,336 +153,587 @@ function handleReset() {
       </div>
 
       <!-- 步骤内容区（带动画过渡） -->
-      <transition name="step-fade" mode="out-in">
-        <div :key="step" class="step-content">
-        <!-- ═══ Step 0 ═══ -->
-        <template v-if="step === 0">
-          <el-card shadow="never" class="step-card">
-            <template #header>
-              <div class="card-header">
-                <el-icon size="20"><Upload /></el-icon>
-                <span>第1步：上传简历</span>
-              </div>
-            </template>
-
-            <ResumeUpload @upload="handleUpload" />
-
-            <el-divider>
-              <el-icon><Edit /></el-icon>
-              <span style="margin-left: 4px">或手动输入技能</span>
-            </el-divider>
-
-            <div v-if="!showManualInput" style="text-align: center">
-              <el-button type="primary" plain @click="showManualInput = true">
-                跳过上传，手动输入技能
-              </el-button>
-            </div>
-
-            <div v-else class="manual-skills">
-              <div class="skill-input-row">
-                <el-input
-                  v-model="skillInput"
-                  placeholder="输入技能名，按回车添加"
-                  @keyup.enter="addManualSkill"
-                  style="flex: 1; min-width: 220px"
-                >
-                  <template #append>
-                    <el-button @click="addManualSkill" :icon="Plus">添加</el-button>
-                  </template>
-                </el-input>
-              </div>
-
-              <!-- 已添加技能标签 -->
-              <div class="skill-tags" v-if="manualSkills.length">
-                <el-tag
-                  v-for="s in manualSkills"
-                  :key="s"
-                  closable
-                  :disable-transitions="false"
-                  @close="removeManualSkill(s)"
-                  size="large"
-                  style="margin: 4px"
-                >{{ s }}</el-tag>
-              </div>
-              <div v-else class="empty-hint">请在上方输入技能并点击"添加"</div>
-
-              <div v-if="manualSkills.length" style="margin-top: 16px; display: flex; gap: 12px">
-                <el-button type="primary" @click="confirmManualSkills">
-                  确认（{{ manualSkills.length }} 项技能）并进入下一步
-                </el-button>
-                <el-button @click="showManualInput = false; manualSkills = []">取消</el-button>
-              </div>
-            </div>
-          </el-card>
-        </template>
-
-        <!-- ═══ Step 1 ═══ -->
-        <template v-else-if="step === 1">
-          <el-card shadow="never" class="step-card">
-            <template #header>
-              <div class="card-header">
-                <el-icon size="20"><Search /></el-icon>
-                <span>第2步：选择目标岗位</span>
-              </div>
-            </template>
-
-            <div class="my-skills" v-if="userStore.parsedSkills.length">
-              <div class="skills-label">我的技能：</div>
-              <div class="skills-list">
-                <el-tag
-                  v-for="s in userStore.parsedSkills"
-                  :key="s"
-                  size="large"
-                  effect="plain"
-                  style="margin: 3px"
-                >{{ s }}</el-tag>
-              </div>
-            </div>
-
-            <el-divider />
-
-            <label class="field-label">搜索目标岗位</label>
-            <PositionSearch @select="handlePositionSelect" />
-
-            <div style="margin-top: 20px">
-              <el-button @click="step = 0" :icon="ArrowLeft">返回上一步</el-button>
-            </div>
-          </el-card>
-
-          <el-card v-if="radarLoading" style="margin-top: 16px" shadow="never">
-            <el-skeleton :rows="4" animated />
-          </el-card>
-        </template>
-
-        <!-- ═══ Step 2 ═══ -->
-        <template v-else-if="step === 2">
-          <el-card shadow="never" class="step-card">
-            <template #header>
-              <div class="card-header">
-                <el-icon size="20"><DataAnalysis /></el-icon>
-                <span>第3步：技能雷达对比 — {{ targetPosition }}</span>
-              </div>
-            </template>
-
-            <SkillRadar :data="radarData" :position-name="targetPosition" />
-
-            <el-alert
-              title="如何读图？"
-              type="info"
-              :closable="false"
-              show-icon
-              style="margin-top: 16px"
+      <transition
+        name="step-fade"
+        mode="out-in"
+      >
+        <div
+          :key="step"
+          class="step-content"
+        >
+          <!-- ═══ Step 0 ═══ -->
+          <template v-if="step === 0">
+            <el-card
+              shadow="never"
+              class="step-card"
             >
-              <template #default>
-                <p style="margin: 0; line-height: 1.8">
-                  <span class="legend-dot" style="background: #f56c6c"></span> <strong>红色</strong> = 岗位要求水平 &emsp;
-                  <span class="legend-dot" style="background: #409eff"></span> <strong>蓝色</strong> = 您当前水平<br/>
-                  蓝色越接近红色，匹配度越高；大面积红色裸露 = 需要重点提升。
-                </p>
+              <template #header>
+                <div class="card-header">
+                  <el-icon size="20">
+                    <Upload />
+                  </el-icon>
+                  <span>第1步：上传简历</span>
+                </div>
               </template>
-            </el-alert>
 
-            <div class="step-actions">
-              <el-button type="primary" size="large" @click="handleStartDiagnosis" :loading="matchStore.loading" :icon="Check">
-                开始智能诊断
-              </el-button>
-              <el-button size="large" @click="step = 1" :icon="ArrowLeft">返回选岗位</el-button>
-            </div>
-          </el-card>
-        </template>
+              <ResumeUpload @upload="handleUpload" />
 
-        <!-- ═══ Step 3 ═══ -->
-        <template v-else-if="step === 3 && matchStore.result">
-          <!-- 匹配分数 -->
-          <el-card shadow="never" class="score-card">
-            <div class="score-circle">
-              <el-progress
-                type="dashboard"
-                :percentage="Math.round(matchStore.result.match_score * 100)"
-                :color="matchStore.result.match_score >= 0.7 ? '#67c23a' : matchStore.result.match_score >= 0.5 ? '#e6a23c' : '#f56c6c'"
-                :stroke-width="14"
-                :width="180"
+              <el-divider>
+                <el-icon><Edit /></el-icon>
+                <span style="margin-left: 4px">或手动输入技能</span>
+              </el-divider>
+
+              <div
+                v-if="!showManualInput"
+                style="text-align: center"
               >
-                <template #default="{ percentage }">
-                  <span class="score-value">{{ percentage }}%</span>
-                </template>
-              </el-progress>
-              <div class="score-label">综合匹配度</div>
-              <div class="score-target">
-                <el-tag type="primary" size="large">{{ matchStore.result.target_position }}</el-tag>
+                <el-button
+                  type="primary"
+                  plain
+                  @click="showManualInput = true"
+                >
+                  跳过上传，手动输入技能
+                </el-button>
               </div>
-            </div>
-          </el-card>
 
-          <!-- 技能三栏 -->
-          <el-row :gutter="16" style="margin-top: 16px">
-            <el-col :md="8" :sm="24">
-              <el-card shadow="hover" class="skill-card matched">
-                <template #header>
-                  <span class="skill-card-title">✅ 已掌握（{{ matchStore.result.matched_skills.length }}）</span>
-                </template>
-                <div class="skill-tags-mini" v-if="matchStore.result.matched_skills.length">
-                  <el-tag v-for="s in matchStore.result.matched_skills" :key="s" type="success" size="large" effect="plain" style="margin: 3px">{{ s }}</el-tag>
+              <div
+                v-else
+                class="manual-skills"
+              >
+                <div class="skill-input-row">
+                  <el-input
+                    v-model="skillInput"
+                    placeholder="输入技能名，按回车添加"
+                    style="flex: 1; min-width: 220px"
+                    @keyup.enter="addManualSkill"
+                  >
+                    <template #append>
+                      <el-button
+                        :icon="Plus"
+                        @click="addManualSkill"
+                      >
+                        添加
+                      </el-button>
+                    </template>
+                  </el-input>
                 </div>
-                <el-empty v-else description="暂无" :image-size="60" />
-              </el-card>
-            </el-col>
-            <el-col :md="8" :sm="24">
-              <el-card shadow="hover" class="skill-card missing-req">
-                <template #header>
-                  <span class="skill-card-title">🔴 缺失必备（{{ matchStore.result.missing_required.length }}）</span>
-                </template>
-                <div class="skill-tags-mini" v-if="matchStore.result.missing_required.length">
-                  <el-tag v-for="s in matchStore.result.missing_required" :key="s" type="danger" size="large" effect="plain" style="margin: 3px">{{ s }}</el-tag>
-                </div>
-                <el-empty v-else description="全部满足！" :image-size="60" />
-              </el-card>
-            </el-col>
-            <el-col :md="8" :sm="24">
-              <el-card shadow="hover" class="skill-card missing-bonus">
-                <template #header>
-                  <span class="skill-card-title">🟡 缺失加分（{{ matchStore.result.missing_bonus.length }}）</span>
-                </template>
-                <div class="skill-tags-mini" v-if="matchStore.result.missing_bonus.length">
-                  <el-tag v-for="s in matchStore.result.missing_bonus" :key="s" type="warning" size="large" effect="plain" style="margin: 3px">{{ s }}</el-tag>
-                </div>
-                <el-empty v-else description="暂无" :image-size="60" />
-              </el-card>
-            </el-col>
-          </el-row>
 
-          <!-- 差距报告表格 -->
-          <el-card shadow="never" class="step-card" style="margin-top: 16px">
-            <template #header>
-              <div class="card-header">
-                <el-icon size="20"><Document /></el-icon>
-                <span>第4步：差距分析报告（按重要度排序）</span>
-              </div>
-            </template>
-
-            <el-table :data="sortedGaps" stripe style="width: 100%">
-              <el-table-column label="优先级" width="85" align="center">
-                <template #default="{ row }">
-                  <el-tag :type="row.importance === 'required' ? 'danger' : 'warning'" size="small" effect="dark">
-                    {{ row.importance === 'required' ? '必备' : '加分' }}
+                <!-- 已添加技能标签 -->
+                <div
+                  v-if="manualSkills.length"
+                  class="skill-tags"
+                >
+                  <el-tag
+                    v-for="s in manualSkills"
+                    :key="s"
+                    closable
+                    :disable-transitions="false"
+                    size="large"
+                    style="margin: 4px"
+                    @close="removeManualSkill(s)"
+                  >
+                    {{ s }}
                   </el-tag>
-                </template>
-              </el-table-column>
-              <el-table-column prop="skill" label="技能" width="150" />
-              <el-table-column label="掌握程度" width="180">
-                <template #default="{ row }">
-                  <div class="gap-progress">
-                    <el-progress
-                      :percentage="gapToProgress(row.gap_level)"
-                      :color="gapToColor(row.gap_level)"
-                      :stroke-width="14"
-                      :text-inside="true"
-                    >
-                      <span>{{ row.gap_level }}</span>
-                    </el-progress>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column prop="learning_path" label="推荐学习路径" min-width="280">
-                <template #default="{ row }">
-                  <div class="learning-path-preview">{{ row.learning_path }}</div>
-                </template>
-              </el-table-column>
-            </el-table>
-          </el-card>
+                </div>
+                <div
+                  v-else
+                  class="empty-hint"
+                >
+                  请在上方输入技能并点击"添加"
+                </div>
 
-          <!-- 总体评估 -->
-          <el-card shadow="hover" style="margin-top: 16px">
-            <template #header>
-              <div class="card-header">
-                <el-icon size="20"><ChatDotSquare /></el-icon>
-                <span>总体评估</span>
+                <div
+                  v-if="manualSkills.length"
+                  style="margin-top: 16px; display: flex; gap: 12px"
+                >
+                  <el-button
+                    type="primary"
+                    @click="confirmManualSkills"
+                  >
+                    确认（{{ manualSkills.length }} 项技能）并进入下一步
+                  </el-button>
+                  <el-button @click="showManualInput = false; manualSkills = []">
+                    取消
+                  </el-button>
+                </div>
               </div>
-            </template>
-            <p class="assessment-text">{{ matchStore.result.overall_assessment }}</p>
-            <el-alert
-              :title="'⏱ 预估学习时长：' + matchStore.result.estimated_learning_time"
-              type="warning"
-              :closable="false"
-              show-icon
-              style="margin-top: 12px"
-            />
-          </el-card>
+            </el-card>
+          </template>
 
-          <div class="step-actions">
-            <el-button type="primary" size="large" @click="step = 4" :icon="Guide">
-              查看学习路径规划
-            </el-button>
-            <el-button size="large" @click="handleReset" :icon="RefreshRight">重新诊断</el-button>
-          </div>
-        </template>
-
-        <!-- ═══ Step 4 ═══ -->
-        <template v-else-if="step === 4 && matchStore.result">
-          <el-card shadow="never" class="step-card">
-            <template #header>
-              <div class="card-header">
-                <el-icon size="20"><Guide /></el-icon>
-                <span>第5步：学习路径规划</span>
-              </div>
-            </template>
-
-            <el-alert type="info" :closable="false" show-icon style="margin-bottom: 24px">
-              <template #title>
-                预估总学习时长：<strong>{{ matchStore.result.estimated_learning_time }}</strong>
+          <!-- ═══ Step 1 ═══ -->
+          <template v-else-if="step === 1">
+            <el-card
+              shadow="never"
+              class="step-card"
+            >
+              <template #header>
+                <div class="card-header">
+                  <el-icon size="20">
+                    <Search />
+                  </el-icon>
+                  <span>第2步：选择目标岗位</span>
+                </div>
               </template>
-            </el-alert>
 
-            <div class="learning-paths">
-              <el-card
-                v-for="(gap, idx) in sortedGaps"
-                :key="gap.skill"
-                shadow="hover"
-                class="learning-card"
-                :style="{ borderLeft: `4px solid ${gap.importance === 'required' ? '#f56c6c' : '#e6a23c'}` }"
+              <div
+                v-if="userStore.parsedSkills.length"
+                class="my-skills"
               >
-                <template #header>
-                  <div class="learning-header">
-                    <div>
-                      <el-tag :type="gap.importance === 'required' ? 'danger' : 'warning'" size="small" effect="dark">
-                        {{ gap.importance === 'required' ? '必备' : '加分' }}
-                      </el-tag>
-                      <strong style="margin-left: 8px; font-size: 16px">{{ gap.skill }}</strong>
-                      <el-tag
-                        :type="gap.gap_level === '已掌握' ? 'success' : gap.gap_level === '部分掌握' ? 'warning' : 'danger'"
-                        size="small"
-                        style="margin-left: 8px"
-                      >{{ gap.gap_level }}</el-tag>
-                    </div>
-                    <span class="step-count">共 {{ gap.learning_path.length }} 阶段</span>
-                  </div>
-                </template>
+                <div class="skills-label">
+                  我的技能：
+                </div>
+                <div class="skills-list">
+                  <el-tag
+                    v-for="s in userStore.parsedSkills"
+                    :key="s"
+                    size="large"
+                    effect="plain"
+                    style="margin: 3px"
+                  >
+                    {{ s }}
+                  </el-tag>
+                </div>
+              </div>
 
-                <el-timeline>
-                  <el-timeline-item
-                    v-for="(stepName, stepIdx) in gap.learning_path"
-                    :key="stepIdx"
-                    :timestamp="'阶段 ' + (stepIdx + 1)"
-                    placement="top"
-                    :color="stepIdx === 0 ? '#409eff' : stepIdx === gap.learning_path.length - 1 ? '#67c23a' : '#e6a23c'"
-                    :hollow="stepIdx > 0"
+              <el-divider />
+
+              <label class="field-label">搜索目标岗位</label>
+              <PositionSearch @select="handlePositionSelect" />
+
+              <div style="margin-top: 20px">
+                <el-button
+                  :icon="ArrowLeft"
+                  @click="step = 0"
+                >
+                  返回上一步
+                </el-button>
+              </div>
+            </el-card>
+
+            <el-card
+              v-if="radarLoading"
+              style="margin-top: 16px"
+              shadow="never"
+            >
+              <el-skeleton
+                :rows="4"
+                animated
+              />
+            </el-card>
+          </template>
+
+          <!-- ═══ Step 2 ═══ -->
+          <template v-else-if="step === 2">
+            <el-card
+              shadow="never"
+              class="step-card"
+            >
+              <template #header>
+                <div class="card-header">
+                  <el-icon size="20">
+                    <DataAnalysis />
+                  </el-icon>
+                  <span>第3步：技能雷达对比 — {{ targetPosition }}</span>
+                </div>
+              </template>
+
+              <SkillRadar
+                :data="radarData"
+                :position-name="targetPosition"
+              />
+
+              <el-alert
+                title="如何读图？"
+                type="info"
+                :closable="false"
+                show-icon
+                style="margin-top: 16px"
+              >
+                <template #default>
+                  <p style="margin: 0; line-height: 1.8">
+                    <span
+                      class="legend-dot"
+                      style="background: #f56c6c"
+                    /> <strong>红色</strong> = 岗位要求水平 &emsp;
+                    <span
+                      class="legend-dot"
+                      style="background: #409eff"
+                    /> <strong>蓝色</strong> = 您当前水平<br>
+                    蓝色越接近红色，匹配度越高；大面积红色裸露 = 需要重点提升。
+                  </p>
+                </template>
+              </el-alert>
+
+              <div class="step-actions">
+                <el-button
+                  type="primary"
+                  size="large"
+                  :loading="matchStore.loading"
+                  :icon="Check"
+                  @click="handleStartDiagnosis"
+                >
+                  开始智能诊断
+                </el-button>
+                <el-button
+                  size="large"
+                  :icon="ArrowLeft"
+                  @click="step = 1"
+                >
+                  返回选岗位
+                </el-button>
+              </div>
+            </el-card>
+          </template>
+
+          <!-- ═══ Step 3 ═══ -->
+          <template v-else-if="step === 3 && matchStore.result">
+            <!-- 匹配分数 -->
+            <el-card
+              shadow="never"
+              class="score-card"
+            >
+              <div class="score-circle">
+                <el-progress
+                  type="dashboard"
+                  :percentage="Math.round(matchStore.result.match_score * 100)"
+                  :color="matchStore.result.match_score >= 0.7 ? '#67c23a' : matchStore.result.match_score >= 0.5 ? '#e6a23c' : '#f56c6c'"
+                  :stroke-width="14"
+                  :width="180"
+                >
+                  <template #default="{ percentage }">
+                    <span class="score-value">{{ percentage }}%</span>
+                  </template>
+                </el-progress>
+                <div class="score-label">
+                  综合匹配度
+                </div>
+                <div class="score-target">
+                  <el-tag
+                    type="primary"
                     size="large"
                   >
-                    <div class="timeline-content">{{ stepName }}</div>
-                  </el-timeline-item>
-                </el-timeline>
-              </el-card>
-            </div>
+                    {{ matchStore.result.target_position }}
+                  </el-tag>
+                </div>
+              </div>
+            </el-card>
+
+            <!-- 技能三栏 -->
+            <el-row
+              :gutter="16"
+              style="margin-top: 16px"
+            >
+              <el-col
+                :md="8"
+                :sm="24"
+              >
+                <el-card
+                  shadow="hover"
+                  class="skill-card matched"
+                >
+                  <template #header>
+                    <span class="skill-card-title">✅ 已掌握（{{ matchStore.result.matched_skills.length }}）</span>
+                  </template>
+                  <div
+                    v-if="matchStore.result.matched_skills.length"
+                    class="skill-tags-mini"
+                  >
+                    <el-tag
+                      v-for="s in matchStore.result.matched_skills"
+                      :key="s"
+                      type="success"
+                      size="large"
+                      effect="plain"
+                      style="margin: 3px"
+                    >
+                      {{ s }}
+                    </el-tag>
+                  </div>
+                  <el-empty
+                    v-else
+                    description="暂无"
+                    :image-size="60"
+                  />
+                </el-card>
+              </el-col>
+              <el-col
+                :md="8"
+                :sm="24"
+              >
+                <el-card
+                  shadow="hover"
+                  class="skill-card missing-req"
+                >
+                  <template #header>
+                    <span class="skill-card-title">🔴 缺失必备（{{ matchStore.result.missing_required.length }}）</span>
+                  </template>
+                  <div
+                    v-if="matchStore.result.missing_required.length"
+                    class="skill-tags-mini"
+                  >
+                    <el-tag
+                      v-for="s in matchStore.result.missing_required"
+                      :key="s"
+                      type="danger"
+                      size="large"
+                      effect="plain"
+                      style="margin: 3px"
+                    >
+                      {{ s }}
+                    </el-tag>
+                  </div>
+                  <el-empty
+                    v-else
+                    description="全部满足！"
+                    :image-size="60"
+                  />
+                </el-card>
+              </el-col>
+              <el-col
+                :md="8"
+                :sm="24"
+              >
+                <el-card
+                  shadow="hover"
+                  class="skill-card missing-bonus"
+                >
+                  <template #header>
+                    <span class="skill-card-title">🟡 缺失加分（{{ matchStore.result.missing_bonus.length }}）</span>
+                  </template>
+                  <div
+                    v-if="matchStore.result.missing_bonus.length"
+                    class="skill-tags-mini"
+                  >
+                    <el-tag
+                      v-for="s in matchStore.result.missing_bonus"
+                      :key="s"
+                      type="warning"
+                      size="large"
+                      effect="plain"
+                      style="margin: 3px"
+                    >
+                      {{ s }}
+                    </el-tag>
+                  </div>
+                  <el-empty
+                    v-else
+                    description="暂无"
+                    :image-size="60"
+                  />
+                </el-card>
+              </el-col>
+            </el-row>
+
+            <!-- 差距报告表格 -->
+            <el-card
+              shadow="never"
+              class="step-card"
+              style="margin-top: 16px"
+            >
+              <template #header>
+                <div class="card-header">
+                  <el-icon size="20">
+                    <Document />
+                  </el-icon>
+                  <span>第4步：差距分析报告（按重要度排序）</span>
+                </div>
+              </template>
+
+              <el-table
+                :data="sortedGaps"
+                stripe
+                style="width: 100%"
+              >
+                <el-table-column
+                  label="优先级"
+                  width="85"
+                  align="center"
+                >
+                  <template #default="{ row }">
+                    <el-tag
+                      :type="row.importance === 'required' ? 'danger' : 'warning'"
+                      size="small"
+                      effect="dark"
+                    >
+                      {{ row.importance === 'required' ? '必备' : '加分' }}
+                    </el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="skill"
+                  label="技能"
+                  width="150"
+                />
+                <el-table-column
+                  label="掌握程度"
+                  width="180"
+                >
+                  <template #default="{ row }">
+                    <div class="gap-progress">
+                      <el-progress
+                        :percentage="gapToProgress(row.gap_level)"
+                        :color="gapToColor(row.gap_level)"
+                        :stroke-width="14"
+                        :text-inside="true"
+                      >
+                        <span>{{ row.gap_level }}</span>
+                      </el-progress>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="learning_path"
+                  label="推荐学习路径"
+                  min-width="280"
+                >
+                  <template #default="{ row }">
+                    <div class="learning-path-preview">
+                      {{ row.learning_path }}
+                    </div>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-card>
+
+            <!-- 总体评估 -->
+            <el-card
+              shadow="hover"
+              style="margin-top: 16px"
+            >
+              <template #header>
+                <div class="card-header">
+                  <el-icon size="20">
+                    <ChatDotSquare />
+                  </el-icon>
+                  <span>总体评估</span>
+                </div>
+              </template>
+              <p class="assessment-text">
+                {{ matchStore.result.overall_assessment }}
+              </p>
+              <el-alert
+                :title="'⏱ 预估学习时长：' + matchStore.result.estimated_learning_time"
+                type="warning"
+                :closable="false"
+                show-icon
+                style="margin-top: 12px"
+              />
+            </el-card>
 
             <div class="step-actions">
-              <el-button type="primary" size="large" @click="handleReset" :icon="RefreshRight">
+              <el-button
+                type="primary"
+                size="large"
+                :icon="Guide"
+                @click="step = 4"
+              >
+                查看学习路径规划
+              </el-button>
+              <el-button
+                size="large"
+                :icon="RefreshRight"
+                @click="handleReset"
+              >
                 重新诊断
               </el-button>
-              <el-button size="large" @click="step = 3" :icon="ArrowLeft">返回差距报告</el-button>
             </div>
-          </el-card>
-        </template>
-      </div>
+          </template>
+
+          <!-- ═══ Step 4 ═══ -->
+          <template v-else-if="step === 4 && matchStore.result">
+            <el-card
+              shadow="never"
+              class="step-card"
+            >
+              <template #header>
+                <div class="card-header">
+                  <el-icon size="20">
+                    <Guide />
+                  </el-icon>
+                  <span>第5步：学习路径规划</span>
+                </div>
+              </template>
+
+              <el-alert
+                type="info"
+                :closable="false"
+                show-icon
+                style="margin-bottom: 24px"
+              >
+                <template #title>
+                  预估总学习时长：<strong>{{ matchStore.result.estimated_learning_time }}</strong>
+                </template>
+              </el-alert>
+
+              <div class="learning-paths">
+                <el-card
+                  v-for="gap in sortedGaps"
+                  :key="gap.skill"
+                  shadow="hover"
+                  class="learning-card"
+                  :style="{ borderLeft: `4px solid ${gap.importance === 'required' ? '#f56c6c' : '#e6a23c'}` }"
+                >
+                  <template #header>
+                    <div class="learning-header">
+                      <div>
+                        <el-tag
+                          :type="gap.importance === 'required' ? 'danger' : 'warning'"
+                          size="small"
+                          effect="dark"
+                        >
+                          {{ gap.importance === 'required' ? '必备' : '加分' }}
+                        </el-tag>
+                        <strong style="margin-left: 8px; font-size: 16px">{{ gap.skill }}</strong>
+                        <el-tag
+                          :type="gap.gap_level === '已掌握' ? 'success' : gap.gap_level === '部分掌握' ? 'warning' : 'danger'"
+                          size="small"
+                          style="margin-left: 8px"
+                        >
+                          {{ gap.gap_level }}
+                        </el-tag>
+                      </div>
+                      <span class="step-count">共 {{ gap.learning_path.length }} 阶段</span>
+                    </div>
+                  </template>
+
+                  <el-timeline>
+                    <el-timeline-item
+                      v-for="(stepName, stepIdx) in gap.learning_path"
+                      :key="stepIdx"
+                      :timestamp="'阶段 ' + (stepIdx + 1)"
+                      placement="top"
+                      :color="stepIdx === 0 ? '#409eff' : stepIdx === gap.learning_path.length - 1 ? '#67c23a' : '#e6a23c'"
+                      :hollow="stepIdx > 0"
+                      size="large"
+                    >
+                      <div class="timeline-content">
+                        {{ stepName }}
+                      </div>
+                    </el-timeline-item>
+                  </el-timeline>
+                </el-card>
+              </div>
+
+              <div class="step-actions">
+                <el-button
+                  type="primary"
+                  size="large"
+                  :icon="RefreshRight"
+                  @click="handleReset"
+                >
+                  重新诊断
+                </el-button>
+                <el-button
+                  size="large"
+                  :icon="ArrowLeft"
+                  @click="step = 3"
+                >
+                  返回差距报告
+                </el-button>
+              </div>
+            </el-card>
+          </template>
+        </div>
       </transition>
     </div>
   </MainLayout>

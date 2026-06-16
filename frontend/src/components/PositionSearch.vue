@@ -56,9 +56,9 @@ function handleChange(val: string) {
       placeholder="请搜索并选择目标岗位"
       :remote-method="remoteMethod"
       :loading="loading"
-      @change="handleChange"
       style="width: 100%"
       size="large"
+      @change="handleChange"
     >
       <el-option
         v-for="opt in options"

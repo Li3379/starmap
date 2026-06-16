@@ -5,7 +5,7 @@
  */
 import { onMounted, onUnmounted, ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
-import { RefreshRight, Grid, DataLine, WarningFilled, Clock } from '@element-plus/icons-vue'
+import { RefreshRight } from '@element-plus/icons-vue'
 import MainLayout from '@/layouts/MainLayout.vue'
 import { useQualityStore } from '@/stores/quality'
 
@@ -202,35 +202,67 @@ const sourceChartOption = computed(() => {
       <div class="page-header">
         <div>
           <h2>图谱质量仪表盘</h2>
-          <p class="page-desc">实时监控数据质量、信任度分布与幻觉率趋势</p>
+          <p class="page-desc">
+            实时监控数据质量、信任度分布与幻觉率趋势
+          </p>
         </div>
         <div class="header-actions">
-          <span v-if="lastRefresh" class="last-refresh">最近刷新：{{ lastRefresh }}</span>
+          <span
+            v-if="lastRefresh"
+            class="last-refresh"
+          >最近刷新：{{ lastRefresh }}</span>
           <el-switch
             v-model="autoRefresh"
             active-text="自动刷新"
-            @change="toggleAutoRefresh"
             size="small"
+            @change="toggleAutoRefresh"
           />
-          <el-button size="small" :icon="RefreshRight" @click="quality.fetchQuality(); lastRefresh = new Date().toLocaleTimeString()">
+          <el-button
+            size="small"
+            :icon="RefreshRight"
+            @click="quality.fetchQuality(); lastRefresh = new Date().toLocaleTimeString()"
+          >
             刷新
           </el-button>
         </div>
       </div>
 
       <!-- 4 指标卡（含趋势） -->
-      <el-row :gutter="16" style="margin-bottom: 16px">
-        <el-col :lg="6" :md="12" :sm="24" v-for="card in kpiCardsEnhanced" :key="card.label" style="margin-bottom: 16px">
-          <el-card shadow="hover" class="kpi-card">
+      <el-row
+        :gutter="16"
+        style="margin-bottom: 16px"
+      >
+        <el-col
+          v-for="card in kpiCardsEnhanced"
+          :key="card.label"
+          :lg="6"
+          :md="12"
+          :sm="24"
+          style="margin-bottom: 16px"
+        >
+          <el-card
+            shadow="hover"
+            class="kpi-card"
+          >
             <div class="kpi-inner">
-              <div class="kpi-icon" :style="{ background: card.color + '18', color: card.color }">
+              <div
+                class="kpi-icon"
+                :style="{ background: card.color + '18', color: card.color }"
+              >
                 <el-icon size="22">
                   <component :is="card.icon" />
                 </el-icon>
               </div>
               <div class="kpi-body">
-                <div class="kpi-label">{{ card.label }}</div>
-                <div class="kpi-value" :style="{ color: card.color }">{{ card.value }}</div>
+                <div class="kpi-label">
+                  {{ card.label }}
+                </div>
+                <div
+                  class="kpi-value"
+                  :style="{ color: card.color }"
+                >
+                  {{ card.value }}
+                </div>
                 <div class="kpi-sub">
                   <span :class="card.trend === 'up' ? 'trend-up' : 'trend-down'">
                     {{ card.trend === 'up' ? '▲' : '▼' }}
@@ -244,36 +276,119 @@ const sourceChartOption = computed(() => {
       </el-row>
 
       <!-- 直方图 + 趋势 -->
-      <el-row :gutter="16" style="margin-bottom: 16px">
-        <el-col :lg="12" :sm="24" style="margin-bottom: 16px">
-          <el-card shadow="never" header="信任度分布直方图" v-loading="quality.loading">
-            <v-chart v-if="quality.metrics?.trust_distribution" :option="histogramOption" style="height: 330px" autoresize />
-            <el-empty v-else description="暂无数据" :image-size="80" />
+      <el-row
+        :gutter="16"
+        style="margin-bottom: 16px"
+      >
+        <el-col
+          :lg="12"
+          :sm="24"
+          style="margin-bottom: 16px"
+        >
+          <el-card
+            v-loading="quality.loading"
+            shadow="never"
+            header="信任度分布直方图"
+          >
+            <v-chart
+              v-if="quality.metrics?.trust_distribution"
+              :option="histogramOption"
+              style="height: 330px"
+              autoresize
+            />
+            <el-empty
+              v-else
+              description="暂无数据"
+              :image-size="80"
+            />
           </el-card>
         </el-col>
-        <el-col :lg="12" :sm="24" style="margin-bottom: 16px">
-          <el-card shadow="never" header="幻觉率趋势" v-loading="quality.loading">
-            <v-chart v-if="quality.metrics?.hallucination_trend" :option="trendChartOption" style="height: 330px" autoresize />
-            <el-empty v-else description="暂无数据" :image-size="80" />
+        <el-col
+          :lg="12"
+          :sm="24"
+          style="margin-bottom: 16px"
+        >
+          <el-card
+            v-loading="quality.loading"
+            shadow="never"
+            header="幻觉率趋势"
+          >
+            <v-chart
+              v-if="quality.metrics?.hallucination_trend"
+              :option="trendChartOption"
+              style="height: 330px"
+              autoresize
+            />
+            <el-empty
+              v-else
+              description="暂无数据"
+              :image-size="80"
+            />
           </el-card>
         </el-col>
       </el-row>
 
       <!-- 数据源 + 审核 -->
       <el-row :gutter="16">
-        <el-col :lg="12" :sm="24" style="margin-bottom: 16px">
-          <el-card shadow="never" header="数据源贡献分布" v-loading="quality.loading">
-            <v-chart v-if="quality.metrics?.source_distribution" :option="sourceChartOption" style="height: 310px" autoresize />
-            <el-empty v-else description="暂无数据源信息" :image-size="80" />
+        <el-col
+          :lg="12"
+          :sm="24"
+          style="margin-bottom: 16px"
+        >
+          <el-card
+            v-loading="quality.loading"
+            shadow="never"
+            header="数据源贡献分布"
+          >
+            <v-chart
+              v-if="quality.metrics?.source_distribution"
+              :option="sourceChartOption"
+              style="height: 310px"
+              autoresize
+            />
+            <el-empty
+              v-else
+              description="暂无数据源信息"
+              :image-size="80"
+            />
           </el-card>
         </el-col>
-        <el-col :lg="12" :sm="24" style="margin-bottom: 16px">
-          <el-card shadow="never" header="待审核队列" v-loading="quality.loading">
-            <el-table :data="quality.metrics?.audit_queue ?? []" stripe size="small" max-height="310">
-              <el-table-column prop="id" label="#" width="50" align="center" />
-              <el-table-column prop="position" label="岗位" />
-              <el-table-column prop="skill" label="技能" />
-              <el-table-column prop="trust" label="信任度" width="120" align="center">
+        <el-col
+          :lg="12"
+          :sm="24"
+          style="margin-bottom: 16px"
+        >
+          <el-card
+            v-loading="quality.loading"
+            shadow="never"
+            header="待审核队列"
+          >
+            <el-table
+              :data="quality.metrics?.audit_queue ?? []"
+              stripe
+              size="small"
+              max-height="310"
+            >
+              <el-table-column
+                prop="id"
+                label="#"
+                width="50"
+                align="center"
+              />
+              <el-table-column
+                prop="position"
+                label="岗位"
+              />
+              <el-table-column
+                prop="skill"
+                label="技能"
+              />
+              <el-table-column
+                prop="trust"
+                label="信任度"
+                width="120"
+                align="center"
+              >
                 <template #default="{ row }">
                   <el-progress
                     :percentage="row.trust"
@@ -282,10 +397,26 @@ const sourceChartOption = computed(() => {
                   />
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="150" align="center">
+              <el-table-column
+                label="操作"
+                width="150"
+                align="center"
+              >
                 <template #default>
-                  <el-button size="small" type="success" plain>通过</el-button>
-                  <el-button size="small" type="danger" plain>拒绝</el-button>
+                  <el-button
+                    size="small"
+                    type="success"
+                    plain
+                  >
+                    通过
+                  </el-button>
+                  <el-button
+                    size="small"
+                    type="danger"
+                    plain
+                  >
+                    拒绝
+                  </el-button>
                 </template>
               </el-table-column>
             </el-table>

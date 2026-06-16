@@ -37,7 +37,11 @@ function closeMobileMenu() {
     <el-header class="layout-header">
       <div class="header-inner">
         <!-- Logo -->
-        <router-link to="/" class="logo" @click="closeMobileMenu">
+        <router-link
+          to="/"
+          class="logo"
+          @click="closeMobileMenu"
+        >
           <span class="logo-icon">★</span>
           <span class="logo-text">星图 StarMap</span>
         </router-link>
@@ -53,7 +57,11 @@ function closeMobileMenu() {
           class="desktop-menu"
           @select="closeMobileMenu"
         >
-          <el-menu-item v-for="item in navItems" :key="item.path" :index="item.path">
+          <el-menu-item
+            v-for="item in navItems"
+            :key="item.path"
+            :index="item.path"
+          >
             <el-icon style="margin-right: 6px">
               <component :is="item.icon" />
             </el-icon>
@@ -62,17 +70,24 @@ function closeMobileMenu() {
         </el-menu>
 
         <!-- 移动端汉堡按钮 -->
-        <button class="mobile-toggle" @click="toggleMobileMenu" :aria-label="mobileMenuOpen ? '关闭菜单' : '打开菜单'">
-          <span :class="{ open: mobileMenuOpen }"></span>
-          <span :class="{ open: mobileMenuOpen }"></span>
-          <span :class="{ open: mobileMenuOpen }"></span>
+        <button
+          class="mobile-toggle"
+          :aria-label="mobileMenuOpen ? '关闭菜单' : '打开菜单'"
+          @click="toggleMobileMenu"
+        >
+          <span :class="{ open: mobileMenuOpen }" />
+          <span :class="{ open: mobileMenuOpen }" />
+          <span :class="{ open: mobileMenuOpen }" />
         </button>
       </div>
     </el-header>
 
     <!-- 移动端下拉菜单 -->
     <transition name="slide-down">
-      <div v-if="mobileMenuOpen" class="mobile-menu">
+      <div
+        v-if="mobileMenuOpen"
+        class="mobile-menu"
+      >
         <router-link
           v-for="item in navItems"
           :key="item.path"

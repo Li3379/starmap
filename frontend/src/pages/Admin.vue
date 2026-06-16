@@ -125,12 +125,17 @@ async function handleReset() {
       <div class="page-header">
         <div>
           <h2>管理后台</h2>
-          <p class="page-desc">人工审核、数据源配置与演示数据管理</p>
+          <p class="page-desc">
+            人工审核、数据源配置与演示数据管理
+          </p>
         </div>
       </div>
 
       <!-- 操作栏 -->
-      <el-card shadow="never" class="action-bar">
+      <el-card
+        shadow="never"
+        class="action-bar"
+      >
         <div class="action-bar-inner">
           <div class="action-left">
             <el-input
@@ -141,23 +146,57 @@ async function handleReset() {
               style="width: 240px"
               size="default"
             />
-            <el-select v-model="typeFilter" placeholder="按类型过滤" clearable style="width: 130px" size="default">
-              <el-option label="全部" value="" />
-              <el-option label="技能" value="skill" />
-              <el-option label="岗位" value="position" />
+            <el-select
+              v-model="typeFilter"
+              placeholder="按类型过滤"
+              clearable
+              style="width: 130px"
+              size="default"
+            >
+              <el-option
+                label="全部"
+                value=""
+              />
+              <el-option
+                label="技能"
+                value="skill"
+              />
+              <el-option
+                label="岗位"
+                value="position"
+              />
             </el-select>
-            <el-button type="danger" plain size="default" @click="handleReset" :icon="Delete">
+            <el-button
+              type="danger"
+              plain
+              size="default"
+              :icon="Delete"
+              @click="handleReset"
+            >
               重置演示数据
             </el-button>
           </div>
           <div class="action-right">
-            <span class="selected-count" v-if="selectedIds.size">
+            <span
+              v-if="selectedIds.size"
+              class="selected-count"
+            >
               已选 {{ selectedIds.size }} 条
             </span>
-            <el-button size="default" type="success" @click="handleBatchApprove" :disabled="!selectedIds.size">
+            <el-button
+              size="default"
+              type="success"
+              :disabled="!selectedIds.size"
+              @click="handleBatchApprove"
+            >
               批量通过
             </el-button>
-            <el-button size="default" type="danger" @click="handleBatchReject" :disabled="!selectedIds.size">
+            <el-button
+              size="default"
+              type="danger"
+              :disabled="!selectedIds.size"
+              @click="handleBatchReject"
+            >
               批量拒绝
             </el-button>
           </div>
@@ -165,19 +204,32 @@ async function handleReset() {
       </el-card>
 
       <!-- 审核 + 数据源 -->
-      <el-row :gutter="16" style="margin-top: 16px">
+      <el-row
+        :gutter="16"
+        style="margin-top: 16px"
+      >
         <!-- 审核队列 -->
-        <el-col :lg="14" :sm="24" style="margin-bottom: 16px">
-          <el-card shadow="never" header="人工审核队列">
+        <el-col
+          :lg="14"
+          :sm="24"
+          style="margin-bottom: 16px"
+        >
+          <el-card
+            shadow="never"
+            header="人工审核队列"
+          >
             <el-table
+              ref="tableRef"
+              v-loading="admin.loading"
               :data="filteredAuditQueue"
               stripe
-              v-loading="admin.loading"
-              @selection-change="() => {}"
-              ref="tableRef"
               size="default"
+              @selection-change="() => {}"
             >
-              <el-table-column width="50" align="center">
+              <el-table-column
+                width="50"
+                align="center"
+              >
                 <template #header>
                   <el-checkbox
                     :model-value="isAllSelected"
@@ -192,16 +244,38 @@ async function handleReset() {
                   />
                 </template>
               </el-table-column>
-              <el-table-column prop="id" label="ID" width="60" align="center" />
-              <el-table-column prop="type" label="类型" width="85" align="center">
+              <el-table-column
+                prop="id"
+                label="ID"
+                width="60"
+                align="center"
+              />
+              <el-table-column
+                prop="type"
+                label="类型"
+                width="85"
+                align="center"
+              >
                 <template #default="{ row }">
-                  <el-tag :type="row.type === 'skill' ? 'success' : ''" size="small" effect="dark">
+                  <el-tag
+                    :type="row.type === 'skill' ? 'success' : ''"
+                    size="small"
+                    effect="dark"
+                  >
                     {{ row.type === 'skill' ? '技能' : '岗位' }}
                   </el-tag>
                 </template>
               </el-table-column>
-              <el-table-column prop="name" label="名称" min-width="140" />
-              <el-table-column label="信任度" width="130" align="center">
+              <el-table-column
+                prop="name"
+                label="名称"
+                min-width="140"
+              />
+              <el-table-column
+                label="信任度"
+                width="130"
+                align="center"
+              >
                 <template #default="{ row }">
                   <div style="display: flex; align-items: center; gap: 8px">
                     <el-progress
@@ -214,34 +288,82 @@ async function handleReset() {
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="160" align="center" fixed="right">
+              <el-table-column
+                label="操作"
+                width="160"
+                align="center"
+                fixed="right"
+              >
                 <template #default="{ row }">
-                  <el-button size="small" type="success" plain @click="handleApprove(row.id)">通过</el-button>
-                  <el-button size="small" type="danger" plain @click="handleReject(row.id)">拒绝</el-button>
+                  <el-button
+                    size="small"
+                    type="success"
+                    plain
+                    @click="handleApprove(row.id)"
+                  >
+                    通过
+                  </el-button>
+                  <el-button
+                    size="small"
+                    type="danger"
+                    plain
+                    @click="handleReject(row.id)"
+                  >
+                    拒绝
+                  </el-button>
                 </template>
               </el-table-column>
             </el-table>
-            <div v-if="!filteredAuditQueue.length" style="text-align: center; padding: 24px; color: #c0c4cc">
+            <div
+              v-if="!filteredAuditQueue.length"
+              style="text-align: center; padding: 24px; color: #c0c4cc"
+            >
               暂无匹配的审核项
             </div>
           </el-card>
         </el-col>
 
         <!-- 数据源配置 -->
-        <el-col :lg="10" :sm="24" style="margin-bottom: 16px">
-          <el-card shadow="never" header="数据源配置">
-            <el-table :data="admin.sources" stripe size="default">
-              <el-table-column prop="name" label="来源名称" min-width="120" />
-              <el-table-column prop="source_type" label="类型" width="80" align="center">
+        <el-col
+          :lg="10"
+          :sm="24"
+          style="margin-bottom: 16px"
+        >
+          <el-card
+            shadow="never"
+            header="数据源配置"
+          >
+            <el-table
+              :data="admin.sources"
+              stripe
+              size="default"
+            >
+              <el-table-column
+                prop="name"
+                label="来源名称"
+                min-width="120"
+              />
+              <el-table-column
+                prop="source_type"
+                label="类型"
+                width="80"
+                align="center"
+              >
                 <template #default="{ row }">
                   <el-tag
                     :type="row.source_type === 'official' ? 'success' : 'info'"
                     size="small"
                     effect="dark"
-                  >{{ row.source_type === 'official' ? '官方' : '聚合' }}</el-tag>
+                  >
+                    {{ row.source_type === 'official' ? '官方' : '聚合' }}
+                  </el-tag>
                 </template>
               </el-table-column>
-              <el-table-column label="权威性" width="100" align="center">
+              <el-table-column
+                label="权威性"
+                width="100"
+                align="center"
+              >
                 <template #default="{ row }">
                   <el-progress
                     :percentage="Math.round(row.authority_score * 100)"
@@ -250,23 +372,41 @@ async function handleReset() {
                   />
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="70" align="center">
+              <el-table-column
+                label="操作"
+                width="70"
+                align="center"
+              >
                 <template #default>
-                  <el-button size="small" type="primary" link>编辑</el-button>
+                  <el-button
+                    size="small"
+                    type="primary"
+                    link
+                  >
+                    编辑
+                  </el-button>
                 </template>
               </el-table-column>
             </el-table>
           </el-card>
 
           <!-- 重置数据说明 -->
-          <el-card shadow="never" style="margin-top: 16px">
+          <el-card
+            shadow="never"
+            style="margin-top: 16px"
+          >
             <template #header>
               <span style="font-weight: 600">🔄 演示数据管理</span>
             </template>
             <p style="color: #606266; font-size: 13px; line-height: 1.8; margin: 0">
               重置为演示种子数据将覆盖当前所有数据，包括岗位、技能、图谱节点与关系。此功能用于演示场景重置（§16.5）。
             </p>
-            <el-button type="danger" style="margin-top: 12px" @click="handleReset" :icon="Delete">
+            <el-button
+              type="danger"
+              style="margin-top: 12px"
+              :icon="Delete"
+              @click="handleReset"
+            >
               重置为演示数据
             </el-button>
           </el-card>

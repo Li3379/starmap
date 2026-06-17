@@ -11,6 +11,8 @@ import tempfile
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
+import pytest
+
 # 强制 UTF-8
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -19,6 +21,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 # 设置环境变量
 os.environ.setdefault("POSTGRES_PORT", "5433")
+
+# CI 环境无 PostgreSQL，跳过需要数据库的测试
+pytestmark = pytest.mark.skipif(
+    os.environ.get("CI") == "true",
+    reason="Need PostgreSQL (not available in CI)",
+)
 
 from crawler.persistence import extraction_dao  # noqa: E402
 from crawler.scripts.w3_integration import call_extract_api  # noqa: E402

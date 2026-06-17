@@ -66,16 +66,17 @@ def fetch_pending_jd_raw(limit: int) -> list[dict]:
             .where(JdRaw.status == JdStatus.raw)
             .limit(limit)
         ).all()
-    return [
-        {
-            "id": r.id,
-            "source_site": r.source_site,
-            "source_url": r.source_url,
-            "job_title": r.job_title,
-            "clean_text": r.clean_text,
-        }
-        for r in rows
-    ]
+        # 在 session 内提取数据，避免 DetachedInstanceError
+        return [
+            {
+                "id": r[0].id,
+                "source_site": r[0].source_site,
+                "source_url": r[0].source_url,
+                "job_title": r[0].job_title,
+                "clean_text": r[0].clean_text,
+            }
+            for r in rows
+        ]
 
 
 def mark_jd_extracted(jd_raw_id: int, success: bool, error: str | None = None) -> None:

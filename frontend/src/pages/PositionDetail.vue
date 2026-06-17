@@ -107,7 +107,9 @@ onMounted(async () => {
 
         <!-- 右侧：技能列表 -->
         <section class="skills-section">
-          <h3 class="section-title">技能要求 ({{ skills.length }})</h3>
+          <h3 class="section-title">
+            技能要求 ({{ skills.length }})
+          </h3>
           <el-table
             :data="skills"
             stripe
@@ -124,7 +126,9 @@ onMounted(async () => {
               width="100"
             >
               <template #default="{ row }">
-                <el-tag size="small">{{ CATEGORY_LABELS[row.category] ?? row.category }}</el-tag>
+                <el-tag size="small">
+                  {{ CATEGORY_LABELS[row.category] ?? row.category }}
+                </el-tag>
               </template>
             </el-table-column>
             <el-table-column

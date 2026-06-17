@@ -36,19 +36,45 @@ onMounted(fetchPositions)
     <div class="position-list-page">
       <div class="page-header">
         <h2>岗位列表</h2>
-        <p class="subtitle">选择岗位查看能力雷达图与技能详情</p>
+        <p class="subtitle">
+          选择岗位查看能力雷达图与技能详情
+        </p>
       </div>
 
-      <el-row :gutter="20" v-loading="loading">
-        <el-col v-for="pos in positions" :key="pos.id" :xs="24" :sm="12" :md="8" :lg="6">
-          <el-card class="position-card" shadow="hover" @click="goDetail(pos.name)">
+      <el-row
+        v-loading="loading"
+        :gutter="20"
+      >
+        <el-col
+          v-for="pos in positions"
+          :key="pos.id"
+          :xs="24"
+          :sm="12"
+          :md="8"
+          :lg="6"
+        >
+          <el-card
+            class="position-card"
+            shadow="hover"
+            @click="goDetail(pos.name)"
+          >
             <div class="card-content">
-            
               <h3>{{ pos.name }}</h3>
-              <el-tag size="small" type="info">{{ pos.industry }}</el-tag>
+              <el-tag
+                size="small"
+                type="info"
+              >
+                {{ pos.industry }}
+              </el-tag>
             </div>
             <template #footer>
-              <el-button type="primary" size="small" link> 查看详情 → </el-button>
+              <el-button
+                type="primary"
+                size="small"
+                link
+              >
+                查看详情 →
+              </el-button>
             </template>
           </el-card>
         </el-col>

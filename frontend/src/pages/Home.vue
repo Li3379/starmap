@@ -500,7 +500,9 @@ onUnmounted(() => {
         <aside class="left-panel">
           <!-- 图例 -->
           <div class="panel-section">
-            <div class="section-title">图例</div>
+            <div class="section-title">
+              图例
+            </div>
             <div class="legend-list">
               <div
                 v-for="(color, label) in COLOR_MAP"
@@ -518,7 +520,9 @@ onUnmounted(() => {
 
           <!-- 技术栈筛选 -->
           <div class="panel-section">
-            <div class="section-title">技术栈</div>
+            <div class="section-title">
+              技术栈
+            </div>
             <div class="filter-chips">
               <el-checkbox
                 v-for="tech in techFilters"
@@ -555,7 +559,9 @@ onUnmounted(() => {
           <template v-if="selectedNode">
             <div class="panel-section">
               <div class="detail-header">
-                <div class="section-title">节点详情</div>
+                <div class="section-title">
+                  节点详情
+                </div>
                 <el-button
                   text
                   size="small"
@@ -681,7 +687,7 @@ onUnmounted(() => {
               class="panel-section"
             >
               <div class="section-title">
-                 知识点 ({{ knowledgePoints.length }})
+                知识点 ({{ knowledgePoints.length }})
               </div>
               <div class="kp-list">
                 <div
@@ -689,7 +695,9 @@ onUnmounted(() => {
                   :key="kp"
                   class="kp-item"
                 >
-                  <el-icon size="14"><Collection /></el-icon>
+                  <el-icon size="14">
+                    <Collection />
+                  </el-icon>
                   <span>{{ kp }}</span>
                 </div>
               </div>
@@ -734,7 +742,9 @@ onUnmounted(() => {
               <Aim />
             </el-icon>
             <p>点击节点查看详情</p>
-            <p class="hint">支持技能粒度下钻</p>
+            <p class="hint">
+              支持技能粒度下钻
+            </p>
           </div>
         </aside>
       </div>

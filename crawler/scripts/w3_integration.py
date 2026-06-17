@@ -123,6 +123,7 @@ def run_integration(limit: int, backend_url: str, skip_existing: bool = True) ->
 
     inserted = 0
     failed = 0
+    retryable = 0
     errors: list[dict] = []
 
     for i, item in enumerate(pending, 1):
@@ -140,6 +141,8 @@ def run_integration(limit: int, backend_url: str, skip_existing: bool = True) ->
             if _is_retryable(err_msg):
                 # 可重试错误：不改 status，下次运行自动重试
                 log.warning("可重试错误（跳过，下次重试）: %s", err_msg)
+                retryable += 1
+                errors.append({"jd_raw_id": item["id"], "error": f"[retryable] {err_msg}"})
             else:
                 # 不可重试错误：标记为 failed
                 log.error("抽取失败（永久）: %s", err_msg)
@@ -192,6 +195,7 @@ def run_integration(limit: int, backend_url: str, skip_existing: bool = True) ->
         "total": len(pending),
         "inserted": inserted,
         "failed": failed,
+        "retryable": retryable,
         "errors": errors[:5],  # 只保留前 5 条详细错误
         "backend_url": backend_url,
     }
@@ -229,9 +233,10 @@ def main() -> int:
     # 输出统计
     log.info("=" * 50)
     log.info("W3 联调完成")
-    log.info("  total:   %d", summary["total"])
+    log.info("  total:    %d", summary["total"])
     log.info("  inserted: %d", summary["inserted"])
     log.info("  failed:   %d", summary["failed"])
+    log.info("  retryable: %d", summary["retryable"])
     log.info("=" * 50)
 
     # 写一份 JSON 报告
@@ -243,7 +248,9 @@ def main() -> int:
     )
     log.info("报告写入: %s", report_path)
 
-    return 0 if summary["failed"] == 0 and summary["total"] > 0 else 1
+    # 成功条件：至少插入 1 条，且无失败/可重试错误
+    ok = summary["inserted"] > 0 and summary["failed"] == 0 and summary["retryable"] == 0
+    return 0 if ok else 1
 
 
 if __name__ == "__main__":

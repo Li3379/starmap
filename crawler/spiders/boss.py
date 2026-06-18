@@ -23,7 +23,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from crawler import config
-from crawler.compliance import RateLimiter, get_proxy
+from crawler.compliance import RateLimiter, get_proxy, stealth_check_robots, stealth_log_request
 from crawler.dedup import hex64, simhash
 from crawler.pipelines.clean import clean_html, extract_job_title
 from crawler.pipelines.items import JdItem
@@ -48,9 +48,11 @@ async def fetch_one(
     p, browser, ctx = None, None, None
     try:
         p, browser, ctx = await create_stealth_context(config_)
+        stealth_check_robots(url)
         page, status = await stealth_goto(ctx, url, timeout=20000)
         if status != 200 or not page:
             log.warning("BOSS 详情非 200 %s", url)
+            stealth_log_request(source_site, url, response_code=status)
             return None
 
         # 等待内容渲染
@@ -60,6 +62,7 @@ async def fetch_one(
             pass
 
         html = await page.content()
+        stealth_log_request(source_site, url, response_code=status, response_bytes=len(html))
         await page.close()
     except Exception as e:  # noqa: BLE001
         log.warning("BOSS 抓取异常 %s: %s", url, e)
@@ -119,10 +122,12 @@ async def run_boss(
     p, browser, ctx = None, None, None
     try:
         p, browser, ctx = await create_stealth_context(cfg)
+        stealth_check_robots(search_url)
         page, status = await stealth_goto(ctx, search_url, timeout=30000, wait_until="domcontentloaded")
 
         if not page:
             log.warning("BOSS 列表页加载失败")
+            stealth_log_request("bosszhipin", search_url, response_code=status)
             return []
 
         # 等待职位列表渲染

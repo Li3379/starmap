@@ -23,7 +23,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from crawler import config
-from crawler.compliance import RateLimiter, get_proxy
+from crawler.compliance import RateLimiter, get_proxy, stealth_check_robots, stealth_log_request
 from crawler.dedup import hex64, simhash
 from crawler.pipelines.clean import clean_html, extract_job_title
 from crawler.pipelines.items import JdItem
@@ -46,9 +46,11 @@ async def fetch_detail(
     p, browser, ctx = None, None, None
     try:
         p, browser, ctx = await create_stealth_context(cfg)
+        stealth_check_robots(url)
         page, status = await stealth_goto(ctx, url, timeout=20000)
         if status != 200 or not page:
             log.warning("拉勾详情失败 %s status=%d", url, status)
+            stealth_log_request("lagou", url, response_code=status)
             return None
 
         # 等待内容渲染
@@ -58,6 +60,7 @@ async def fetch_detail(
             pass
 
         html = await page.content()
+        stealth_log_request("lagou", url, response_code=status, response_bytes=len(html))
         await page.close()
     except Exception as e:  # noqa: BLE001
         log.warning("拉勾详情异常 %s: %s", url, e)
@@ -125,8 +128,10 @@ async def run_lagou(
             url = SEARCH_URL.format(kw=keyword, pn=page_num)
             log.info("[lagou] 第 %d 页: %s", page_num, url)
 
+            stealth_check_robots(url)
             page, status = await stealth_goto(ctx, url, timeout=30000)
             if not page:
+                stealth_log_request("lagou", url, response_code=status)
                 continue
 
             # 等待职位列表渲染

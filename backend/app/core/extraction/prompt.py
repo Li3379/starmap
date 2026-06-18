@@ -15,7 +15,7 @@ JD_EXTRACTION_PROMPT = """你是一个专业的技能提取专家。请从以下
 
 1. position_name: 职位名称（如"高级Python后端工程师"）
 2. required_skills: 必需/必备技能列表。每项包含：
-   - name: 技能标准化名称（中文或英文，如"Python"、"FastAPI"）
+    - name: 技能标准化名称（仅英文，首字母大写，不要加中文描述或后缀）
    - level: 熟练度，可选值"expert"、"advanced"、"intermediate"、"beginner"
    - category: 类别，可选值"hard_skill"、"soft_skill"、"tool"、"certificate"
 3. preferred_skills: 加分/优先技能列表（格式同上，每项含name/level/category）
@@ -33,6 +33,7 @@ JD_EXTRACTION_PROMPT = """你是一个专业的技能提取专家。请从以下
 3. 无法确认的字段返回null，禁止编造
 4. 仅提取信息技术相关技能，过滤无关描述
 5. 区分大小写，技能名称首字母大写
+6. 技能名称使用干净的标准英文名称，不要添加中文说明或后缀：例如输出 "Linux" 而不是 "Linux系统" 或 "Linux系统安全"；输出 "Go" 而不是 "Go语言"；输出 "Docker" 而不是 "Docker容器" 或 "Docker安全"
 
 仅返回JSON格式，不要包含其他文字。"""
 

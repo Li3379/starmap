@@ -72,10 +72,21 @@ class AntiHallucinationResult(BaseModel):
     """Anti-hallucination validation result."""
 
     is_valid: bool = Field(default=True)
-    hallucinated_skills: list[str] = Field(default_factory=list)
-    missing_skills: list[str] = Field(default_factory=list)
+    hallucinated_skills: list[str | dict[str, Any]] = Field(default_factory=list)
+    missing_skills: list[str | dict[str, Any]] = Field(default_factory=list)
     confidence: float = Field(default=1.0, ge=0.0, le=1.0)
     issues: list[str] = Field(default_factory=list)
+
+
+def _normalize_skill_list(skills: list[str | dict[str, Any]]) -> list[str]:
+    """Normalize skill list items to strings (extract 'name' key if dict)."""
+    result = []
+    for s in skills:
+        if isinstance(s, dict):
+            result.append(str(s.get("name", str(s))))
+        else:
+            result.append(str(s))
+    return result
 
 
 @dataclass
@@ -169,6 +180,32 @@ class JDExtractionPipeline:
                 else:
                     setattr(validated, key, parsed.get(key, ""))
 
+        # Step 4.5: Clean up Chinese suffixes from skill names
+        chinese_suffixes = [
+            "系统", "安全", "开发", "管理", "平台", "框架", "技术", "语言",
+            "生态", "相关", "服务", "设计", "网络", "算法", "存储", "计算",
+            "容器", "工具", "应用", "架构", "工程", "引擎", "协议", "自动化",
+            "编程", "部署", "监控", "测试", "运维", "研发", "分析",
+        ]
+        def _clean_skill_name(name: str) -> str:
+            for suffix in chinese_suffixes:
+                if len(name) > 3 and name.endswith(suffix) and not name.startswith(tuple("一二三四五六七八九十")):
+                    cleaned = name[:-len(suffix)]
+                    if cleaned:
+                        return cleaned
+            return name
+
+        for skill in validated.required_skills:
+            cleaned = _clean_skill_name(skill.name)
+            if cleaned != skill.name:
+                logger.debug("Cleaned skill name: '{}' -> '{}'", skill.name, cleaned)
+                skill.name = cleaned
+        for skill in validated.preferred_skills:
+            cleaned = _clean_skill_name(skill.name)
+            if cleaned != skill.name:
+                logger.debug("Cleaned skill name: '{}' -> '{}'", skill.name, cleaned)
+                skill.name = cleaned
+
         # Step 5: Normalize skills
         if self.normalize_skills_enabled:
             all_skill_names = []
@@ -225,7 +262,11 @@ class JDExtractionPipeline:
                 v["missing_skills"] = _normalize_str_list(v.get("missing_skills", []))
                 v["issues"] = _normalize_str_list(v.get("issues", []))
                 validation = AntiHallucinationResult(**v)
-                result["validation"] = validation.model_dump()
+                # Normalize dict items to strings for serialization
+                v_normalized = validation.model_dump()
+                v_normalized["hallucinated_skills"] = _normalize_skill_list(validation.hallucinated_skills)
+                v_normalized["missing_skills"] = _normalize_skill_list(validation.missing_skills)
+                result["validation"] = v_normalized
 
                 if not validation.is_valid:
                     msg = f"Anti-hallucination: {len(validation.hallucinated_skills)} hallucinated, {len(validation.missing_skills)} missing"

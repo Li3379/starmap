@@ -8,9 +8,14 @@ import argparse
 import asyncio
 import json
 import logging
+import os
 import sys
 import time
 from pathlib import Path
+
+# 绕过系统代理（Windows 上 127.0.0.1:8080）
+os.environ["NO_PROXY"] = "*"
+os.environ["no_proxy"] = "*"
 
 # 强制 UTF-8 stdout（Windows 兼容）
 if hasattr(sys.stdout, "reconfigure"):
@@ -68,7 +73,7 @@ def call_extract_api(jd_content: str, backend_url: str) -> dict:
         },
     }
     try:
-        resp = httpx.post(endpoint, json=payload, timeout=60.0)
+        resp = httpx.post(endpoint, json=payload, timeout=60.0, proxy=None)
         resp.raise_for_status()
         return resp.json()
     except httpx.HTTPStatusError as e:
@@ -218,7 +223,7 @@ def main() -> int:
 
     # 先试连通性
     try:
-        r = httpx.get(f"{args.backend}/api/v1/health", timeout=5.0)
+        r = httpx.get(f"{args.backend}/api/v1/health", timeout=5.0, proxy=None)
         r.raise_for_status()
         log.info("✅ backend 健康检查通过: %s", r.json())
     except Exception as e:

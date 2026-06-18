@@ -3,6 +3,9 @@
 import threading
 from dataclasses import dataclass, field
 from typing import Any
+from pathlib import Path
+
+import yaml
 
 from loguru import logger
 
@@ -16,7 +19,7 @@ SKILL_ALIAS: dict[str, list[str]] = {
     "C++": ["c++", "cpp", "c plus plus", "c/c++", "c and c++"],
     "C#": ["c#", "csharp", "c sharp", ".net", "dotnet", "dot net", ".net core", "asp.net"],
     "SQL": ["sql", "mysql", "postgresql", "postgres", "pl/sql", "t-sql", "tsql", "sql server", "mssql"],
-    "NoSQL": ["nosql", "mongodb", "mongo", "redis", "cassandra", "dynamodb", "couchdb"],
+    "NoSQL": ["nosql", "dynamodb", "couchdb"],
     "React": ["react", "react.js", "reactjs", "react j", "react js", "react frontend", "next.js", "nextjs", "next"],
     "Vue.js": ["vue", "vue.js", "vuejs", "vue2", "vue3", "nuxt", "nuxt.js", "nuxtjs"],
     "Angular": ["angular", "angular.js", "angularjs", "angular2", "angular 2+"],
@@ -42,8 +45,8 @@ SKILL_ALIAS: dict[str, list[str]] = {
     "REST API": ["rest", "rest api", "restful", "restful api", "restful apis", "rest api design", "restful web services"],
     "gRPC": ["grpc", "g rpc", "protobuf", "protocol buffers"],
     "RabbitMQ": ["rabbitmq", "rabbit mq", "message queue", "mq", "message broker"],
-    "Apache Kafka": ["kafka", "apache kafka", "kafka streaming", "kafka connect", "confluent kafka"],
-    "Linux": ["linux", "unix", "red hat", "ubuntu", "centos", "debian", "bash", "shell", "shell scripting"],
+    "Kafka": ["kafka", "apache kafka", "kafka message queue", "kafka mq", "kafka streaming", "kafka connect", "confluent kafka"],
+    "Linux": ["linux", "unix", "red hat", "ubuntu", "centos", "debian", "bash", "shell scripting"],
     "Agile": ["agile", "scrum", "kanban", "scrum master", "agile development", "agile methodology"],
     "Project Management": ["project management", "pm", "project manager", "program management"],
     "Microservices": ["microservices", "micro service", "micro-service", "micro services architecture", "msa"],
@@ -58,7 +61,7 @@ SKILL_ALIAS: dict[str, list[str]] = {
     "Redis": ["redis", "redis cache", "redis cluster"],
     "Nginx": ["nginx", "nginx web server", "nginx proxy", "openresty"],
     "WebSocket": ["websocket", "ws", "wss", "websockets"],
-    "OAuth": ["oauth", "oauth2", "oauth 2.0", "oauth 2", "openid", "openid connect", "saml", "jwt", "json web token"],
+    "OAuth": ["oauth", "oauth 2.0", "oauth 2", "openid", "openid connect", "saml", "json web token"],
     "Unit Testing": ["unit testing", "unit test", "ut", "pytest", "junit", "jest", "mocha", "chai", "vitest"],
     "Test Automation": ["test automation", "automation testing", "e2e", "end to end", "selenium", "cypress", "playwright"],
     "System Design": ["system design", "system architecture", "architecture design", "software architecture", "distributed systems"],
@@ -92,10 +95,10 @@ SKILL_ALIAS: dict[str, list[str]] = {
     "Combine": ["combine", "apple combine", "combine framework"],
     "Firebase": ["firebase", "google firebase", "firebase console", "firebase sdk"],
     # ---- Big Data & Streaming ----
-    "Apache Spark": ["spark", "apache spark", "spark sql", "spark streaming", "pyspark"],
+    "Spark": ["spark", "apache spark", "spark core", "spark sql", "spark streaming", "pyspark"],
     "Hadoop": ["hadoop", "apache hadoop", "hdfs", "mapreduce", "yarn"],
-    "Hive": ["hive", "apache hive", "hive sql", "hive data warehouse"],
-    "Apache Flink": ["flink", "apache flink", "flink sql", "flink streaming"],
+    "Hive": ["hive", "hive sql", "hive data warehouse"],
+    "Flink": ["flink", "apache flink", "flink streaming"],
     "Airflow": ["airflow", "apache airflow", "airflow dag", "airflow pipeline"],
     "Presto": ["presto", "prestodb", "trino", "presto sql"],
     "HBase": ["hbase", "apache hbase", "hbase database"],
@@ -197,7 +200,7 @@ SKILL_ALIAS: dict[str, list[str]] = {
     "用户调研": ["用户调研", "用户 调研", "user research"],
     "产品设计": ["产品设计", "产品 设计", "product design"],
     "统计分析": ["统计分析", "统计 分析", "statistical analysis"],
-    "微服务": ["微服务", "微服务架构", "microservices"],
+    "微服务": ["微服务", "微服务架构"],
     "微前端": ["微前端", "微前端架构", "micro frontend"],
     "领域驱动设计": ["领域驱动设计", "ddd", "领域驱动"],
     "异步编程": ["异步编程", "异步 编程", "async programming", "asynchronous programming"],
@@ -205,14 +208,48 @@ SKILL_ALIAS: dict[str, list[str]] = {
     "前端工程化": ["前端工程化", "前端 工程化", "frontend engineering"],
     "可视化编辑器": ["可视化编辑器", "可视化 编辑器", "visual editor", "visual builder"],
     "推荐系统": ["推荐系统", "推荐 系统", "recommendation system", "recommender system"],
-    "渗透测试": ["渗透测试", "渗透 测试", "penetration testing", "pentest"],
-    "Web安全": ["web安全", "web安全", "web security"],
+    "渗透测试": ["渗透测试", "渗透 测试", "pentest"],
+    "Web安全": ["web安全", "web安全"],
     "智能合约": ["智能合约", "智能 合约", "smart contract"],
     "嵌入式开发": ["嵌入式开发", "嵌入式", "embedded development", "embedded system"],
     # ---- Education aliases ----
-    "计算机视觉": ["计算机视觉", "computer vision"],
-    "自然语言处理": ["自然语言处理", "natural language processing"],
+    "计算机视觉": ["计算机视觉"],
+    "自然语言处理": ["自然语言处理"],
+    "Element Plus": ["element plus", "element-plus", "elementplus", "element ui", "element-ui"],
+    "Celery": ["celery", "celery task", "celery queue"],
+    "SAP HANA": ["sap hana", "sap hana db", "hana", "hana db"],
+    "FFmpeg": ["ffmpeg", "ffmpeg encoder", "ffmpeg decoder"],
+    "GStreamer": ["gstreamer", "gst", "gstreamer pipeline"],
+    "MyBatis": ["mybatis", "mybatis plus", "mybatis-plus", "mybatis3"],
+    "Nacos": ["nacos", "nacos config", "nacos discovery", "nacos registry"],
+    "Sentinel": ["sentinel", "sentinel flow", "sentinel circuit breaker"],
+    "Canal": ["canal", "canal binlog", "canal mysql"],
+    "Matplotlib": ["matplotlib", "matplotlib plot", "mpl"],
 }
+
+
+_TAXONOMY_PATH = Path(__file__).resolve().parent.parent.parent.parent.parent / "docs" / "ontology" / "skill_taxonomy.yaml"
+
+
+def load_skill_aliases_from_yaml(path: Path = _TAXONOMY_PATH) -> dict[str, list[str]]:
+    if not path.exists():
+        logger.warning("Skill taxonomy not found at {}", path)
+        return {}
+
+    with open(path, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+
+    aliases: dict[str, list[str]] = {}
+    ontology = data.get("ontology", {})
+    for domain in ontology.get("domains", []):
+        for sub in domain.get("subdomains", []):
+            for skill in sub.get("skills", []):
+                name = skill.get("name", "")
+                alias_list = skill.get("aliases", [])
+                if name:
+                    aliases[name] = alias_list
+    return aliases
+
 
 _REVERSE_INDEX: dict[str, str] = {}
 _LOCK = threading.Lock()
@@ -229,6 +266,27 @@ def _build_reverse_index() -> dict[str, str]:
 
 
 _REVERSE_INDEX.update(_build_reverse_index())
+
+
+# ---- YAML taxonomy integration ----
+_YAML_SKILL_ALIASES = load_skill_aliases_from_yaml()
+if _YAML_SKILL_ALIASES:
+    merged = dict(_YAML_SKILL_ALIASES)
+    for k, v in SKILL_ALIAS.items():
+        if k not in merged:
+            merged[k] = v
+    SKILL_ALIAS.clear()
+    SKILL_ALIAS.update(merged)
+    logger.info(
+        "Loaded {} skills from YAML + {} hardcoded = {} total",
+        len(_YAML_SKILL_ALIASES),
+        len(SKILL_ALIAS) - len(_YAML_SKILL_ALIASES),
+        len(SKILL_ALIAS),
+    )
+    _REVERSE_INDEX.clear()
+    _REVERSE_INDEX.update(_build_reverse_index())
+else:
+    logger.info("Using hardcoded skill aliases ({} skills)", len(SKILL_ALIAS))
 
 
 def normalize_by_alias(skill_name: str) -> str | None:

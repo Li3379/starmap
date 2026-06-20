@@ -748,7 +748,10 @@ onUnmounted(() => {
               图例
             </div>
             <!-- 技术栈：领域色 -->
-            <div v-if="graphStore.viewMode === 'tech'" class="legend-list">
+            <div
+              v-if="graphStore.viewMode === 'tech'"
+              class="legend-list"
+            >
               <div
                 v-for="item in techLegend"
                 :key="item.name"
@@ -762,21 +765,33 @@ onUnmounted(() => {
               </div>
             </div>
             <!-- 热度：热力渐变 -->
-            <div v-else-if="graphStore.viewMode === 'heat'" class="heat-legend">
+            <div
+              v-else-if="graphStore.viewMode === 'heat'"
+              class="heat-legend"
+            >
               <div class="heat-gradient-bar" />
               <div class="heat-gradient-labels">
                 <span>冷</span>
                 <span>热</span>
               </div>
               <div class="heat-size-hint">
-                <span class="hint-dot" style="width:6px;height:6px" />
+                <span
+                  class="hint-dot"
+                  style="width:6px;height:6px"
+                />
                 <span>出现少</span>
-                <span class="hint-dot" style="width:16px;height:16px" />
+                <span
+                  class="hint-dot"
+                  style="width:16px;height:16px"
+                />
                 <span>出现多</span>
               </div>
             </div>
             <!-- 默认：节点类型 -->
-            <div v-else class="legend-list">
+            <div
+              v-else
+              class="legend-list"
+            >
               <div
                 v-for="(color, label) in COLOR_MAP"
                 :key="label"

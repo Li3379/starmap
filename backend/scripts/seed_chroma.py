@@ -24,7 +24,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from loguru import logger
 
-
 COLLECTION_NAME = os.getenv("COLLECTION_NAME", "skill_embeddings")
 CHROMA_HOST = os.getenv("CHROMA_HOST", "localhost")
 CHROMA_PORT = int(os.getenv("CHROMA_PORT", "8000"))
@@ -37,7 +36,7 @@ def get_skills() -> list[dict[str, str]]:
     Returns list of dicts with 'name' key (canonical skill name).
     Each can be extended with 'category' or 'domain' metadata.
     """
-    from app.core.extraction.normalize import SKILL_ALIAS, get_standard_skill_seeds
+    from app.core.extraction.normalize import get_standard_skill_seeds
 
     seeds = get_standard_skill_seeds()
     logger.info("Loaded {} canonical skill names from normalize module", len(seeds))
@@ -151,7 +150,7 @@ def main():
         final_count,
         COLLECTION_NAME,
     )
-    print(f"\nSummary:")
+    print("\nSummary:")
     print(f"  Collection: {COLLECTION_NAME}")
     print(f"  Model:      {args.model}")
     print(f"  Skills:     {final_count}")

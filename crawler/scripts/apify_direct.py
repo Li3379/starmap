@@ -148,7 +148,7 @@ if __name__ == "__main__":
     from sqlalchemy import text
     from crawler.persistence import dao
     with dao.engine.connect() as conn:
-        rows = conn.execute(text("SELECT source_site, COUNT(*) FROM raw_jd GROUP BY source_site ORDER BY source_site")).fetchall()
+        rows = conn.execute(text("SELECT source_site, COUNT(*) FROM jd_raw GROUP BY source_site ORDER BY source_site")).fetchall()
         total = 0
         for r in rows:
             print(f"  {r[0]}: {r[1]}")

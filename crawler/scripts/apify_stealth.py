@@ -11,6 +11,7 @@ os.environ["NO_PROXY"] = "*"
 os.environ["no_proxy"] = "*"
 
 from apify_client import ApifyClient
+from crawler.compliance import log_request, is_allowed
 from crawler.dedup import hex64, simhash
 from crawler.persistence import dao
 from crawler.persistence.models import JdStatus
@@ -54,10 +55,16 @@ def run_scraper(urls, js_code, source_site, max_pages=3):
         "maxPages": max_pages,
         "pageFunction": js_code,
     }
+    target_url = f"https://www.apify.com/actor/{ACTOR}"
+    robots_ok = is_allowed(target_url)
     print(f"启动 {ACTOR} 抓 {source_site}...")
     run = client.actor(ACTOR).call(run_input=run_input)
     dataset_id = run.get("defaultDatasetId")
     items = list(client.dataset(dataset_id).iterate_items())
+    # 记录合规日志：每条 item 一次
+    for item in items:
+        item_url = item.get("url", target_url)
+        log_request(source_site, item_url, robots_ok, "StarMap-Apify/1.0", 0.0, 200, len(json.dumps(item)))
     print(f"返回 {len(items)} 条")
     return items
 

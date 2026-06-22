@@ -13,3 +13,4 @@ pydantic>=2.5
 beautifulsoup4>=4.12
 lxml>=5.0
 pytest>=7.0
+pyyaml>=6.0

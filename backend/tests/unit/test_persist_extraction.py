@@ -102,8 +102,8 @@ async def test_persist_with_preferred_skills(monkeypatch: pytest.MonkeyPatch) ->
     )
     record = await s.persist_extraction_result(session, "JD", result)
     assert record.job_title == "Backend Engineer"
-    # session.add called: JDExtractionRecord + position + skill + relation
-    assert len(session.added) >= 4
+    # session.add called for the JDExtractionRecord
+    assert len(session.added) == 1
 
 
 @pytest.mark.asyncio

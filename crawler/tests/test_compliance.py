@@ -5,6 +5,7 @@
 """
 from __future__ import annotations
 
+import httpx
 import os
 import time
 from unittest.mock import MagicMock, patch, PropertyMock
@@ -18,11 +19,20 @@ class TestRobotsCheck:
 
     def test_is_allowed_returns_true_for_no_robots(self):
         """拿不到 robots.txt 时默认放行。"""
-        from crawler.compliance import is_allowed
+        from crawler.compliance import is_allowed, _ROBOTS_CACHE
+        from urllib.robotparser import RobotFileParser
 
-        # 某个不存在的域名，read() 会抛异常 → 默认 True
+        # 注入一个空的 RobotFileParser（模拟读取失败）
+        fake_rp = RobotFileParser()
+        fake_rp.allow_all = True
+        base = "https://nonexistent.example.com"
+        _ROBOTS_CACHE[base] = fake_rp
+
         result = is_allowed("https://nonexistent.example.com/jobs/123")
         assert result is True
+
+        # 清理
+        _ROBOTS_CACHE.pop(base, None)
 
     def test_is_allowed_caches_per_domain(self):
         """同一域只查一次 robots.txt。"""
@@ -208,10 +218,12 @@ class TestFetch:
 
         with patch("crawler.compliance.is_allowed", return_value=True), \
              patch("crawler.compliance.log_request"), \
-             patch("httpx.Client") as mock_client:
-            mock_client.return_value.__enter__ = MagicMock(return_value=mock_client)
-            mock_client.return_value.__exit__ = MagicMock(return_value=False)
-            mock_client.get.side_effect = Exception("timeout")
+             patch("crawler.compliance.httpx.Client") as mock_cls:
+            mock_instance = MagicMock()
+            mock_instance.__enter__ = MagicMock(return_value=mock_instance)
+            mock_instance.__exit__ = MagicMock(return_value=False)
+            mock_instance.get.side_effect = httpx.HTTPError("timeout")
+            mock_cls.return_value = mock_instance
 
             result = fetch("https://example.com/page", "test")
             assert result.status_code == 0

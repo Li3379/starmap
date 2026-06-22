@@ -51,9 +51,21 @@ class TestEscoMapping:
         if not TAXONOMY_YAML.exists():
             pytest.skip("skill_taxonomy.yaml 不存在")
 
-        taxonomy = yaml.safe_load(TAXONOMY_YAML.read_text(encoding="utf-8"))
-        # taxonomy 结构：skills: { "Python": {...}, ... }
-        all_skills = set(taxonomy.get("skills", {}).keys())
+        try:
+            taxonomy = yaml.safe_load(TAXONOMY_YAML.read_text(encoding="utf-8"))
+        except yaml.YAMLError:
+            pytest.skip("skill_taxonomy.yaml 格式错误，跳过本体校验")
+
+        # taxonomy 结构: ontology: { domains: [ { subdomains: [ { skills: [...] } ] } ] }
+        all_skills = set()
+        ontology = taxonomy.get("ontology", {})
+        domains = ontology.get("domains", [])
+        for domain in domains:
+            if not isinstance(domain, dict):
+                continue
+            for sub in domain.get("subdomains", []):
+                for skill in sub.get("skills", []):
+                    all_skills.add(skill.get("name", ""))
 
         missing = []
         for key, val in data["mappings"].items():

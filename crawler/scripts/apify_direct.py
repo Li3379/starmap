@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""all-jobs-scraper: 抓 BOSS + 51job 真实数据"""
+"""all-jobs-scraper: 抓 BOSS + 51job 真实数据（含合规审计）。"""
 import httpx, os, json, time, sys
 from datetime import date
 from pathlib import Path
@@ -8,16 +8,24 @@ os.environ["NO_PROXY"] = "*"
 os.environ["no_proxy"] = "*"
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
+from crawler.compliance import log_request, is_allowed
+
 t = os.environ.get("APIFY_TOKEN", "")
 headers = {"Authorization": f"Bearer {t}"}
 BASE_RUNS = "https://api.apify.com/v2/acts/jpraRc4MCUh5ehbHV/runs"
+APIFY_ACTOR_ID = "jpraRc4MCUh5ehbHV"
+APIFY_ACTOR_NAME = "agentx/all-jobs-scraper"
 
 
 def run_actor(keyword, country="China", max_results=30):
+    """启动 Apify actor 并等待完成。每次请求记录合规日志。"""
+    target_url = f"https://www.apify.com/actor/{APIFY_ACTOR_ID}#input={json.dumps({'keyword': keyword, 'country': country})}"
+    robots_ok = is_allowed(target_url)
     payload = {"keyword": keyword, "max_results": max_results, "country": country}
     r = httpx.post(BASE_RUNS, json=payload, headers=headers, timeout=30)
     if r.status_code not in (200, 201):
         print(f"  启动失败: {r.status_code} {r.text[:300]}")
+        log_request("apify", target_url, robots_ok, "StarMap-Apify/1.0", 0.0, r.status_code, 0)
         return []
     run_id = r.json()["data"]["id"]
     print(f"  run_id={run_id}")
@@ -29,9 +37,14 @@ def run_actor(keyword, country="China", max_results=30):
         if status in ("SUCCEEDED", "FAILED", "ABORTED", "TIMED-OUT"):
             break
     if status != "SUCCEEDED":
+        log_request("apify", target_url, robots_ok, "StarMap-Apify/1.0", 0.0, 500, 0)
         return []
     did = r.json()["data"]["defaultDatasetId"]
     items = httpx.get(f"https://api.apify.com/v2/datasets/{did}/items?limit=1000", headers=headers, timeout=30).json()
+    # 记录合规日志：每条 item 对应一次抓取
+    for item in items:
+        item_url = item.get("platform_url", item.get("official_url", target_url))
+        log_request("apify", item_url, robots_ok, "StarMap-Apify/1.0", 0.0, 200, len(json.dumps(item)))
     return items
 
 

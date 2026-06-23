@@ -50,7 +50,7 @@ export const useMatchStore = defineStore('match', () => {
         category: 'hard_skill' as const,
         proficiency: '熟悉' as const,
       }))
-      const data = await request.post('/match/diagnose', {
+      const data = await request.post('/match/position', {
         person_skills,
         target_position: targetPosition,
       })

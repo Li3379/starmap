@@ -25,28 +25,9 @@ export interface QualityMetrics {
   audit_queue: { id: number; position: string; skill: string; trust: number }[]
 }
 
-/** 质量看板 4 项核心指标 */
-export interface DashboardMetrics {
-  precision: number
-  recall: number
-  f1: number
-  hallucination_rate: number
-}
-
 export const useQualityStore = defineStore('quality', () => {
   const metrics = ref<QualityMetrics | null>(null)
-  const dashboard = ref<DashboardMetrics | null>(null)
   const loading = ref(false)
-
-  /** 获取质量看板核心指标 GET /quality/dashboard */
-  async function fetchDashboard() {
-    try {
-      const data = await request.get('/quality/dashboard')
-      dashboard.value = data as DashboardMetrics
-    } catch {
-      // 静默降级
-    }
-  }
 
   /** 获取完整质量报告 GET /quality/report */
   async function fetchQuality() {
@@ -70,5 +51,5 @@ export const useQualityStore = defineStore('quality', () => {
     ]
   })
 
-  return { metrics, dashboard, loading, kpiCards, fetchDashboard, fetchQuality }
+  return { metrics, loading, kpiCards, fetchQuality }
 })

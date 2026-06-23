@@ -21,7 +21,7 @@ function startAutoRefresh() {
   if (timer) clearInterval(timer)
   if (autoRefresh.value) {
     timer = setInterval(() => {
-      Promise.all([quality.fetchQuality(), quality.fetchDashboard()]).then(() => {
+      quality.fetchQuality().then(() => {
         lastRefresh.value = new Date().toLocaleTimeString()
       })
     }, refreshInterval.value * 1000)
@@ -29,7 +29,7 @@ function startAutoRefresh() {
 }
 
 onMounted(() => {
-  Promise.all([quality.fetchQuality(), quality.fetchDashboard()]).then(() => {
+  quality.fetchQuality().then(() => {
     lastRefresh.value = new Date().toLocaleTimeString()
   })
   startAutoRefresh()
@@ -54,37 +54,36 @@ function toggleAutoRefresh(val: boolean) {
 const kpiCardsEnhanced = computed(() => {
   if (!quality.metrics) return []
   const m = quality.metrics
-  const d = quality.dashboard
   return [
     {
-      label: '精确率 Precision',
-      value: d ? (d.precision * 100).toFixed(1) + '%' : m.precision.toFixed(2),
-      sub: '模型准确率指标',
-      trend: d && d.precision >= 0.8 ? 'up' : 'down',
+      label: '总节点数',
+      value: m.total_nodes.toLocaleString(),
+      sub: `周新增 +${m.weekly_new_nodes}`,
+      trend: 'up',
       color: '#409eff',
       icon: 'Grid',
     },
     {
-      label: '召回率 Recall',
-      value: d ? (d.recall * 100).toFixed(1) + '%' : m.recall.toFixed(2),
-      sub: '模型覆盖率指标',
-      trend: d && d.recall >= 0.8 ? 'up' : 'down',
+      label: '平均信任度',
+      value: m.avg_trust_score.toFixed(1) + '%',
+      sub: `高信任占比 ${(m.high_trust_ratio * 100).toFixed(0)}%`,
+      trend: m.avg_trust_score >= 75 ? 'up' : 'down',
       color: '#67c23a',
       icon: 'DataLine',
     },
     {
-      label: 'F1 分数',
-      value: d ? (d.f1 * 100).toFixed(1) + '%' : m.f1.toFixed(2),
-      sub: '综合平衡指标',
-      trend: d && d.f1 >= 0.8 ? 'up' : 'down',
+      label: '幻觉率',
+      value: (m.hallucination_rate * 100).toFixed(1) + '%',
+      sub: `审核通过率 ${(m.audit_pass_rate * 100).toFixed(0)}%`,
+      trend: m.hallucination_rate <= 0.08 ? 'down' : 'up',
       color: '#e6a23c',
       icon: 'WarningFilled',
     },
     {
-      label: '幻觉率',
-      value: d ? (d.hallucination_rate * 100).toFixed(1) + '%' : (m.hallucination_rate * 100).toFixed(1) + '%',
-      sub: d && d.hallucination_rate <= 0.08 ? '正常范围' : '需关注',
-      trend: d && d.hallucination_rate <= 0.08 ? 'down' : 'up',
+      label: '待审核',
+      value: String(m.pending_review),
+      sub: '条记录待处理',
+      trend: m.pending_review > 5 ? 'up' : 'down',
       color: '#f56c6c',
       icon: 'Clock',
     },

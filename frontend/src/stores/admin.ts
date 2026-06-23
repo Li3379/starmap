@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import request from '@/api/request'
 
-/** 管理后台 store */
 export interface SourceConfig {
   id: number
   name: string
@@ -25,8 +25,7 @@ export const useAdminStore = defineStore('admin', () => {
   async function fetchSources() {
     loading.value = true
     try {
-      const resp = await fetch('/api/v1/admin/sources')
-      const data = await resp.json()
+      const data = await request.get('/admin/sources')
       sources.value = data.items ?? []
     } finally {
       loading.value = false
@@ -34,23 +33,22 @@ export const useAdminStore = defineStore('admin', () => {
   }
 
   async function fetchAuditQueue() {
-    const resp = await fetch('/api/v1/admin/audit-queue')
-    const data = await resp.json()
+    const data = await request.get('/admin/review-queue')
     auditQueue.value = data.items ?? []
   }
 
   async function approveAudit(id: number) {
-    await fetch(`/api/v1/admin/audit/${id}/approve`, { method: 'POST' })
+    await request.post(`/admin/review/${id}/approve`)
     auditQueue.value = auditQueue.value.filter((i) => i.id !== id)
   }
 
   async function rejectAudit(id: number) {
-    await fetch(`/api/v1/admin/audit/${id}/reject`, { method: 'POST' })
+    await request.post(`/admin/review/${id}/reject`)
     auditQueue.value = auditQueue.value.filter((i) => i.id !== id)
   }
 
   async function resetToDemo() {
-    await fetch('/api/v1/admin/reset-demo', { method: 'POST' })
+    await request.post('/admin/seed/reset')
   }
 
   return { sources, auditQueue, loading, fetchSources, fetchAuditQueue, approveAudit, rejectAudit, resetToDemo }

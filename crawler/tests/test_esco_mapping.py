@@ -1,4 +1,4 @@
-﻿"""Tests for ESCO skill mapping rules consistency.
+"""Tests for ESCO skill mapping rules consistency.
 
 Verifies that esco_mapping_rules.json is well-structured and that
 every starmap_skill referenced by a mapping exists in the
@@ -14,7 +14,7 @@ try:
     import yaml
     _HAS_YAML = True
 except ImportError:
-    yaml = None
+    yaml = None  # type: ignore[assignment]
     _HAS_YAML = False
 
 MAPPING_FILE = Path(__file__).resolve().parents[1] / "data" / "esco_mapping_rules.json"
@@ -41,26 +41,24 @@ class TestEscoMapping:
         assert len(data["mappings"]) >= 10, "Too few mapping entries"
 
     @pytest.mark.xfail(
-        reason="141 starmap_skills missing from skill_taxonomy.yaml - ontology sync needed separately",
         strict=False,
+        reason="141 starmap_skills missing from skill_taxonomy.yaml -- ontology sync needed separately",
     )
     @pytest.mark.skipif(not _HAS_YAML, reason="pyyaml not installed")
     def test_all_starmap_skills_exist_in_taxonomy(self):
-        """鎵€鏈?starmap_skill 閮藉湪 skill_taxonomy.yaml 涓瓨鍦ㄣ€?""
+        """All starmap_skill targets exist in skill_taxonomy.yaml ontology."""
         data = self._load()
         if not TAXONOMY_YAML.exists():
-            pytest.skip("skill_taxonomy.yaml 涓嶅瓨鍦?)
+            pytest.skip("skill_taxonomy.yaml not found")
 
         try:
             taxonomy = yaml.safe_load(TAXONOMY_YAML.read_text(encoding="utf-8"))
         except yaml.YAMLError:
-            pytest.skip("skill_taxonomy.yaml 鏍煎紡閿欒锛岃烦杩囨湰浣撴牎楠?)
+            pytest.skip("skill_taxonomy.yaml parse error, skipping ontology check")
 
-        # taxonomy 缁撴瀯: ontology: { domains: [ { subdomains: [ { skills: [...] } ] } ] }
         all_skills = set()
         ontology = taxonomy.get("ontology", {})
-        domains = ontology.get("domains", [])
-        for domain in domains:
+        for domain in ontology.get("domains", []):
             if not isinstance(domain, dict):
                 continue
             for sub in domain.get("subdomains", []):
@@ -69,14 +67,13 @@ class TestEscoMapping:
 
         missing = []
         for key, val in data["mappings"].items():
-            skill = val["starmap_skill"]
-            if skill not in all_skills:
-                missing.append(f"{key} 鈫?{skill}")
+            if val["starmap_skill"] not in all_skills:
+                missing.append(f"{key} -> {val['starmap_skill']}")
 
-        assert len(missing) == 0, f"浠ヤ笅鏄犲皠鍦ㄦ湰浣撲腑鎵句笉鍒?\n" + "\n".join(missing[:10])
+        assert not missing, f"Missing in ontology:\n" + "\n".join(missing[:10])
 
     def test_no_duplicate_starmap_targets(self):
-        """娌℃湁閲嶅鐨?starmap_skill 鐩爣銆?""
+        """No duplicate starmap_skill targets."""
         data = self._load()
         targets = [v["starmap_skill"] for v in data["mappings"].values()]
         dupes = [t for t in set(targets) if targets.count(t) > 1]

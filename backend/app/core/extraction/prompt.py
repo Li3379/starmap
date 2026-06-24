@@ -17,10 +17,8 @@ Typical usage::
     prompt = get_prompt("jd_extraction", version="v2", jd_content="...")
 """
 
-import json
 import random
 import re
-from datetime import UTC, datetime
 from typing import Any
 
 from loguru import logger

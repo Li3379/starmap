@@ -160,7 +160,7 @@ def _load_jsonl(filepath: str | Path) -> list[dict[str, Any]]:
     return data
 
 
-def _check_quality_gate(metrics: "ExtractionMetrics", threshold: float) -> dict[str, Any]:
+def _check_quality_gate(metrics: ExtractionMetrics, threshold: float) -> dict[str, Any]:
     """检查整体指标是否通过质量门禁。"""
     passed = metrics.avg_f1 >= threshold
     return {

@@ -15,8 +15,6 @@ from app.core.extraction.llm_client import (
     LLMTimeoutError,
 )
 from app.services.judge_service import (
-    ExtractionMetrics,
-    SampleEvaluation,
     evaluate_batch_async,
     evaluate_pair_async,
     evaluate_sample_async,

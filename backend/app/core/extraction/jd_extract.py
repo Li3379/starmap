@@ -22,7 +22,7 @@ from app.core.extraction.llm_client import (
 from app.core.extraction.normalize import (
     batch_normalize_skills,
 )
-from app.core.extraction.prompt import get_prompt, get_active_version, get_ab_test
+from app.core.extraction.prompt import get_ab_test, get_active_version, get_prompt
 
 # Chinese PII patterns
 _PII_PATTERNS: list[re.Pattern] = [

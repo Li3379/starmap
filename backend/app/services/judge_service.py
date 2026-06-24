@@ -253,7 +253,6 @@ async def evaluate_pair_async(
 
     以 output_a 为基准，计算 output_b 相对 output_a 的 precision / recall / F1。
     """
-    sid = output_b.get("id") or output_a.get("id") or "unknown"
     return await evaluate_sample_async(output_a, output_b, use_llm_judge=False)
 
 

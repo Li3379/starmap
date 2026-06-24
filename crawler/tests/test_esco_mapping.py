@@ -1,4 +1,4 @@
-"""Tests for ESCO skill mapping rules consistency.
+﻿"""Tests for ESCO skill mapping rules consistency.
 
 Verifies that esco_mapping_rules.json is well-structured and that
 every starmap_skill referenced by a mapping exists in the
@@ -9,7 +9,13 @@ import json
 from pathlib import Path
 
 import pytest
-import yaml
+
+try:
+    import yaml
+    _HAS_YAML = True
+except ImportError:
+    yaml = None
+    _HAS_YAML = False
 
 MAPPING_FILE = Path(__file__).resolve().parents[1] / "data" / "esco_mapping_rules.json"
 TAXONOMY_YAML = Path(__file__).resolve().parents[1] / "data" / "skill_taxonomy.yaml"
@@ -38,18 +44,19 @@ class TestEscoMapping:
         reason="141 starmap_skills missing from skill_taxonomy.yaml - ontology sync needed separately",
         strict=False,
     )
+    @pytest.mark.skipif(not _HAS_YAML, reason="pyyaml not installed")
     def test_all_starmap_skills_exist_in_taxonomy(self):
-        """所有 starmap_skill 都在 skill_taxonomy.yaml 中存在。"""
+        """鎵€鏈?starmap_skill 閮藉湪 skill_taxonomy.yaml 涓瓨鍦ㄣ€?""
         data = self._load()
         if not TAXONOMY_YAML.exists():
-            pytest.skip("skill_taxonomy.yaml 不存在")
+            pytest.skip("skill_taxonomy.yaml 涓嶅瓨鍦?)
 
         try:
             taxonomy = yaml.safe_load(TAXONOMY_YAML.read_text(encoding="utf-8"))
         except yaml.YAMLError:
-            pytest.skip("skill_taxonomy.yaml 格式错误，跳过本体校验")
+            pytest.skip("skill_taxonomy.yaml 鏍煎紡閿欒锛岃烦杩囨湰浣撴牎楠?)
 
-        # taxonomy 结构: ontology: { domains: [ { subdomains: [ { skills: [...] } ] } ] }
+        # taxonomy 缁撴瀯: ontology: { domains: [ { subdomains: [ { skills: [...] } ] } ] }
         all_skills = set()
         ontology = taxonomy.get("ontology", {})
         domains = ontology.get("domains", [])
@@ -64,12 +71,12 @@ class TestEscoMapping:
         for key, val in data["mappings"].items():
             skill = val["starmap_skill"]
             if skill not in all_skills:
-                missing.append(f"{key} → {skill}")
+                missing.append(f"{key} 鈫?{skill}")
 
-        assert len(missing) == 0, f"以下映射在本体中找不到:\n" + "\n".join(missing[:10])
+        assert len(missing) == 0, f"浠ヤ笅鏄犲皠鍦ㄦ湰浣撲腑鎵句笉鍒?\n" + "\n".join(missing[:10])
 
     def test_no_duplicate_starmap_targets(self):
-        """没有重复的 starmap_skill 目标。"""
+        """娌℃湁閲嶅鐨?starmap_skill 鐩爣銆?""
         data = self._load()
         targets = [v["starmap_skill"] for v in data["mappings"].values()]
         dupes = [t for t in set(targets) if targets.count(t) > 1]

@@ -34,7 +34,7 @@ export const useQualityStore = defineStore('quality', () => {
     loading.value = true
     try {
       const data = await request.get('/quality/report')
-      metrics.value = data as QualityMetrics
+      metrics.value = data as unknown as QualityMetrics
     } finally {
       loading.value = false
     }

@@ -31,7 +31,7 @@ export const useResumeStore = defineStore('resume', () => {
       const data = await request.post('/resume/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
-      result.value = data as ResumeParseResult
+      result.value = data as unknown as ResumeParseResult
     } finally {
       loading.value = false
     }

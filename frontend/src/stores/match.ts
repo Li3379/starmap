@@ -54,7 +54,7 @@ export const useMatchStore = defineStore('match', () => {
         person_skills,
         target_position: targetPosition,
       })
-      result.value = data as MatchResult
+      result.value = data as unknown as MatchResult
     } finally {
       loading.value = false
     }
@@ -64,7 +64,7 @@ export const useMatchStore = defineStore('match', () => {
   async function fetchPositionSkills(positionId: string): Promise<PositionSkills | null> {
     try {
       const data = await request.get(`/graph/position/${positionId}/skills`)
-      return data as PositionSkills
+      return data as unknown as PositionSkills
     } catch {
       return null
     }

@@ -26,7 +26,7 @@ export const useAdminStore = defineStore('admin', () => {
     loading.value = true
     try {
       const data = await request.get('/admin/sources')
-      sources.value = data.items ?? []
+      sources.value = (data as any).items ?? []
     } finally {
       loading.value = false
     }
@@ -34,7 +34,7 @@ export const useAdminStore = defineStore('admin', () => {
 
   async function fetchAuditQueue() {
     const data = await request.get('/admin/review-queue')
-    auditQueue.value = data.items ?? []
+    auditQueue.value = (data as any).items ?? []
   }
 
   async function approveAudit(id: number) {

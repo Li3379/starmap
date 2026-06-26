@@ -7,10 +7,9 @@ from typing import Annotated, Any
 
 import sqlalchemy as sa
 from fastapi import APIRouter, Depends, HTTPException
+from loguru import logger
 from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from loguru import logger
 
 from app.api.v1.quality import _build_quality_dashboard
 from app.core.extraction.prompt import (
@@ -21,7 +20,6 @@ from app.core.extraction.prompt import (
     set_ab_test,
     set_active_version,
     stop_ab_test,
-    ABTestConfig,
 )
 from app.dependencies import get_db_session
 from app.models.extraction_models import JDExtractionRecord, PositionRecord, PositionSkillRelation, SkillRecord

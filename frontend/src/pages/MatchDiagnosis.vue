@@ -105,11 +105,7 @@ async function handlePositionSelect(pos: { position_id: string; name: string }) 
 // ── Step 2: 开始诊断 ──
 async function handleStartDiagnosis() {
   const skills = resumeStore.result?.required_skills.length
-    ? resumeStore.result.required_skills.map(s => ({
-        name: s.skill,
-        category: s.category,
-        proficiency: s.proficiency,
-      }))
+    ? resumeStore.result.required_skills.map(s => s.skill)
     : userStore.parsedSkills
   await matchStore.runMatch(targetPositionName.value, skills)
   step.value = 3

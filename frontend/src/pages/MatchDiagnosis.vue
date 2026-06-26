@@ -744,7 +744,11 @@ function handleReset() {
                   </template>
 
                   <div style="height:180px;margin:8px 0">
-                    <v-chart :option="buildTimelineOption(gap.learning_path)" autoresize style="height:100%" />
+                    <v-chart
+                      :option="buildTimelineOption(gap.learning_path)"
+                      autoresize
+                      style="height:100%"
+                    />
                   </div>
                 </el-card>
               </div>

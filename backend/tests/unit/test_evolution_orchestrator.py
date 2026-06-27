@@ -165,7 +165,8 @@ async def test_orchestrator_emergence_detection():
     session = FakeSession()
     orchestrator = EvolutionOrchestrator(session)
 
-    from datetime import UTC, datetime as _dt
+    from datetime import UTC
+    from datetime import datetime as _dt
     snap = SimpleNamespace(
         id="snap-1", position_name="Backend",
         snapshot_date=_dt(2026, 6, 1, tzinfo=UTC),

@@ -6,6 +6,12 @@
 import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Upload, Edit, Search, DataAnalysis, Document, ChatDotSquare, Guide, ArrowLeft, Check, RefreshRight, Plus } from '@element-plus/icons-vue'
+import VChart from 'vue-echarts'
+import { use } from 'echarts/core'
+import { BarChart } from 'echarts/charts'
+import { GridComponent, TooltipComponent } from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
+use([BarChart, GridComponent, TooltipComponent, CanvasRenderer])
 import MainLayout from '@/layouts/MainLayout.vue'
 import ResumeUpload from '@/components/ResumeUpload.vue'
 import PositionSearch from '@/components/PositionSearch.vue'
@@ -74,11 +80,9 @@ async function handlePositionSelect(pos: { position_id: string; name: string }) 
   targetPositionName.value = pos.name
   radarLoading.value = true
   try {
-    // 契约: GET /graph/position/{position_id}/skills
-    const resp = await fetch(`/api/v1/graph/position/${encodeURIComponent(pos.position_id)}/skills`)
-    const data = await resp.json()
-    // 契约 SkillNode[] → 雷达图 RadarItem[]
-    const skills = data.skills ?? []
+    // 契约: GET /graph/position/{id}/skills
+    const data = await matchStore.fetchPositionSkills(pos.position_id)
+    const skills = data?.required_skills ?? []
     radarData.value = skills.map((s: any) => ({
       skill: s.name,
       required: PROFICIENCY_MAP[s.proficiency] ?? 0.5,
@@ -100,9 +104,9 @@ async function handlePositionSelect(pos: { position_id: string; name: string }) 
 
 // ── Step 2: 开始诊断 ──
 async function handleStartDiagnosis() {
-  const skills = userStore.parsedSkills.length
-    ? userStore.parsedSkills
-    : resumeStore.result?.required_skills.map(s => s.skill) ?? []
+  const skills = resumeStore.result?.required_skills.length
+    ? resumeStore.result.required_skills.map(s => s.skill)
+    : userStore.parsedSkills
   await matchStore.runMatch(targetPositionName.value, skills)
   step.value = 3
 }
@@ -129,6 +133,28 @@ function gapToColor(level: string) {
   if (level === '已掌握') return '#67c23a'
   if (level === '部分掌握') return '#e6a23c'
   return '#f56c6c'
+}
+
+// ── 学习路径时间线 ECharts（横条甘特图）──
+function buildTimelineOption(steps: string[]) {
+  const stages = steps.map((s, i) => `阶段${i + 1}: ${s}`)
+  return {
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    grid: { left: 10, right: 20, top: 10, bottom: 10, containLabel: true },
+    xAxis: { type: 'value', show: false, min: 0, max: steps.length },
+    yAxis: { type: 'category', data: stages.reverse(), axisLine: { show: false }, axisTick: { show: false }, axisLabel: { fontSize: 11, color: '#475569', width: 200, overflow: 'truncate' } },
+    series: [{
+      type: 'bar', barWidth: 14,
+      data: steps.map((_, i) => ({
+        value: i + 1,
+        itemStyle: {
+          borderRadius: [0, 6, 6, 0],
+          color: i === 0 ? '#409eff' : i === steps.length - 1 ? '#67c23a' : `rgba(64,158,255,${0.3 + (i / steps.length) * 0.6})`,
+        },
+      })),
+      label: { show: true, position: 'insideRight', formatter: () => '→', fontSize: 12, color: '#fff' },
+    }],
+  }
 }
 
 // ── 重置 ──
@@ -717,21 +743,13 @@ function handleReset() {
                     </div>
                   </template>
 
-                  <el-timeline>
-                    <el-timeline-item
-                      v-for="(stepName, stepIdx) in gap.learning_path"
-                      :key="stepIdx"
-                      :timestamp="'阶段 ' + (stepIdx + 1)"
-                      placement="top"
-                      :color="stepIdx === 0 ? '#409eff' : stepIdx === gap.learning_path.length - 1 ? '#67c23a' : '#e6a23c'"
-                      :hollow="stepIdx > 0"
-                      size="large"
-                    >
-                      <div class="timeline-content">
-                        {{ stepName }}
-                      </div>
-                    </el-timeline-item>
-                  </el-timeline>
+                  <div style="height:180px;margin:8px 0">
+                    <v-chart
+                      :option="buildTimelineOption(gap.learning_path)"
+                      autoresize
+                      style="height:100%"
+                    />
+                  </div>
                 </el-card>
               </div>
 

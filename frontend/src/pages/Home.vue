@@ -66,6 +66,43 @@ function buildDomainMap(): Map<string, string> {
   return map
 }
 
+// ── 级别视图：等级 → 颜色 + 大小 ──
+const LEVEL_COLORS: Record<string, string> = {
+  '初级': '#64B5F6',  // 浅蓝
+  '中级': '#5C6BC0',  // 靛蓝
+  '高级': '#7E57C2',  // 紫色
+  '专家': '#D32F2F',  // 深红
+}
+const LEVEL_SIZES: Record<string, number> = {
+  '初级': 24,
+  '中级': 32,
+  '高级': 42,
+  '专家': 55,
+}
+
+// ── 通过 REQUIRED_FOR 边推断每个 Skill/Tool 对应的最高岗位级别 ──
+function buildLevelMap(): Map<string, string> {
+  const map = new Map<string, string>()
+  const levelRank: Record<string, number> = { '初级': 1, '中级': 2, '高级': 3, '专家': 4 }
+  for (const e of graphStore.edges) {
+    if (e.type !== 'REQUIRED_FOR') continue
+    const pos = graphStore.nodes.find(n => n.id === e.target_id)
+    if (!pos || !pos.properties.level) continue
+    const level = pos.properties.level
+    const current = map.get(e.source_id)
+    if (!current || levelRank[level] > levelRank[current]) {
+      map.set(e.source_id, level)
+    }
+  }
+  // Position 节点直接用自身 level
+  for (const n of graphStore.nodes) {
+    if (n.labels.includes('Position') && n.properties.level) {
+      map.set(n.id, n.properties.level)
+    }
+  }
+  return map
+}
+
 // ── 筛选器 ──
 const techFilters = ['AI', '大数据', '物联网', '前端', '后端', '云计算']
 const selectedTech = ref<string[]>([])
@@ -95,6 +132,14 @@ const techLegend = [
   { name: 'AI', color: '#9B59B6' },
   { name: '数据', color: '#E6A23C' },
   { name: '运维', color: '#36CFC9' },
+]
+
+// ── 级别图例（初级浅→专家深）──
+const levelLegend = [
+  { name: '初级', color: LEVEL_COLORS['初级'] },
+  { name: '中级', color: LEVEL_COLORS['中级'] },
+  { name: '高级', color: LEVEL_COLORS['高级'] },
+  { name: '专家', color: LEVEL_COLORS['专家'] },
 ]
 
 // ── 视图模式选项 ──
@@ -159,6 +204,12 @@ const isKnowledgeArea = computed(() =>
 const isSkill = computed(() =>
   selectedNode.value?.labels.includes('Skill') ?? false
 )
+// 选中节点的级别
+const selectedNodeLevel = computed(() => {
+  if (!selectedNode.value) return null
+  if (selectedNode.value.properties.level) return selectedNode.value.properties.level as string
+  return buildLevelMap().get(selectedNode.value.id) ?? null
+})
 // ── 下钻面包屑 ──
 const drillBreadcrumb = computed(() => {
   const items = drillStack.value.map(n => ({ id: n.id, name: n.properties.name }))
@@ -203,6 +254,10 @@ function closeDetail() {
 // ── 高亮关联 ──
 function highlightRelated(nodeId: string) {
   if (!graph) return
+
+  graphStore.nodes.forEach(n => {
+    try { graph!.setElementState(n.id, []) } catch {}
+  })
 
   // 技术栈视图：只高亮 REQUIRED_FOR 关联的 Position
   const isTechView = graphStore.viewMode === 'tech'
@@ -288,6 +343,56 @@ function handleSearch() {
   }
 }
 
+// ── 级别布局：Y 轴按级别分 4 层，同层 X 均匀排开 ──
+function applyLevelLayout() {
+  if (!graph || !graphRef.value) return
+
+  const levelMap = buildLevelMap()
+  const width = graphRef.value.clientWidth
+  const height = graphRef.value.clientHeight
+
+  const levelOrder = ['初级', '中级', '高级', '专家']
+  const groups: Record<string, string[]> = { '初级': [], '中级': [], '高级': [], '专家': [] }
+  // 只排 Position / Skill / Tool 且有 level 的节点
+  for (const [id, lv] of levelMap) {
+    if (groups[lv]) groups[lv].push(id)
+  }
+
+  const topPad = 60
+  const bottomPad = 60
+  const leftPad = 80
+  const rightPad = 80
+  const usableH = height - topPad - bottomPad
+  const usableW = width - leftPad - rightPad
+  const n = levelOrder.length
+  const layerGap = n > 1 ? usableH / (n - 1) : 0
+
+  const posMap = new Map<string, { x: number; y: number }>()
+  for (let i = 0; i < n; i++) {
+    const ids = groups[levelOrder[i]]
+    const y = topPad + (n - 1 - i) * layerGap // 专家在上，初级在下
+    const count = ids.length
+    for (let j = 0; j < count; j++) {
+      const x = count > 1 ? leftPad + (j * usableW) / (count - 1) : width / 2
+      posMap.set(ids[j], { x, y })
+    }
+  }
+
+  const updatedNodes = graphStore.nodes.map(n => {
+    const pos = posMap.get(n.id)
+    return {
+      id: n.id,
+      style: {
+        x: pos?.x ?? width / 2,
+        y: pos?.y ?? height / 2,
+      },
+    }
+  })
+
+  graph.updateNodeData(updatedNodes)
+  graph.draw()
+}
+
 // ── 按当前布局模式重新排布 ──
 function relayout() {
   if (!graph) return
@@ -310,22 +415,20 @@ function applyCurrentView() {
   const expansionActive = twoHopVisibleIds.value.size > 0
 
   if (mode === 'tech') {
-    // ── 技术栈视图：用 updateData 而非 setData，保留 G6 内部状态 ──
+    // ── 技术栈视图：setData 全量替换，避免 removeEdgeData 导致跨视图切换丢边 ──
     const visibleLabels = new Set(['Skill', 'Tool', 'Position'])
-    const visibleNodeIds = new Set(
-      graphStore.nodes
-        .filter(n => n.labels.some(l => visibleLabels.has(l)))
-        .map(n => n.id),
-    )
     const domainMap = buildDomainMap()
 
     // 过滤掉无领域归属的灰色节点（Git / VS Code / Webpack）
-    for (const id of visibleNodeIds) {
-      if (!domainMap.has(id)) visibleNodeIds.delete(id)
+    const visibleNodeIds = new Set<string>()
+    for (const n of graphStore.nodes) {
+      if (n.labels.some(l => visibleLabels.has(l)) && domainMap.has(n.id)) {
+        visibleNodeIds.add(n.id)
+      }
     }
 
-    graph.updateNodeData(
-      graphStore.nodes.map(n => {
+    graph.setData({
+      nodes: graphStore.nodes.map(n => {
         const isVisible = visibleNodeIds.has(n.id) && !ids.has(n.id) && (!expansionActive || twoHopVisibleIds.value.has(n.id))
         const domainColor = DOMAIN_COLORS[domainMap.get(n.id) ?? ''] ?? '#909399'
         const prof = n.properties.proficiency
@@ -345,36 +448,24 @@ function applyCurrentView() {
           },
         }
       }),
-    )
-
-    // 先删掉涉及隐藏节点的边（G6 updateEdgeData 不能删边）
-    graph.removeEdgeData(
-      graphStore.edges
-        .filter(e => !visibleNodeIds.has(e.source_id) || !visibleNodeIds.has(e.target_id))
-        .map(e => `${e.source_id}-${e.target_id}-${e.type}`),
-    )
-
-    graph.updateEdgeData(
-      graphStore.edges
+      edges: graphStore.edges
         .filter(e => visibleNodeIds.has(e.source_id) && visibleNodeIds.has(e.target_id))
         .map(e => {
-        const isVisible = !ids.has(e.source_id) && !ids.has(e.target_id) && (!expansionActive || (twoHopVisibleIds.value.has(e.source_id) && twoHopVisibleIds.value.has(e.target_id)))
-        const isCore = e.type === 'REQUIRED_FOR'
-
-        return {
-          id: `${e.source_id}-${e.target_id}-${e.type}`,
-          source: e.source_id,
-          target: e.target_id,
-          style: {
-            stroke: '#d0d0d0',
-            lineWidth: isCore ? 2 : 0.5,
-            opacity: isVisible ? (isCore ? 0.6 : 0.15) : 0,
-          },
-        }
-      }),
-    )
-
-    graph.draw()
+          const isVisible = !ids.has(e.source_id) && !ids.has(e.target_id) && (!expansionActive || (twoHopVisibleIds.value.has(e.source_id) && twoHopVisibleIds.value.has(e.target_id)))
+          const isCore = e.type === 'REQUIRED_FOR'
+          return {
+            id: `${e.source_id}-${e.target_id}-${e.type}`,
+            source: e.source_id,
+            target: e.target_id,
+            style: {
+              stroke: '#d0d0d0',
+              lineWidth: isCore ? 2 : 0.5,
+              opacity: isVisible ? (isCore ? 0.6 : 0.15) : 0,
+            },
+          }
+        }),
+    })
+    relayout()
     return
   }
 
@@ -430,6 +521,62 @@ function applyCurrentView() {
       })),
     })
     relayout()
+    return
+  }
+
+  // ── 级别视图：Position.level 分层 + 渐变色 + setData 全量 ──
+  if (mode === 'level') {
+    const levelMap = buildLevelMap()
+    const visibleLabels = new Set(['Position', 'Skill', 'Tool'])
+
+    // 可见节点 ID（排除没有级别归属的节点）
+    const visibleNodeIds = new Set<string>()
+    for (const n of graphStore.nodes) {
+      if (n.labels.some(l => visibleLabels.has(l)) && levelMap.has(n.id)) {
+        visibleNodeIds.add(n.id)
+      }
+    }
+
+    graph.setData({
+      nodes: graphStore.nodes.map(n => {
+        const lv = levelMap.get(n.id)
+        const isVisible = visibleNodeIds.has(n.id)
+        const isDimmed = ids.has(n.id) || (expansionActive && !twoHopVisibleIds.value.has(n.id))
+        const prof = n.properties.proficiency as string | undefined
+        const label = n.labels.includes('Position')
+          ? `${n.properties.name} · ${lv}`
+          : n.labels.some(l => l === 'Skill' || l === 'Tool') && prof
+            ? `${n.properties.name} · ${prof}`
+            : n.properties.name
+
+        return {
+          id: n.id,
+          style: {
+            fill: lv ? LEVEL_COLORS[lv] : '#909399',
+            size: lv ? (LEVEL_SIZES[lv] ?? 28) : 28,
+            opacity: isDimmed ? 0.1 : isVisible ? 1 : 0,
+            labelText: isDimmed ? '' : isVisible ? label : '',
+            labelFill: '#1f1f1f',
+            labelFontSize: 11,
+            labelPlacement: 'bottom',
+            labelOffsetY: 6,
+          },
+        }
+      }),
+      edges: graphStore.edges
+        .filter(e => visibleNodeIds.has(e.source_id) && visibleNodeIds.has(e.target_id))
+        .map(e => ({
+          id: `${e.source_id}-${e.target_id}-${e.type}`,
+          source: e.source_id,
+          target: e.target_id,
+          style: {
+            stroke: '#c0c4cc',
+            lineWidth: e.type === 'REQUIRED_FOR' ? 2 : 0.8,
+            opacity: ids.has(e.source_id) || ids.has(e.target_id) || (expansionActive && (!twoHopVisibleIds.value.has(e.source_id) || !twoHopVisibleIds.value.has(e.target_id))) ? 0.05 : 0.3,
+          },
+        })),
+    })
+    applyLevelLayout()
     return
   }
 
@@ -787,6 +934,23 @@ onUnmounted(() => {
                 <span>出现多</span>
               </div>
             </div>
+            <!-- 级别：渐变色 -->
+            <div
+              v-else-if="graphStore.viewMode === 'level'"
+              class="legend-list"
+            >
+              <div
+                v-for="item in levelLegend"
+                :key="item.name"
+                class="legend-row"
+              >
+                <span
+                  class="legend-dot"
+                  :style="{ background: item.color }"
+                />
+                <span>{{ item.name }}</span>
+              </div>
+            </div>
             <!-- 默认：节点类型 -->
             <div
               v-else
@@ -894,6 +1058,18 @@ onUnmounted(() => {
                     effect="plain"
                   >
                     {{ LABEL_NAMES[selectedNode.labels[0]] }}
+                  </el-tag>
+                </div>
+                <div
+                  v-if="selectedNodeLevel"
+                  class="detail-row"
+                >
+                  <span class="detail-label">级别</span>
+                  <el-tag
+                    size="small"
+                    effect="plain"
+                  >
+                    {{ selectedNodeLevel }}
                   </el-tag>
                 </div>
                 <div

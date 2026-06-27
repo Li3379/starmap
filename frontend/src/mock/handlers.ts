@@ -140,10 +140,10 @@ const MOCK_EVOLUTION = {
 const MOCK_GRAPH = {
   nodes: [
     // ── Position 岗位（4）──
-    { id: 'pos-algo', labels: ['Position'], properties: { name: '算法工程师', source_count: 18, trend: 'rising' } },
-    { id: 'pos-data', labels: ['Position'], properties: { name: '数据分析师', source_count: 14, trend: 'rising' } },
-    { id: 'pos-fe', labels: ['Position'], properties: { name: '前端开发工程师', source_count: 16, trend: 'stable' } },
-    { id: 'pos-be', labels: ['Position'], properties: { name: '后端开发工程师', source_count: 20, trend: 'stable' } },
+    { id: 'pos-algo', labels: ['Position'], properties: { name: '算法工程师', level: '专家', source_count: 18, trend: 'rising' } },
+    { id: 'pos-data', labels: ['Position'], properties: { name: '数据分析师', level: '高级', source_count: 14, trend: 'rising' } },
+    { id: 'pos-fe', labels: ['Position'], properties: { name: '前端开发工程师', level: '中级', source_count: 16, trend: 'stable' } },
+    { id: 'pos-be', labels: ['Position'], properties: { name: '后端开发工程师', level: '初级', source_count: 20, trend: 'stable' } },
     // ── Skill 技能（9）──
     { id: 'skill-py', labels: ['Skill'], properties: { name: 'Python', proficiency: '精通', source_count: 22, trend: 'rising', knowledge_points: ['基础语法', '面向对象', '装饰器/生成器', '异步编程', 'NumPy / Pandas', 'Flask / FastAPI'] } },
     { id: 'skill-ml', labels: ['Skill'], properties: { name: '机器学习', proficiency: '精通', source_count: 18, trend: 'rising', knowledge_points: ['监督学习', '无监督学习', '特征工程', '模型评估', '集成方法', 'Scikit-learn'] } },

@@ -19,6 +19,7 @@ export interface GraphNode {
     name: string
     category?: string
     proficiency?: '了解' | '熟悉' | '精通'
+    level?: '初级' | '中级' | '高级' | '专家'
     source_count?: number
     trend?: 'rising' | 'stable' | 'declining'
     knowledge_points?: string[]

@@ -75,14 +75,14 @@ onMounted(fetchPositions)
         placeholder="搜索岗位名称或行业..."
         clearable
         size="large"
-        style="margin-bottom: 20px; max-width: 400px;"
+        class="search-input-wrapper"
         prefix-icon="Search"
       />
-      <div style="margin-bottom: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+      <div class="industry-tags">
         <el-tag
           :type="selectedIndustry === '' ? '' : 'info'"
           :effect="selectedIndustry === '' ? 'dark' : 'plain'"
-          style="cursor: pointer;"
+          class="clickable-tag"
           @click="selectedIndustry = ''"
         >全部</el-tag>
         <el-tag
@@ -90,11 +90,11 @@ onMounted(fetchPositions)
           :key="ind"
           :type="selectedIndustry === ind ? '' : 'info'"
           :effect="selectedIndustry === ind ? 'dark' : 'plain'"
-          style="cursor: pointer;"
+          class="clickable-tag"
           @click="selectedIndustry = selectedIndustry === ind ? '' : ind"
         >{{ ind }}</el-tag>
       </div>
-      <div style="margin-bottom: 16px; color: var(--muted-foreground); font-size: var(--font-size-sm);">
+      <div class="result-count">
         共 {{ filteredPositions.length }} 个岗位
       </div>
 
@@ -221,4 +221,9 @@ onMounted(fetchPositions)
   margin-bottom: 16px;
   line-height: 1.6;
 }
+
+.search-input-wrapper { margin-bottom: var(--space-5); max-width: 400px; }
+.industry-tags { margin-bottom: var(--space-3); display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+.clickable-tag { cursor: pointer; }
+.result-count { margin-bottom: var(--space-4); color: var(--muted-foreground); font-size: var(--font-size-sm); }
 </style>

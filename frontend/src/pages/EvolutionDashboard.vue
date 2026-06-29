@@ -256,7 +256,7 @@ onMounted(fetchTrends)
           </el-table-column>
           <el-table-column label="变化" width="100">
             <template #default="{ row }">
-              <span v-if="row.points?.length" :style="{ color: row.points.at(-1)! >= 100 ? '#67C23A' : '#F56C6C' }">
+              <span v-if="row.points?.length" :class="row.points.at(-1)! >= 100 ? 'cii-up' : 'cii-down'">
                 {{ row.points.at(-1)! >= 100 ? '+' : '' }}{{ row.points.at(-1)! - 100 }}%
               </span>
             </template>
@@ -279,7 +279,7 @@ onMounted(fetchTrends)
             <el-timeline-item v-for="(item, idx) in changelogData" :key="idx" :timestamp="item.date ?? item.created_at ?? ''" placement="top">
               <el-card shadow="never">
                 <p><b>{{ item.change_type ?? '变更' }}</b>: {{ item.description ?? item.detail ?? '' }}</p>
-                <p v-if="item.trust_score" style="color: #909399; font-size: 12px;">信任度: {{ (item.trust_score * 100).toFixed(0) }}%</p>
+                <p v-if="item.trust_score" class="trust-meta">信任度: {{ (item.trust_score * 100).toFixed(0) }}%</p>
               </el-card>
             </el-timeline-item>
           </el-timeline>
@@ -440,4 +440,8 @@ onMounted(fetchTrends)
     align-items: stretch;
   }
 }
+
+.cii-up { color: var(--success); font-weight: 600; }
+.cii-down { color: var(--destructive); font-weight: 600; }
+.trust-meta { color: var(--muted-foreground); font-size: var(--font-size-xs); }
 </style>

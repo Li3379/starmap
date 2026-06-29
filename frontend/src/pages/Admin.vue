@@ -309,7 +309,7 @@ async function handleReset() {
                       :color="row.trust >= 70 ? '#67c23a' : row.trust >= 50 ? '#e6a23c' : '#f56c6c'"
                       style="flex: 1"
                     />
-                    <span style="font-size: 12px; color: #909399; width: 32px">{{ row.trust }}%</span>
+                    <span class="trust-pct">{{ row.trust }}%</span>
                   </div>
                 </template>
               </el-table-column>
@@ -341,7 +341,7 @@ async function handleReset() {
             </el-table>
             <div
               v-if="!filteredAuditQueue.length"
-              style="text-align: center; padding: 24px; color: #c0c4cc"
+              class="empty-state"
             >
               暂无匹配的审核项
             </div>
@@ -422,9 +422,9 @@ async function handleReset() {
             style="margin-top: 16px"
           >
             <template #header>
-              <span style="font-weight: 600">演示数据管理</span>
+              <span class="section-label">演示数据管理</span>
             </template>
-            <p style="color: #606266; font-size: 13px; line-height: 1.8; margin: 0">
+            <p class="demo-desc">
               重置为演示种子数据将覆盖当前所有数据，包括岗位、技能、图谱节点与关系。此功能用于演示场景重置（§16.5）。
             </p>
             <el-button
@@ -504,4 +504,10 @@ async function handleReset() {
     flex-wrap: wrap;
   }
 }
+
+/* Inline style replacements */
+.trust-pct { font-size: var(--font-size-xs); color: var(--muted-foreground); width: 32px; }
+.empty-state { text-align: center; padding: var(--space-6); color: var(--muted-foreground); }
+.demo-desc { color: var(--muted-foreground); font-size: var(--font-size-sm); line-height: 1.8; margin: 0; }
+.section-label { font-weight: 600; }
 </style>

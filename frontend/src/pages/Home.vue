@@ -755,7 +755,7 @@ onUnmounted(() => {
       <!-- ── KPI Strip ── -->
       <div class="kpi-strip">
         <div class="kpi-card">
-          <div class="kpi-icon" style="background: var(--info-ghost); color: var(--info)">
+          <div class="kpi-icon kpi-icon--info">
             <el-icon><DataAnalysis /></el-icon>
           </div>
           <div class="kpi-body">
@@ -764,7 +764,7 @@ onUnmounted(() => {
           </div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-icon" style="background: var(--primary-ghost); color: var(--primary)">
+          <div class="kpi-icon kpi-icon--primary">
             <el-icon><Collection /></el-icon>
           </div>
           <div class="kpi-body">
@@ -773,7 +773,7 @@ onUnmounted(() => {
           </div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-icon" style="background: var(--success-ghost); color: var(--success)">
+          <div class="kpi-icon kpi-icon--success">
             <el-icon><TrendCharts /></el-icon>
           </div>
           <div class="kpi-body">
@@ -820,9 +820,9 @@ onUnmounted(() => {
         <div class="controls-right">
           <!-- Legend -->
           <div class="graph-legend">
-            <span class="legend-item"><span class="ld-dot" style="background: var(--chart-3)"></span>领域</span>
-            <span class="legend-item"><span class="ld-dot" style="background: var(--chart-1)"></span>岗位</span>
-            <span class="legend-item"><span class="ld-dot" style="background: var(--success)"></span>技能</span>
+            <span class="legend-item"><span class="ld-dot ld-dot--domain"></span>领域</span>
+            <span class="legend-item"><span class="ld-dot ld-dot--position"></span>岗位</span>
+            <span class="legend-item"><span class="ld-dot ld-dot--skill"></span>技能</span>
             <span v-if="showEvolution" class="legend-item"><span class="ld-line"></span>演化</span>
           </div>
 
@@ -862,7 +862,7 @@ onUnmounted(() => {
               <span class="tb-divider"></span>
               <el-tooltip :content="layoutMode === 'force' ? '切换分层' : '切换力导向'" placement="top">
                 <button class="tb-btn" @click="toggleLayout">
-                  <span style="font-size: 12px; font-weight: 600">{{ layoutMode === 'force' ? '力' : '层' }}</span>
+                  <span class="tb-label">{{ layoutMode === 'force' ? '力' : '层' }}</span>
                 </button>
               </el-tooltip>
               <span class="tb-divider"></span>
@@ -894,7 +894,7 @@ onUnmounted(() => {
             <!-- Radar for Position nodes -->
             <div v-if="positionRadarOption" class="rp-section">
               <div class="rp-section-title">技能雷达</div>
-              <VChart :option="positionRadarOption" style="height: 200px" autoresize />
+              <VChart :option="positionRadarOption" class="radar-chart" autoresize />
             </div>
 
             <!-- Properties -->
@@ -953,7 +953,7 @@ onUnmounted(() => {
                   class="rp-list-item"
                   @click="graphStore.goToDetailLayer(r.node.id); selectedNode = r.node"
                 >
-                  <span class="rp-list-dot" style="background: var(--chart-1)"></span>
+                  <span class="rp-list-dot"></span>
                   <span class="rp-list-name">{{ r.node.properties.name }}</span>
                   <span class="rp-list-meta">{{ r.sharedCount }} 共享技能</span>
                 </div>
@@ -969,7 +969,7 @@ onUnmounted(() => {
                   class="rp-list-item"
                   @click="graphStore.goToDetailLayer(p.id); selectedNode = p"
                 >
-                  <span class="rp-list-dot" style="background: var(--chart-1)"></span>
+                  <span class="rp-list-dot"></span>
                   <span class="rp-list-name">{{ p.properties.name }}</span>
                 </div>
               </div>
@@ -1551,4 +1551,23 @@ onUnmounted(() => {
   .search-bar { margin: 0 calc(-1 * var(--space-4)); border-radius: 0; border-left: none; border-right: none; }
   .controls-left, .controls-right { flex-wrap: wrap; }
 }
+
+/* KPI icon modifiers */
+.kpi-icon--info { background: var(--info-ghost); color: var(--info); }
+.kpi-icon--primary { background: var(--primary-ghost); color: var(--primary); }
+.kpi-icon--success { background: var(--success-ghost); color: var(--success); }
+
+/* Legend dot modifiers */
+.ld-dot--domain { background: var(--chart-3); }
+.ld-dot--position { background: var(--chart-1); }
+.ld-dot--skill { background: var(--success); }
+
+/* Layout toggle label */
+.tb-label { font-size: var(--font-size-xs); font-weight: 600; }
+
+/* Radar chart in detail panel */
+.radar-chart { height: 200px; }
+
+/* Detail panel list dot colors */
+.rp-list-dot { background: var(--chart-1); }
 </style>

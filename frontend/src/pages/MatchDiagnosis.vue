@@ -243,7 +243,7 @@ function exportReport() {
                   <el-button
                     v-if="manualSkills.length"
                     type="primary"
-                    style="margin-top: 16px"
+                    class="skill-confirm-action"
                     @click="confirmManualSkills"
                   >
                     确认 {{ manualSkills.length }} 项技能
@@ -330,7 +330,7 @@ function exportReport() {
 
             <!-- Gap table -->
             <h3 class="table-title">技能差距明细</h3>
-            <el-table :data="gapSkills" stripe style="width:100%">
+            <el-table :data="gapSkills" stripe class="full-width-table">
               <el-table-column prop="skill" label="技能" min-width="140" />
               <el-table-column label="重要性" width="100">
                 <template #default="{ row }">
@@ -374,7 +374,7 @@ function exportReport() {
               <el-button text @click="goBack">← 返回</el-button>
             </div>
           </div>
-          <el-table :data="learningPaths" stripe style="width:100%">
+          <el-table :data="learningPaths" stripe class="full-width-table">
             <el-table-column prop="skill" label="技能" min-width="140" />
             <el-table-column label="优先级" width="100">
               <template #default="{ row }">
@@ -575,4 +575,7 @@ function exportReport() {
   color: var(--foreground);
   margin: var(--space-5) 0 var(--space-3);
 }
+
+.skill-confirm-action { margin-top: var(--space-4); }
+.full-width-table { width: 100%; }
 </style>

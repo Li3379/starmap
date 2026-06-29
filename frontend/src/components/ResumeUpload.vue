@@ -116,7 +116,7 @@ function handleRemove() {
         <el-progress
           :percentage="Math.round(uploadProgress)"
           :status="uploadProgress === 100 ? 'success' : undefined"
-          style="margin-top: 12px"
+          class="progress-wrapper"
         />
       </template>
 
@@ -147,7 +147,7 @@ function handleRemove() {
 
       <!-- 空状态 -->
       <template v-else>
-        <div style="color: var(--muted-foreground)">
+        <div class="upload-icon-wrapper">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/><path d="M12 10v6"/><path d="m9 13 3-3 3 3"/></svg>
         </div>
         <div class="upload-text">
@@ -244,4 +244,7 @@ function handleRemove() {
   gap: 12px;
   justify-content: center;
 }
+
+.progress-wrapper { margin-top: var(--space-3); }
+.upload-icon-wrapper { color: var(--muted-foreground); }
 </style>

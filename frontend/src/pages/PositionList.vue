@@ -84,7 +84,9 @@ onMounted(fetchPositions)
           :effect="selectedIndustry === '' ? 'dark' : 'plain'"
           class="clickable-tag"
           @click="selectedIndustry = ''"
-        >全部</el-tag>
+        >
+          全部
+        </el-tag>
         <el-tag
           v-for="ind in industries"
           :key="ind"
@@ -92,13 +94,15 @@ onMounted(fetchPositions)
           :effect="selectedIndustry === ind ? 'dark' : 'plain'"
           class="clickable-tag"
           @click="selectedIndustry = selectedIndustry === ind ? '' : ind"
-        >{{ ind }}</el-tag>
+        >
+          {{ ind }}
+        </el-tag>
       </div>
       <div class="result-count">
         共 {{ filteredPositions.length }} 个岗位
       </div>
 
-            <!-- 有数据时 -->
+      <!-- 有数据时 -->
       <el-row
         v-if="filteredPositions.length || loading"
         v-loading="loading"
@@ -140,14 +144,42 @@ onMounted(fetchPositions)
       </el-row>
 
       <!-- 空状态引导 -->
-      <div v-else class="empty-guide">
+      <div
+        v-else
+        class="empty-guide"
+      >
         <div class="custom-empty">
-          <div class="empty-icon-wrapper"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
-          <p class="empty-text">未找到匹配的岗位</p>
-          <p class="empty-hint-text">尝试调整筛选条件或关键词</p>
+          <div class="empty-icon-wrapper">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ><circle
+              cx="11"
+              cy="11"
+              r="8"
+            /><path d="m21 21-4.35-4.35" /></svg>
+          </div>
+          <p class="empty-text">
+            未找到匹配的岗位
+          </p>
+          <p class="empty-hint-text">
+            尝试调整筛选条件或关键词
+          </p>
           <div class="empty-actions">
-            <p class="empty-hint-text">请先执行数据采集，或从 JD 中抽取岗位信息</p>
-            <el-button type="primary" :icon="Plus" @click="goExtract">
+            <p class="empty-hint-text">
+              请先执行数据采集，或从 JD 中抽取岗位信息
+            </p>
+            <el-button
+              type="primary"
+              :icon="Plus"
+              @click="goExtract"
+            >
               前往 JD 抽取
             </el-button>
           </div>

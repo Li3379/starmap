@@ -799,9 +799,27 @@ onUnmounted(() => {
           </div>
         </div>
         <div class="kpi-actions">
-          <el-button size="small" :icon="Upload" @click="$router.push('/match')">简历匹配</el-button>
-          <el-button size="small" :icon="Document" @click="$router.push('/extract')">JD 抽取</el-button>
-          <el-button size="small" :icon="TrendCharts" @click="$router.push('/evolution')">演化趋势</el-button>
+          <el-button
+            size="small"
+            :icon="Upload"
+            @click="$router.push('/match')"
+          >
+            简历匹配
+          </el-button>
+          <el-button
+            size="small"
+            :icon="Document"
+            @click="$router.push('/extract')"
+          >
+            JD 抽取
+          </el-button>
+          <el-button
+            size="small"
+            :icon="TrendCharts"
+            @click="$router.push('/evolution')"
+          >
+            演化趋势
+          </el-button>
         </div>
       </div>
 
@@ -810,13 +828,19 @@ onUnmounted(() => {
         <div class="controls-left">
           <!-- Graph breadcrumb -->
           <nav class="graph-breadcrumb">
-            <template v-for="(item, i) in breadcrumb" :key="i">
+            <template
+              v-for="(item, i) in breadcrumb"
+              :key="i"
+            >
               <span
                 class="gb-item"
                 :class="{ active: i === breadcrumb.length - 1 }"
                 @click="i < breadcrumb.length - 1 && item.action?.()"
               >{{ item.label }}</span>
-              <span v-if="i < breadcrumb.length - 1" class="gb-sep">›</span>
+              <span
+                v-if="i < breadcrumb.length - 1"
+                class="gb-sep"
+              >›</span>
             </template>
           </nav>
 
@@ -825,22 +849,31 @@ onUnmounted(() => {
             v-if="graphStore.currentLayer === 'domain'"
             v-model="overviewMode"
             size="small"
-            @change="onOverviewModeChange"
             class="view-tabs"
+            @change="onOverviewModeChange"
           >
-            <el-radio-button value="domain">领域</el-radio-button>
-            <el-radio-button value="tech_stack">技术栈</el-radio-button>
-            <el-radio-button value="level">级别</el-radio-button>
+            <el-radio-button value="domain">
+              领域
+            </el-radio-button>
+            <el-radio-button value="tech_stack">
+              技术栈
+            </el-radio-button>
+            <el-radio-button value="level">
+              级别
+            </el-radio-button>
           </el-radio-group>
         </div>
 
         <div class="controls-right">
           <!-- Legend -->
           <div class="graph-legend">
-            <span class="legend-item"><span class="ld-dot ld-dot--domain"></span>领域</span>
-            <span class="legend-item"><span class="ld-dot ld-dot--position"></span>岗位</span>
-            <span class="legend-item"><span class="ld-dot ld-dot--skill"></span>技能</span>
-            <span v-if="showEvolution" class="legend-item"><span class="ld-line"></span>演化</span>
+            <span class="legend-item"><span class="ld-dot ld-dot--domain" />领域</span>
+            <span class="legend-item"><span class="ld-dot ld-dot--position" />岗位</span>
+            <span class="legend-item"><span class="ld-dot ld-dot--skill" />技能</span>
+            <span
+              v-if="showEvolution"
+              class="legend-item"
+            ><span class="ld-line" />演化</span>
           </div>
 
           <!-- Evolution toggle -->
@@ -858,11 +891,29 @@ onUnmounted(() => {
       <!-- ── Graph Main Area ── -->
       <div class="graph-layout">
         <main class="graph-main">
-          <div v-loading="graphStore.loading" class="graph-container grain">
-            <div ref="graphRef" class="graph-canvas" />
-            <div v-if="!graphStore.loading && graphStore.visibleNodes.length === 0" class="empty-hint">
-              <el-icon size="40" color="var(--muted-foreground)"><Aim /></el-icon>
-              <p class="empty-text">图谱数据为空</p><p class="empty-hint-text">请确认后端服务已启动并有数据接入</p>
+          <div
+            v-loading="graphStore.loading"
+            class="graph-container grain"
+          >
+            <div
+              ref="graphRef"
+              class="graph-canvas"
+            />
+            <div
+              v-if="!graphStore.loading && graphStore.visibleNodes.length === 0"
+              class="empty-hint"
+            >
+              <el-icon
+                size="40"
+                color="var(--muted-foreground)"
+              >
+                <Aim />
+              </el-icon>
+              <p class="empty-text">
+                图谱数据为空
+              </p><p class="empty-hint-text">
+                请确认后端服务已启动并有数据接入
+              </p>
             </div>
 
             <!-- Floating toolbar -->
@@ -878,34 +929,58 @@ onUnmounted(() => {
         </main>
 
         <!-- ── Right Detail Panel ── -->
-        <aside class="right-panel hover-lift" :class="{ open: !!selectedNode }">
+        <aside
+          class="right-panel hover-lift"
+          :class="{ open: !!selectedNode }"
+        >
           <template v-if="selectedNode">
             <div class="rp-header">
-              <div class="rp-type-badge" :style="{
-                background: selectedNode.labels.includes('KnowledgeArea')
-                  ? 'var(--chart-3)' : selectedNode.labels.includes('Position')
-                  ? 'var(--chart-1)' : 'var(--success)'
-              }">
+              <div
+                class="rp-type-badge"
+                :style="{
+                  background: selectedNode.labels.includes('KnowledgeArea')
+                    ? 'var(--chart-3)' : selectedNode.labels.includes('Position')
+                      ? 'var(--chart-1)' : 'var(--success)'
+                }"
+              >
                 {{ selectedNode.labels.includes('KnowledgeArea') ? 'KA' : selectedNode.labels.includes('Position') ? 'P' : 'S' }}
               </div>
               <div class="rp-title-group">
-                <h3 class="rp-title">{{ selectedNode.properties.name }}</h3>
+                <h3 class="rp-title">
+                  {{ selectedNode.properties.name }}
+                </h3>
                 <span class="rp-subtitle">
                   {{ selectedNode.labels.includes('KnowledgeArea') ? '知识领域' : selectedNode.labels.includes('Position') ? '岗位' : '技能' }}
                 </span>
               </div>
-              <button class="rp-close" @click="closeDetail">×</button>
+              <button
+                class="rp-close"
+                @click="closeDetail"
+              >
+                ×
+              </button>
             </div>
 
             <!-- Radar for Position nodes -->
-            <div v-if="positionRadarOption" class="rp-section">
-              <div class="rp-section-title">技能雷达</div>
-              <VChart :option="positionRadarOption" class="radar-chart" autoresize />
+            <div
+              v-if="positionRadarOption"
+              class="rp-section"
+            >
+              <div class="rp-section-title">
+                技能雷达
+              </div>
+              <VChart
+                :option="positionRadarOption"
+                class="radar-chart"
+                autoresize
+              />
             </div>
 
             <!-- Properties -->
             <div class="rp-section">
-              <div class="rp-section-title">属性</div>
+              <div class="rp-section-title">
+                属性
+              </div>
               <div class="rp-props">
                 <template v-if="selectedNode.labels.includes('Skill')">
                   <div class="rp-prop-row">
@@ -918,8 +993,13 @@ onUnmounted(() => {
                       v-if="selectedNode.properties.trend"
                       size="small"
                       :type="selectedNode.properties.trend === 'rising' ? 'success' : selectedNode.properties.trend === 'declining' ? 'danger' : 'info'"
-                    >{{ selectedNode.properties.trend === 'rising' ? '↑ 上升' : selectedNode.properties.trend === 'declining' ? '↓ 下降' : '→ 平稳' }}</el-tag>
-                    <span v-else class="rp-prop-value">—</span>
+                    >
+                      {{ selectedNode.properties.trend === 'rising' ? '↑ 上升' : selectedNode.properties.trend === 'declining' ? '↓ 下降' : '→ 平稳' }}
+                    </el-tag>
+                    <span
+                      v-else
+                      class="rp-prop-value"
+                    >—</span>
                   </div>
                   <div class="rp-prop-row">
                     <span class="rp-prop-label">来源数</span>
@@ -950,8 +1030,13 @@ onUnmounted(() => {
             </div>
 
             <!-- Related items -->
-            <div v-if="relatedPositions.length" class="rp-section">
-              <div class="rp-section-title">相似岗位</div>
+            <div
+              v-if="relatedPositions.length"
+              class="rp-section"
+            >
+              <div class="rp-section-title">
+                相似岗位
+              </div>
               <div class="rp-list">
                 <div
                   v-for="r in relatedPositions"
@@ -959,15 +1044,20 @@ onUnmounted(() => {
                   class="rp-list-item"
                   @click="graphStore.goToDetailLayer(r.node.id); selectedNode = r.node"
                 >
-                  <span class="rp-list-dot"></span>
+                  <span class="rp-list-dot" />
                   <span class="rp-list-name">{{ r.node.properties.name }}</span>
                   <span class="rp-list-meta">{{ r.sharedCount }} 共享技能</span>
                 </div>
               </div>
             </div>
 
-            <div v-if="kaRelatedPositions.length" class="rp-section">
-              <div class="rp-section-title">所属岗位</div>
+            <div
+              v-if="kaRelatedPositions.length"
+              class="rp-section"
+            >
+              <div class="rp-section-title">
+                所属岗位
+              </div>
               <div class="rp-list">
                 <div
                   v-for="p in kaRelatedPositions"
@@ -975,7 +1065,7 @@ onUnmounted(() => {
                   class="rp-list-item"
                   @click="graphStore.goToDetailLayer(p.id); selectedNode = p"
                 >
-                  <span class="rp-list-dot"></span>
+                  <span class="rp-list-dot" />
                   <span class="rp-list-name">{{ p.properties.name }}</span>
                 </div>
               </div>
@@ -983,8 +1073,16 @@ onUnmounted(() => {
           </template>
 
           <!-- Empty state -->
-          <div v-else class="rp-empty">
-            <el-icon size="28" color="var(--muted-foreground)"><Aim /></el-icon>
+          <div
+            v-else
+            class="rp-empty"
+          >
+            <el-icon
+              size="28"
+              color="var(--muted-foreground)"
+            >
+              <Aim />
+            </el-icon>
             <p>点击节点查看详情</p>
           </div>
         </aside>
@@ -993,7 +1091,12 @@ onUnmounted(() => {
       <!-- ── Bottom Search Bar ── -->
       <div class="search-bar glass border-glow">
         <div class="search-inner">
-          <el-icon size="16" color="var(--muted-foreground)"><Search /></el-icon>
+          <el-icon
+            size="16"
+            color="var(--muted-foreground)"
+          >
+            <Search />
+          </el-icon>
           <div class="search-input-wrapper">
             <input
               v-model="searchKeyword"
@@ -1005,9 +1108,12 @@ onUnmounted(() => {
               @keydown.enter.prevent="onSearchKeydown"
               @blur="onSearchBlur"
               @focus="onSearchInput"
-            />
+            >
             <transition name="fade">
-              <div v-if="showSearchDropdown" class="search-dropdown glass">
+              <div
+                v-if="showSearchDropdown"
+                class="search-dropdown glass"
+              >
                 <div
                   v-for="(r, idx) in searchResults"
                   :key="r.id"
@@ -1018,7 +1124,7 @@ onUnmounted(() => {
                   <span
                     class="si-dot"
                     :style="{ background: r.type === '领域' ? 'var(--chart-3)' : r.type === '岗位' ? 'var(--chart-1)' : 'var(--success)' }"
-                  ></span>
+                  />
                   <span class="si-name">{{ r.name }}</span>
                   <span class="si-tag">{{ r.type }}</span>
                 </div>

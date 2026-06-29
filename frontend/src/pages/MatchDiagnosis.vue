@@ -193,33 +193,57 @@ function exportReport() {
     <div class="match-page animate-fade-in">
       <!-- Page header -->
       <div class="page-header">
-        <h1 class="page-title">匹配诊断</h1>
-        <p class="page-desc">上传简历或输入技能，诊断与目标岗位的匹配度</p>
+        <h1 class="page-title">
+          匹配诊断
+        </h1>
+        <p class="page-desc">
+          上传简历或输入技能，诊断与目标岗位的匹配度
+        </p>
       </div>
 
       <!-- Steps -->
-      <el-steps :active="step" finish-status="success" class="steps-bar" align-center>
-        <el-step v-for="title in stepTitles" :key="title" :title="title" />
+      <el-steps
+        :active="step"
+        finish-status="success"
+        class="steps-bar"
+        align-center
+      >
+        <el-step
+          v-for="title in stepTitles"
+          :key="title"
+          :title="title"
+        />
       </el-steps>
 
       <!-- Step 0: Upload/Input -->
-      <div v-if="step === 0" class="step-content">
+      <div
+        v-if="step === 0"
+        class="step-content"
+      >
         <div class="step-card">
           <div class="sc-header">
-            <h2 class="sc-title">录入你的技能</h2>
-            <p class="sc-desc">上传简历自动解析，或手动输入技能标签</p>
+            <h2 class="sc-title">
+              录入你的技能
+            </h2>
+            <p class="sc-desc">
+              上传简历自动解析，或手动输入技能标签
+            </p>
           </div>
 
           <el-row :gutter="20">
             <el-col :span="12">
               <div class="input-section">
-                <h3 class="is-title">上传简历</h3>
+                <h3 class="is-title">
+                  上传简历
+                </h3>
                 <ResumeUpload ref="resumeUploadRef" />
               </div>
             </el-col>
             <el-col :span="12">
               <div class="input-section">
-                <h3 class="is-title">手动输入技能</h3>
+                <h3 class="is-title">
+                  手动输入技能
+                </h3>
                 <div class="manual-input">
                   <el-input
                     v-model="skillInput"
@@ -228,17 +252,27 @@ function exportReport() {
                     @keyup.enter="addManualSkill"
                   >
                     <template #append>
-                      <el-button :icon="Plus" @click="addManualSkill">添加</el-button>
+                      <el-button
+                        :icon="Plus"
+                        @click="addManualSkill"
+                      >
+                        添加
+                      </el-button>
                     </template>
                   </el-input>
-                  <div v-if="manualSkills.length" class="skill-tags">
+                  <div
+                    v-if="manualSkills.length"
+                    class="skill-tags"
+                  >
                     <el-tag
                       v-for="s in manualSkills"
                       :key="s"
                       closable
                       size="default"
                       @close="removeManualSkill(s)"
-                    >{{ s }}</el-tag>
+                    >
+                      {{ s }}
+                    </el-tag>
                   </div>
                   <el-button
                     v-if="manualSkills.length"
@@ -256,33 +290,60 @@ function exportReport() {
       </div>
 
       <!-- Step 1: Select position -->
-      <div v-if="step === 1" class="step-content">
+      <div
+        v-if="step === 1"
+        class="step-content"
+      >
         <div class="step-card">
           <div class="sc-header">
-            <h2 class="sc-title">选择目标岗位</h2>
-            <p class="sc-desc">搜索并选择你要匹配的目标岗位</p>
+            <h2 class="sc-title">
+              选择目标岗位
+            </h2>
+            <p class="sc-desc">
+              搜索并选择你要匹配的目标岗位
+            </p>
           </div>
           <PositionSearch @select="handlePositionSelect" />
         </div>
       </div>
 
       <!-- Step 2: Radar comparison -->
-      <div v-if="step === 2" class="step-content">
+      <div
+        v-if="step === 2"
+        class="step-content"
+      >
         <div class="step-card">
           <div class="sc-header">
             <div class="sc-header-row">
               <div>
-                <h2 class="sc-title">技能雷达对比</h2>
-                <p class="sc-desc">你的技能 vs {{ targetPositionName }} 岗位要求</p>
+                <h2 class="sc-title">
+                  技能雷达对比
+                </h2>
+                <p class="sc-desc">
+                  你的技能 vs {{ targetPositionName }} 岗位要求
+                </p>
               </div>
-              <el-button text @click="step = 1">← 返回选岗</el-button>
+              <el-button
+                text
+                @click="step = 1"
+              >
+                ← 返回选岗
+              </el-button>
             </div>
           </div>
           <div v-loading="radarLoading">
-            <SkillRadar :data="radarData" :position-name="targetPositionName" />
+            <SkillRadar
+              :data="radarData"
+              :position-name="targetPositionName"
+            />
           </div>
           <div class="step-actions">
-            <el-button type="primary" size="large" :icon="DataAnalysis" @click="handleStartDiagnosis">
+            <el-button
+              type="primary"
+              size="large"
+              :icon="DataAnalysis"
+              @click="handleStartDiagnosis"
+            >
               开始诊断
             </el-button>
           </div>
@@ -290,15 +351,27 @@ function exportReport() {
       </div>
 
       <!-- Step 3: Gap analysis report -->
-      <div v-if="step === 3" class="step-content">
+      <div
+        v-if="step === 3"
+        class="step-content"
+      >
         <div class="step-card">
           <div class="sc-header">
             <div class="sc-header-row">
               <div>
-                <h2 class="sc-title">差距分析报告</h2>
-                <p class="sc-desc">综合评估你的岗位匹配度</p>
+                <h2 class="sc-title">
+                  差距分析报告
+                </h2>
+                <p class="sc-desc">
+                  综合评估你的岗位匹配度
+                </p>
               </div>
-              <el-button text @click="goBack">← 返回</el-button>
+              <el-button
+                text
+                @click="goBack"
+              >
+                ← 返回
+              </el-button>
             </div>
           </div>
 
@@ -313,15 +386,28 @@ function exportReport() {
                 <div class="rs-row">
                   <span class="rs-label">匹配技能</span>
                   <div class="rs-tags">
-                    <el-tag v-for="s in matchedSkills" :key="s" type="success" size="small">{{ s }}</el-tag>
-                    <span v-if="!matchedSkills.length" class="rs-empty">无</span>
+                    <el-tag
+                      v-for="s in matchedSkills"
+                      :key="s"
+                      type="success"
+                      size="small"
+                    >
+                      {{ s }}
+                    </el-tag>
+                    <span
+                      v-if="!matchedSkills.length"
+                      class="rs-empty"
+                    >无</span>
                   </div>
                 </div>
                 <div class="rs-row">
                   <span class="rs-label">综合评估</span>
                   <span class="rs-text">{{ matchResult?.overall_assessment ?? '等待评估结果生成' }}</span>
                 </div>
-                <div v-if="matchResult?.estimated_learning_time" class="rs-row">
+                <div
+                  v-if="matchResult?.estimated_learning_time"
+                  class="rs-row"
+                >
                   <span class="rs-label">预计学习时间</span>
                   <span class="rs-text">{{ matchResult?.estimated_learning_time }}</span>
                 </div>
@@ -329,19 +415,41 @@ function exportReport() {
             </div>
 
             <!-- Gap table -->
-            <h3 class="table-title">技能差距明细</h3>
-            <el-table :data="gapSkills" stripe class="full-width-table">
-              <el-table-column prop="skill" label="技能" min-width="140" />
-              <el-table-column label="重要性" width="100">
+            <h3 class="table-title">
+              技能差距明细
+            </h3>
+            <el-table
+              :data="gapSkills"
+              stripe
+              class="full-width-table"
+            >
+              <el-table-column
+                prop="skill"
+                label="技能"
+                min-width="140"
+              />
+              <el-table-column
+                label="重要性"
+                width="100"
+              >
                 <template #default="{ row }">
-                  <el-tag :type="row.importance === 'required' ? 'danger' : 'info'" size="small">
+                  <el-tag
+                    :type="row.importance === 'required' ? 'danger' : 'info'"
+                    size="small"
+                  >
                     {{ row.importance === 'required' ? '必备' : '加分' }}
                   </el-tag>
                 </template>
               </el-table-column>
-              <el-table-column label="差距程度" width="120">
+              <el-table-column
+                label="差距程度"
+                width="120"
+              >
                 <template #default="{ row }">
-                  <el-tag :type="row.gap_level === '完全缺失' ? 'danger' : row.gap_level === '部分掌握' ? 'warning' : 'success'" size="small">
+                  <el-tag
+                    :type="row.gap_level === '完全缺失' ? 'danger' : row.gap_level === '部分掌握' ? 'warning' : 'success'"
+                    size="small"
+                  >
                     {{ row.gap_level }}
                   </el-tag>
                 </template>
@@ -354,44 +462,105 @@ function exportReport() {
             </el-table>
 
             <div class="step-actions">
-              <el-button type="primary" size="large" :icon="Guide" @click="goToLearning">查看学习路径</el-button>
-              <el-button size="large" :icon="Download" @click="exportReport">导出报告</el-button>
+              <el-button
+                type="primary"
+                size="large"
+                :icon="Guide"
+                @click="goToLearning"
+              >
+                查看学习路径
+              </el-button>
+              <el-button
+                size="large"
+                :icon="Download"
+                @click="exportReport"
+              >
+                导出报告
+              </el-button>
             </div>
           </div>
-          <div v-else class="step-empty">诊断尚未开始，请完成前序步骤</div>
+          <div
+            v-else
+            class="step-empty"
+          >
+            诊断尚未开始，请完成前序步骤
+          </div>
         </div>
       </div>
 
       <!-- Step 4: Learning path -->
-      <div v-if="step === 4" class="step-content">
+      <div
+        v-if="step === 4"
+        class="step-content"
+      >
         <div class="step-card">
           <div class="sc-header">
             <div class="sc-header-row">
               <div>
-                <h2 class="sc-title">学习路径规划</h2>
-                <p class="sc-desc">基于技能差距的个性化学习建议</p>
+                <h2 class="sc-title">
+                  学习路径规划
+                </h2>
+                <p class="sc-desc">
+                  基于技能差距的个性化学习建议
+                </p>
               </div>
-              <el-button text @click="goBack">← 返回</el-button>
+              <el-button
+                text
+                @click="goBack"
+              >
+                ← 返回
+              </el-button>
             </div>
           </div>
-          <el-table :data="learningPaths" stripe class="full-width-table">
-            <el-table-column prop="skill" label="技能" min-width="140" />
-            <el-table-column label="优先级" width="100">
+          <el-table
+            :data="learningPaths"
+            stripe
+            class="full-width-table"
+          >
+            <el-table-column
+              prop="skill"
+              label="技能"
+              min-width="140"
+            />
+            <el-table-column
+              label="优先级"
+              width="100"
+            >
               <template #default="{ row }">
-                <el-tag :type="row.importance === 'required' ? 'danger' : 'info'" size="small">
+                <el-tag
+                  :type="row.importance === 'required' ? 'danger' : 'info'"
+                  size="small"
+                >
                   {{ row.importance === 'required' ? '必备' : '加分' }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="差距" width="100">
+            <el-table-column
+              label="差距"
+              width="100"
+            >
               <template #default="{ row }">
-                <el-tag :type="row.gapLevel === '完全缺失' ? 'danger' : 'warning'" size="small">{{ row.gapLevel }}</el-tag>
+                <el-tag
+                  :type="row.gapLevel === '完全缺失' ? 'danger' : 'warning'"
+                  size="small"
+                >
+                  {{ row.gapLevel }}
+                </el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="path" label="推荐学习路径" />
+            <el-table-column
+              prop="path"
+              label="推荐学习路径"
+            />
           </el-table>
           <div class="step-actions">
-            <el-button size="large" :icon="RefreshRight" @click="resetAll">重新开始</el-button>
+            <el-button
+              size="large"
+              :icon="RefreshRight"
+              @click="resetAll"
+            >
+              重新开始
+            </el-button>
           </div>
         </div>
       </div>

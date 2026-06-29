@@ -345,7 +345,10 @@ async function handleReset() {
             >
               当前筛选条件下无审核项
             </div>
-            <div v-if="filteredAuditQueue.length" style="margin-top: 16px; display: flex; justify-content: center;">
+            <div
+              v-if="filteredAuditQueue.length"
+              style="margin-top: 16px; display: flex; justify-content: center;"
+            >
               <el-pagination
                 v-model:current-page="currentPage"
                 v-model:page-size="pageSize"

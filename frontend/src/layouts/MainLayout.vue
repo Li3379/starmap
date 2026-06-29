@@ -38,22 +38,76 @@ function closeMobileMenu() { mobileMenuOpen.value = false }
 function navigateTo(path: string) { router.push(path); closeMobileMenu() }
 </script>
 <template>
-  <div class="layout" :class="{ 'sidebar-collapsed': sidebarCollapsed }">
+  <div
+    class="layout"
+    :class="{ 'sidebar-collapsed': sidebarCollapsed }"
+  >
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-header">
-        <router-link to="/" class="sidebar-brand" @click="closeMobileMenu">
+        <router-link
+          to="/"
+          class="sidebar-brand"
+          @click="closeMobileMenu"
+        >
           <div class="brand-mark">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="3.5" fill="currentColor" opacity="0.9"/>
-              <circle cx="12" cy="12" r="7.5" stroke="currentColor" stroke-width="1.5" opacity="0.35" stroke-dasharray="2 3"/>
-              <circle cx="12" cy="12" r="11" stroke="currentColor" stroke-width="0.8" opacity="0.12"/>
-              <circle cx="5.5" cy="7.5" r="1.3" fill="currentColor" opacity="0.5"/>
-              <circle cx="18.5" cy="5.5" r="1" fill="currentColor" opacity="0.35"/>
-              <circle cx="17" cy="18" r="1.2" fill="currentColor" opacity="0.45"/>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="3.5"
+                fill="currentColor"
+                opacity="0.9"
+              />
+              <circle
+                cx="12"
+                cy="12"
+                r="7.5"
+                stroke="currentColor"
+                stroke-width="1.5"
+                opacity="0.35"
+                stroke-dasharray="2 3"
+              />
+              <circle
+                cx="12"
+                cy="12"
+                r="11"
+                stroke="currentColor"
+                stroke-width="0.8"
+                opacity="0.12"
+              />
+              <circle
+                cx="5.5"
+                cy="7.5"
+                r="1.3"
+                fill="currentColor"
+                opacity="0.5"
+              />
+              <circle
+                cx="18.5"
+                cy="5.5"
+                r="1"
+                fill="currentColor"
+                opacity="0.35"
+              />
+              <circle
+                cx="17"
+                cy="18"
+                r="1.2"
+                fill="currentColor"
+                opacity="0.45"
+              />
             </svg>
           </div>
-          <div class="brand-text-group" v-show="!sidebarCollapsed">
+          <div
+            v-show="!sidebarCollapsed"
+            class="brand-text-group"
+          >
             <span class="brand-text">StarMap</span>
             <span class="brand-badge">星图</span>
           </div>
@@ -61,25 +115,57 @@ function navigateTo(path: string) { router.push(path); closeMobileMenu() }
       </div>
 
       <nav class="sidebar-nav">
-        <div v-for="group in navGroups" :key="group.key" class="nav-group">
-          <span class="nav-group-label" v-show="!sidebarCollapsed">{{ group.label }}</span>
-          <div v-for="item in navItems.filter(i => i.group === group.key)" :key="item.path" class="nav-item" :class="{ active: route.path === item.path }" @click="navigateTo(item.path)">
+        <div
+          v-for="group in navGroups"
+          :key="group.key"
+          class="nav-group"
+        >
+          <span
+            v-show="!sidebarCollapsed"
+            class="nav-group-label"
+          >{{ group.label }}</span>
+          <div
+            v-for="item in navItems.filter(i => i.group === group.key)"
+            :key="item.path"
+            class="nav-item"
+            :class="{ active: route.path === item.path }"
+            @click="navigateTo(item.path)"
+          >
             <div class="nav-item-icon">
-              <el-icon :size="18"><component :is="item.icon" /></el-icon>
+              <el-icon :size="18">
+                <component :is="item.icon" />
+              </el-icon>
             </div>
-            <span class="nav-item-label" v-show="!sidebarCollapsed">{{ item.title }}</span>
-            <div v-if="route.path === item.path" class="nav-item-indicator" />
+            <span
+              v-show="!sidebarCollapsed"
+              class="nav-item-label"
+            >{{ item.title }}</span>
+            <div
+              v-if="route.path === item.path"
+              class="nav-item-indicator"
+            />
           </div>
         </div>
       </nav>
 
       <div class="sidebar-footer">
-        <button class="sidebar-action" @click="toggleDarkMode" :title="isDark ? '切换亮色' : '切换暗色'">
-          <el-icon :size="16"><component :is="isDark ? Sunny : MoonNight" /></el-icon>
+        <button
+          class="sidebar-action"
+          :title="isDark ? '切换亮色' : '切换暗色'"
+          @click="toggleDarkMode"
+        >
+          <el-icon :size="16">
+            <component :is="isDark ? Sunny : MoonNight" />
+          </el-icon>
           <span v-show="!sidebarCollapsed">{{ isDark ? '亮色模式' : '暗色模式' }}</span>
         </button>
-        <button class="sidebar-action" @click="sidebarCollapsed = !sidebarCollapsed">
-          <el-icon :size="16"><component :is="sidebarCollapsed ? Expand : Fold" /></el-icon>
+        <button
+          class="sidebar-action"
+          @click="sidebarCollapsed = !sidebarCollapsed"
+        >
+          <el-icon :size="16">
+            <component :is="sidebarCollapsed ? Expand : Fold" />
+          </el-icon>
           <span v-show="!sidebarCollapsed">收起侧栏</span>
         </button>
       </div>
@@ -89,25 +175,74 @@ function navigateTo(path: string) { router.push(path); closeMobileMenu() }
     <div class="main-wrapper">
       <!-- Mobile Header -->
       <header class="mobile-header">
-        <button class="mobile-toggle" @click="mobileMenuOpen = !mobileMenuOpen">
-          <span :class="{ open: mobileMenuOpen }"/>
-          <span :class="{ open: mobileMenuOpen }"/>
-          <span :class="{ open: mobileMenuOpen }"/>
+        <button
+          class="mobile-toggle"
+          @click="mobileMenuOpen = !mobileMenuOpen"
+        >
+          <span :class="{ open: mobileMenuOpen }" />
+          <span :class="{ open: mobileMenuOpen }" />
+          <span :class="{ open: mobileMenuOpen }" />
         </button>
-        <router-link to="/" class="mobile-brand">
-          <div class="brand-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" fill="currentColor" opacity="0.9"/><circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="1.5" opacity="0.4"/><circle cx="12" cy="12" r="11" stroke="currentColor" stroke-width="1" opacity="0.15"/></svg></div>
+        <router-link
+          to="/"
+          class="mobile-brand"
+        >
+          <div class="brand-mark">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+            ><circle
+              cx="12"
+              cy="12"
+              r="3"
+              fill="currentColor"
+              opacity="0.9"
+            /><circle
+              cx="12"
+              cy="12"
+              r="7"
+              stroke="currentColor"
+              stroke-width="1.5"
+              opacity="0.4"
+            /><circle
+              cx="12"
+              cy="12"
+              r="11"
+              stroke="currentColor"
+              stroke-width="1"
+              opacity="0.15"
+            /></svg>
+          </div>
           <span class="brand-text">StarMap</span>
         </router-link>
-        <button class="action-btn" @click="toggleDarkMode">
-          <el-icon :size="16"><component :is="isDark ? Sunny : MoonNight" /></el-icon>
+        <button
+          class="action-btn"
+          @click="toggleDarkMode"
+        >
+          <el-icon :size="16">
+            <component :is="isDark ? Sunny : MoonNight" />
+          </el-icon>
         </button>
       </header>
 
       <!-- Mobile Menu Overlay -->
       <transition name="slide-down">
-        <div v-if="mobileMenuOpen" class="mobile-menu glass">
-          <div v-for="item in navItems" :key="item.path" class="mobile-link" :class="{ active: route.path === item.path }" @click="navigateTo(item.path)">
-            <el-icon :size="16"><component :is="item.icon" /></el-icon>
+        <div
+          v-if="mobileMenuOpen"
+          class="mobile-menu glass"
+        >
+          <div
+            v-for="item in navItems"
+            :key="item.path"
+            class="mobile-link"
+            :class="{ active: route.path === item.path }"
+            @click="navigateTo(item.path)"
+          >
+            <el-icon :size="16">
+              <component :is="item.icon" />
+            </el-icon>
             {{ item.title }}
           </div>
         </div>
@@ -116,9 +251,18 @@ function navigateTo(path: string) { router.push(path); closeMobileMenu() }
       <!-- Breadcrumb -->
       <div class="breadcrumb-bar">
         <nav class="breadcrumbs">
-          <template v-for="(crumb, idx) in breadcrumbs" :key="idx">
-            <span v-if="idx > 0" class="bc-sep">/</span>
-            <span class="bc-item" :class="{ 'bc-current': idx === breadcrumbs.length - 1 }">{{ crumb }}</span>
+          <template
+            v-for="(crumb, idx) in breadcrumbs"
+            :key="idx"
+          >
+            <span
+              v-if="idx > 0"
+              class="bc-sep"
+            >/</span>
+            <span
+              class="bc-item"
+              :class="{ 'bc-current': idx === breadcrumbs.length - 1 }"
+            >{{ crumb }}</span>
           </template>
         </nav>
       </div>

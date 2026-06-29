@@ -8,7 +8,10 @@
       :name="(route.meta?.transition as string) || 'page-fade'"
       mode="out-in"
     >
-      <component :is="Component" :key="route.path" />
+      <component
+        :is="Component"
+        :key="route.path"
+      />
     </transition>
   </router-view>
 </template>

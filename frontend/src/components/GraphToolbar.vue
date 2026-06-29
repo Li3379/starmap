@@ -20,22 +20,52 @@ defineEmits<{
 
 <template>
   <div class="graph-toolbar glass">
-    <el-tooltip content="放大" placement="top">
-      <button class="tb-btn" @click="$emit('zoomIn')"><el-icon><ZoomIn /></el-icon></button>
+    <el-tooltip
+      content="放大"
+      placement="top"
+    >
+      <button
+        class="tb-btn"
+        @click="$emit('zoomIn')"
+      >
+        <el-icon><ZoomIn /></el-icon>
+      </button>
     </el-tooltip>
-    <el-tooltip content="缩小" placement="top">
-      <button class="tb-btn" @click="$emit('zoomOut')"><el-icon><ZoomOut /></el-icon></button>
+    <el-tooltip
+      content="缩小"
+      placement="top"
+    >
+      <button
+        class="tb-btn"
+        @click="$emit('zoomOut')"
+      >
+        <el-icon><ZoomOut /></el-icon>
+      </button>
     </el-tooltip>
-    <el-tooltip content="居中" placement="top">
-      <button class="tb-btn" @click="$emit('zoomFit')"><el-icon><Aim /></el-icon></button>
+    <el-tooltip
+      content="居中"
+      placement="top"
+    >
+      <button
+        class="tb-btn"
+        @click="$emit('zoomFit')"
+      >
+        <el-icon><Aim /></el-icon>
+      </button>
     </el-tooltip>
-    <span class="tb-divider"></span>
-    <el-tooltip :content="layoutMode === 'force' ? '切换分层' : '切换力导向'" placement="top">
-      <button class="tb-btn" @click="$emit('toggleLayout')">
+    <span class="tb-divider" />
+    <el-tooltip
+      :content="layoutMode === 'force' ? '切换分层' : '切换力导向'"
+      placement="top"
+    >
+      <button
+        class="tb-btn"
+        @click="$emit('toggleLayout')"
+      >
         <span class="tb-label">{{ layoutMode === 'force' ? '力' : '层' }}</span>
       </button>
     </el-tooltip>
-    <span class="tb-divider"></span>
+    <span class="tb-divider" />
     <span class="tb-count">{{ nodeCount }} 节点</span>
   </div>
 </template>

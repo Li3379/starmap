@@ -178,109 +178,366 @@ onMounted(fetchTrends)
       <!-- 标题 -->
       <div class="page-header">
         <div>
-          <h2 class="page-title">演化趋势看板</h2>
-          <p class="page-subtitle">CII 时序曲线 — 技能需求通胀指数（基准 100 = 2024-Q1）</p>
+          <h2 class="page-title">
+            演化趋势看板
+          </h2>
+          <p class="page-subtitle">
+            CII 时序曲线 — 技能需求通胀指数（基准 100 = 2024-Q1）
+          </p>
         </div>
-        <el-select v-model="selectedSkill" placeholder="全部技能" clearable size="small" class="select-sm">
-          <el-option v-for="item in items" :key="item.skill_name" :label="item.skill_name" :value="item.skill_name" />
+        <el-select
+          v-model="selectedSkill"
+          placeholder="全部技能"
+          clearable
+          size="small"
+          class="select-sm"
+        >
+          <el-option
+            v-for="item in items"
+            :key="item.skill_name"
+            :label="item.skill_name"
+            :value="item.skill_name"
+          />
         </el-select>
       </div>
 
       <!-- KPI 区域: CII 仪表盘 + 新兴技能卡片 -->
       <div class="kpi-row">
         <!-- CII 仪表盘 -->
-        <el-card class="gauge-card" shadow="hover">
-          <template #header><div class="card-header-row"><span>CII 仪表盘</span><span class="card-header-badge">实时</span></div></template>
-          <VChart v-if="items.length" :option="ciiGaugeOption" autoresize class="chart-h-gauge" />
-          <div v-else class="custom-empty"><div class="empty-icon-wrapper"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div><p class="empty-text">图表数据为空</p><p class="empty-hint-text">技能 CII 数据将在分析完成后展示</p></div>
+        <el-card
+          class="gauge-card"
+          shadow="hover"
+        >
+          <template #header>
+            <div class="card-header-row">
+              <span>CII 仪表盘</span><span class="card-header-badge">实时</span>
+            </div>
+          </template>
+          <VChart
+            v-if="items.length"
+            :option="ciiGaugeOption"
+            autoresize
+            class="chart-h-gauge"
+          />
+          <div
+            v-else
+            class="custom-empty"
+          >
+            <div class="empty-icon-wrapper">
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ><path d="M3 3v18h18" /><path d="m19 9-5 5-4-4-3 3" /></svg>
+            </div><p class="empty-text">
+              图表数据为空
+            </p><p class="empty-hint-text">
+              技能 CII 数据将在分析完成后展示
+            </p>
+          </div>
         </el-card>
 
         <!-- 新兴技能卡片 -->
-        <el-card class="emerging-card" shadow="hover">
-          <template #header><div class="card-header-row"><span>新兴技能</span><el-tag type="success" size="small" effect="plain" class="ml-2">rising</el-tag></div></template>
+        <el-card
+          class="emerging-card"
+          shadow="hover"
+        >
+          <template #header>
+            <div class="card-header-row">
+              <span>新兴技能</span><el-tag
+                type="success"
+                size="small"
+                effect="plain"
+                class="ml-2"
+              >
+                rising
+              </el-tag>
+            </div>
+          </template>
           <div class="emerging-grid">
-            <div v-for="skill in emergingSkills" :key="skill.skill_name" class="emerging-item" @click="fetchChangelog(skill.skill_name)">
-              <div class="emerging-name">{{ skill.skill_name }}</div>
+            <div
+              v-for="skill in emergingSkills"
+              :key="skill.skill_name"
+              class="emerging-item"
+              @click="fetchChangelog(skill.skill_name)"
+            >
+              <div class="emerging-name">
+                {{ skill.skill_name }}
+              </div>
               <div class="emerging-meta">
                 <span class="emerging-cii">CII {{ skill.points?.[skill.points.length - 1] ?? '-' }}</span>
-                <el-tag size="small" type="success" effect="plain" class="pulse-tag">↑ {{ ((skill.confidence ?? 0) * 100).toFixed(0) }}%</el-tag>
+                <el-tag
+                  size="small"
+                  type="success"
+                  effect="plain"
+                  class="pulse-tag"
+                >
+                  ↑ {{ ((skill.confidence ?? 0) * 100).toFixed(0) }}%
+                </el-tag>
               </div>
             </div>
-            <div v-if="!emergingSkills.length" class="custom-empty"><div class="empty-icon-wrapper"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div><p class="empty-text">暂未检测到新兴技能</p><p class="empty-hint-text">当技能 CII 指数出现显著上升时会在此显示</p></div>
+            <div
+              v-if="!emergingSkills.length"
+              class="custom-empty"
+            >
+              <div class="empty-icon-wrapper">
+                <svg
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ><path d="M3 3v18h18" /><path d="m19 9-5 5-4-4-3 3" /></svg>
+              </div><p class="empty-text">
+                暂未检测到新兴技能
+              </p><p class="empty-hint-text">
+                当技能 CII 指数出现显著上升时会在此显示
+              </p>
+            </div>
           </div>
         </el-card>
       </div>
 
       <!-- 曲线图 -->
-      <el-card v-loading="loading" class="chart-card">
-        <template #header>CII 时序趋势</template>
-        <VChart v-if="items.length" :option="chartOption" autoresize class="chart-h-lg" />
-        <div v-else class="custom-empty"><div class="empty-icon-wrapper"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg></div><p class="empty-text">演化数据待生成</p><p class="empty-hint-text">CII 时序分析运行后将自动填充</p></div>
+      <el-card
+        v-loading="loading"
+        class="chart-card"
+      >
+        <template #header>
+          CII 时序趋势
+        </template>
+        <VChart
+          v-if="items.length"
+          :option="chartOption"
+          autoresize
+          class="chart-h-lg"
+        />
+        <div
+          v-else
+          class="custom-empty"
+        >
+          <div class="empty-icon-wrapper">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ><ellipse
+              cx="12"
+              cy="5"
+              rx="9"
+              ry="3"
+            /><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5" /><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3" /></svg>
+          </div><p class="empty-text">
+            演化数据待生成
+          </p><p class="empty-hint-text">
+            CII 时序分析运行后将自动填充
+          </p>
+        </div>
       </el-card>
 
       <!-- Task 3: 技能对比 -->
-      <el-card class="compare-card" shadow="hover">
-        <template #header>技能对比</template>
+      <el-card
+        class="compare-card"
+        shadow="hover"
+      >
+        <template #header>
+          技能对比
+        </template>
         <div class="compare-selectors">
-          <el-select v-model="compareSkillA" placeholder="选择技能 A" clearable size="small" class="select-md">
-            <el-option v-for="item in items" :key="'A_' + item.skill_name" :label="item.skill_name" :value="item.skill_name" />
+          <el-select
+            v-model="compareSkillA"
+            placeholder="选择技能 A"
+            clearable
+            size="small"
+            class="select-md"
+          >
+            <el-option
+              v-for="item in items"
+              :key="'A_' + item.skill_name"
+              :label="item.skill_name"
+              :value="item.skill_name"
+            />
           </el-select>
           <span class="compare-vs">VS</span>
-          <el-select v-model="compareSkillB" placeholder="选择技能 B" clearable size="small" class="select-md">
-            <el-option v-for="item in items" :key="'B_' + item.skill_name" :label="item.skill_name" :value="item.skill_name" />
+          <el-select
+            v-model="compareSkillB"
+            placeholder="选择技能 B"
+            clearable
+            size="small"
+            class="select-md"
+          >
+            <el-option
+              v-for="item in items"
+              :key="'B_' + item.skill_name"
+              :label="item.skill_name"
+              :value="item.skill_name"
+            />
           </el-select>
         </div>
-        <VChart v-if="compareOption" :option="compareOption" autoresize class="chart-h-md mt-3" />
-        <div v-else class="compare-placeholder">选择两个技能进行对比分析</div>
+        <VChart
+          v-if="compareOption"
+          :option="compareOption"
+          autoresize
+          class="chart-h-md mt-3"
+        />
+        <div
+          v-else
+          class="compare-placeholder"
+        >
+          选择两个技能进行对比分析
+        </div>
       </el-card>
 
       <!-- 趋势概览表 -->
       <el-card class="table-card">
-        <template #header>趋势概览</template>
-        <el-table :data="items" size="small" stripe @row-click="(row: any) => fetchChangelog(row.skill_name)">
-          <el-table-column prop="skill_name" label="技能" min-width="120">
+        <template #header>
+          趋势概览
+        </template>
+        <el-table
+          :data="items"
+          size="small"
+          stripe
+          @row-click="(row: any) => fetchChangelog(row.skill_name)"
+        >
+          <el-table-column
+            prop="skill_name"
+            label="技能"
+            min-width="120"
+          >
             <template #default="{ row }">
-              <el-link type="primary">{{ row.skill_name }}</el-link>
+              <el-link type="primary">
+                {{ row.skill_name }}
+              </el-link>
             </template>
           </el-table-column>
-          <el-table-column label="趋势" width="100">
+          <el-table-column
+            label="趋势"
+            width="100"
+          >
             <template #default="{ row }">
-              <el-tag :type="trendTagType[row.trend]" size="small" effect="plain">{{ trendLabel[row.trend] ?? row.trend }}</el-tag>
+              <el-tag
+                :type="trendTagType[row.trend]"
+                size="small"
+                effect="plain"
+              >
+                {{ trendLabel[row.trend] ?? row.trend }}
+              </el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="当前 CII" width="100">
-            <template #default="{ row }"><b>{{ row.points?.[row.points.length - 1] ?? '-' }}</b></template>
-          </el-table-column>
-          <el-table-column label="变化" width="100">
+          <el-table-column
+            label="当前 CII"
+            width="100"
+          >
             <template #default="{ row }">
-              <span v-if="row.points?.length" :class="row.points.at(-1)! >= 100 ? 'cii-up' : 'cii-down'">
+              <b>{{ row.points?.[row.points.length - 1] ?? '-' }}</b>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="变化"
+            width="100"
+          >
+            <template #default="{ row }">
+              <span
+                v-if="row.points?.length"
+                :class="row.points.at(-1)! >= 100 ? 'cii-up' : 'cii-down'"
+              >
                 {{ row.points.at(-1)! >= 100 ? '+' : '' }}{{ row.points.at(-1)! - 100 }}%
               </span>
             </template>
           </el-table-column>
-          <el-table-column label="置信度" width="90">
-            <template #default="{ row }">{{ ((row.confidence ?? 0) * 100).toFixed(0) }}%</template>
-          </el-table-column>
-          <el-table-column label="关联岗位" min-width="200">
+          <el-table-column
+            label="置信度"
+            width="90"
+          >
             <template #default="{ row }">
-              <el-tag v-for="pos in row.related_positions" :key="pos" size="small" class="related-tag">{{ pos }}</el-tag>
+              {{ ((row.confidence ?? 0) * 100).toFixed(0) }}%
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="关联岗位"
+            min-width="200"
+          >
+            <template #default="{ row }">
+              <el-tag
+                v-for="pos in row.related_positions"
+                :key="pos"
+                size="small"
+                class="related-tag"
+              >
+                {{ pos }}
+              </el-tag>
             </template>
           </el-table-column>
         </el-table>
       </el-card>
 
       <!-- 演化详情抽屉 -->
-      <el-drawer v-model="drawerVisible" :title="`${selectedSkillForDetail} 演化历史`" size="400px">
+      <el-drawer
+        v-model="drawerVisible"
+        :title="`${selectedSkillForDetail} 演化历史`"
+        size="400px"
+      >
         <div v-loading="changelogLoading">
           <el-timeline v-if="changelogData.length">
-            <el-timeline-item v-for="(item, idx) in changelogData" :key="idx" :timestamp="item.date ?? item.created_at ?? ''" placement="top">
+            <el-timeline-item
+              v-for="(item, idx) in changelogData"
+              :key="idx"
+              :timestamp="item.date ?? item.created_at ?? ''"
+              placement="top"
+            >
               <el-card shadow="never">
                 <p><b>{{ item.change_type ?? '变更' }}</b>: {{ item.description ?? item.detail ?? '' }}</p>
-                <p v-if="item.trust_score" class="trust-meta">信任度: {{ (item.trust_score * 100).toFixed(0) }}%</p>
+                <p
+                  v-if="item.trust_score"
+                  class="trust-meta"
+                >
+                  信任度: {{ (item.trust_score * 100).toFixed(0) }}%
+                </p>
               </el-card>
             </el-timeline-item>
           </el-timeline>
-          <div v-else class="custom-empty"><div class="empty-icon-wrapper"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div><p class="empty-text">该技能暂无变更记录</p></div>
+          <div
+            v-else
+            class="custom-empty"
+          >
+            <div class="empty-icon-wrapper">
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line
+                x1="16"
+                y1="13"
+                x2="8"
+                y2="13"
+              /><line
+                x1="16"
+                y1="17"
+                x2="8"
+                y2="17"
+              /><polyline points="10 9 9 9 8 9" /></svg>
+            </div><p class="empty-text">
+              该技能暂无变更记录
+            </p>
+          </div>
         </div>
       </el-drawer>
     </div>

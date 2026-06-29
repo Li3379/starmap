@@ -51,6 +51,11 @@ export function axisLabelStyle() {
   return { color: chartColors().muted, fontSize: 11 }
 }
 
+/** Shared ECharts legend text config */
+export function legendStyle() {
+  return { color: chartColors().muted, fontSize: 11, fontFamily: 'inherit' }
+}
+
 /** Gauge color thresholds — returns color based on value ranges */
 export function gaugeColor(value: number, warn: number = 100, danger: number = 120) {
   const c = chartColors()

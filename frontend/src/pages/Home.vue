@@ -26,11 +26,18 @@ const graphRef = ref<HTMLElement | null>(null)
 let graph: Graph | null = null
 
 // ── 颜色常量 ──
-const KA_FALLBACK_COLORS = ["#9B59B6", "#E6A23C", "#409EFF", "#67C23A", "#36CFC9", "#F56C6C", "#E040FB", "#FF7043", "#00BCD4", "#8BC34A", "#FF5252", "#7C4DFF", "#009688", "#FF9800"]
+const KA_FALLBACK_COLORS = computed(() => {
+  const base = chartColors()
+  return [
+    base.primary, base.success, base.warning, base.info, base.chart[0],
+    base.chart[1], base.chart[2], base.chart[3], base.chart[4],
+    base.danger, base.primary, base.success, base.warning, base.info
+  ]
+})
 const KA_COLOR_MAP = computed(() => {
   const map = new Map<string, string>()
   graphStore.domains.forEach((d, i) => {
-    map.set(d.id, d.color || KA_FALLBACK_COLORS[i % KA_FALLBACK_COLORS.length])
+    map.set(d.id, d.color || KA_FALLBACK_COLORS.value[i % KA_FALLBACK_COLORS.value.length])
   })
   return map
 })
@@ -337,7 +344,7 @@ function renderDomainLayer() {
     const posCount = domain?.position_count ?? 0
     const importance = skillCount + posCount * 2
     const size = minSize + (skillCount / maxSkill) * (maxSize - minSize)
-    const color = KA_COLOR_MAP.value.get(n.id) ?? KA_FALLBACK_COLORS[i % KA_FALLBACK_COLORS.length]
+    const color = KA_COLOR_MAP.value.get(n.id) ?? KA_FALLBACK_COLORS.value[i % KA_FALLBACK_COLORS.value.length]
     return {
       id: n.id,
       style: {

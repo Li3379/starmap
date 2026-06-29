@@ -11,7 +11,7 @@ import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
 import MainLayout from '@/layouts/MainLayout.vue'
 import request from '@/api/request'
-import { chartColors, tooltipStyle, splitLineStyle, gaugeColor } from '@/utils/chartTheme'
+import { chartColors, tooltipStyle, splitLineStyle, gaugeColor, legendStyle } from '@/utils/chartTheme'
 
 use([CanvasRenderer, LineChart, BarChart, GaugeChart, TitleComponent, TooltipComponent, LegendComponent, GridComponent])
 
@@ -143,7 +143,7 @@ const compareOption = computed(() => {
   if (!itemA || !itemB) return null
   return {
     tooltip: { ...tooltipStyle(), trigger: 'axis' },
-    legend: { data: [compareSkillA.value, compareSkillB.value], bottom: 0 },
+    legend: { data: [compareSkillA.value, compareSkillB.value], bottom: 0, textStyle: legendStyle() },
     grid: { left: 50, right: 30, top: 30, bottom: 40 },
     xAxis: { type: 'category', data: quarters.value, boundaryGap: false },
     yAxis: { type: 'value', name: 'CII', splitLine: splitLineStyle() },

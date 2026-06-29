@@ -8,7 +8,7 @@ import { ElMessage } from 'element-plus'
 import { RefreshRight } from '@element-plus/icons-vue'
 import MainLayout from '@/layouts/MainLayout.vue'
 import { useQualityStore } from '@/stores/quality'
-import { chartColors, tooltipStyle, splitLineStyle, axisLabelStyle } from '@/utils/chartTheme'
+import { chartColors, tooltipStyle, splitLineStyle, axisLabelStyle, legendStyle } from '@/utils/chartTheme'
 
 const quality = useQualityStore()
 
@@ -173,7 +173,7 @@ const sourceChartOption = computed(() => {
   if (!quality.metrics?.source_distribution) return {}
   return {
     tooltip: { ...tooltipStyle(), trigger: 'item', formatter: '{b}: {c} 条 ({d}%)' },
-    legend: { bottom: 0, textStyle: { fontSize: 12 } },
+    legend: { bottom: 0, textStyle: legendStyle() },
     series: [{
       type: 'pie',
       radius: ['48%', '75%'],

@@ -6,7 +6,7 @@
 import { computed } from 'vue'
 import VChart from 'vue-echarts'
 import { use } from 'echarts/core'
-import { chartColors } from '@/utils/chartTheme'
+import { chartColors, legendStyle } from '@/utils/chartTheme'
 import { RadarChart } from 'echarts/charts'
 import { TooltipComponent, LegendComponent, RadarComponent } from 'echarts/components'
 
@@ -42,10 +42,7 @@ const radarOption = computed(() => {
         return `${p.name}<br/>我的掌握：${(p.value * 100).toFixed(0)}%`
       },
     },
-    legend: {
-      data: ['岗位要求', '我的技能'],
-      bottom: 0,
-    },
+    legend: { bottom: 0, textStyle: legendStyle() },
     radar: {
       center: ['50%', '48%'],
       radius: '65%',

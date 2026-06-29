@@ -167,14 +167,14 @@ async function handleReset() {
               placeholder="搜索技能或岗位名..."
               :prefix-icon="Search"
               clearable
-              style="width: 240px"
+              class="input-search"
               size="default"
             />
             <el-select
               v-model="typeFilter"
               placeholder="按类型过滤"
               clearable
-              style="width: 130px"
+              class="select-filter"
               size="default"
             >
               <el-option
@@ -230,13 +230,13 @@ async function handleReset() {
       <!-- 审核 + 数据源 -->
       <el-row
         :gutter="16"
-        style="margin-top: 16px"
+        class="mt-4"
       >
         <!-- 审核队列 -->
         <el-col
           :lg="14"
           :sm="24"
-          style="margin-bottom: 16px"
+          class="mb-4"
         >
           <el-card
             shadow="never"
@@ -307,7 +307,7 @@ async function handleReset() {
                       :percentage="row.trust"
                       :stroke-width="6"
                       :color="row.trust >= 70 ? '#67c23a' : row.trust >= 50 ? '#e6a23c' : '#f56c6c'"
-                      style="flex: 1"
+                      class="flex-1"
                     />
                     <span class="trust-pct">{{ row.trust }}%</span>
                   </div>
@@ -362,7 +362,7 @@ async function handleReset() {
         <el-col
           :lg="10"
           :sm="24"
-          style="margin-bottom: 16px"
+          class="mb-4"
         >
           <el-card
             shadow="never"
@@ -415,11 +415,11 @@ async function handleReset() {
         <el-col
           :lg="10"
           :sm="24"
-          style="margin-bottom: 16px"
+          class="mb-4"
         >
           <el-card
             shadow="never"
-            style="margin-top: 16px"
+            class="mt-4"
           >
             <template #header>
               <span class="section-label">演示数据管理</span>
@@ -429,7 +429,7 @@ async function handleReset() {
             </p>
             <el-button
               type="danger"
-              style="margin-top: 12px"
+              class="mt-3"
               :icon="Delete"
               @click="handleReset"
             >
@@ -510,4 +510,13 @@ async function handleReset() {
 .empty-state { text-align: center; padding: var(--space-6); color: var(--muted-foreground); }
 .demo-desc { color: var(--muted-foreground); font-size: var(--font-size-sm); line-height: 1.8; margin: 0; }
 .section-label { font-weight: 600; }
+
+/* Layout utilities */
+.input-search { width: 240px; }
+.select-filter { width: 130px; }
+.mt-4 { margin-top: var(--space-4); }
+.mt-3 { margin-top: var(--space-3); }
+.mb-4 { margin-bottom: var(--space-4); }
+.flex-1 { flex: 1; }
+.fw-600 { font-weight: 600; }
 </style>

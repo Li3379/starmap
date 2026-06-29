@@ -231,7 +231,7 @@ const sourceChartOption = computed(() => {
       <!-- 4 指标卡（含趋势） -->
       <el-row
         :gutter="16"
-        style="margin-bottom: 16px"
+        class="mb-4"
       >
         <el-col
           v-for="card in kpiCardsEnhanced"
@@ -239,7 +239,7 @@ const sourceChartOption = computed(() => {
           :lg="6"
           :md="12"
           :sm="24"
-          style="margin-bottom: 16px"
+          class="mb-4"
         >
           <el-card
             shadow="hover"
@@ -279,12 +279,12 @@ const sourceChartOption = computed(() => {
       <!-- 直方图 + 趋势 -->
       <el-row
         :gutter="16"
-        style="margin-bottom: 16px"
+        class="mb-4"
       >
         <el-col
           :lg="12"
           :sm="24"
-          style="margin-bottom: 16px"
+          class="mb-4"
         >
           <el-card
             v-loading="quality.loading"
@@ -294,7 +294,7 @@ const sourceChartOption = computed(() => {
             <v-chart
               v-if="quality.metrics?.trust_distribution"
               :option="histogramOption"
-              style="height: 330px"
+              class="chart-h-md"
               autoresize
             />
             <el-empty
@@ -307,7 +307,7 @@ const sourceChartOption = computed(() => {
         <el-col
           :lg="12"
           :sm="24"
-          style="margin-bottom: 16px"
+          class="mb-4"
         >
           <el-card
             v-loading="quality.loading"
@@ -317,7 +317,7 @@ const sourceChartOption = computed(() => {
             <v-chart
               v-if="quality.metrics?.hallucination_trend"
               :option="trendChartOption"
-              style="height: 330px"
+              class="chart-h-md"
               autoresize
             />
             <el-empty
@@ -334,7 +334,7 @@ const sourceChartOption = computed(() => {
         <el-col
           :lg="12"
           :sm="24"
-          style="margin-bottom: 16px"
+          class="mb-4"
         >
           <el-card
             v-loading="quality.loading"
@@ -344,7 +344,7 @@ const sourceChartOption = computed(() => {
             <v-chart
               v-if="quality.metrics?.source_distribution"
               :option="sourceChartOption"
-              style="height: 310px"
+              class="chart-h-sm"
               autoresize
             />
             <el-empty
@@ -357,7 +357,7 @@ const sourceChartOption = computed(() => {
         <el-col
           :lg="12"
           :sm="24"
-          style="margin-bottom: 16px"
+          class="mb-4"
         >
           <el-card
             v-loading="quality.loading"
@@ -542,4 +542,9 @@ const sourceChartOption = computed(() => {
     font-size: var(--font-size-2xl);
   }
 }
+
+/* Layout utilities */
+.mb-4 { margin-bottom: var(--space-4); }
+.chart-h-md { height: 330px; }
+.chart-h-sm { height: 310px; }
 </style>

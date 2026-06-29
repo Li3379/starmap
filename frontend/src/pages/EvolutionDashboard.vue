@@ -181,7 +181,7 @@ onMounted(fetchTrends)
           <h2 class="page-title">演化趋势看板</h2>
           <p class="page-subtitle">CII 时序曲线 — 技能需求通胀指数（基准 100 = 2024-Q1）</p>
         </div>
-        <el-select v-model="selectedSkill" placeholder="全部技能" clearable size="small" style="width: 160px">
+        <el-select v-model="selectedSkill" placeholder="全部技能" clearable size="small" class="select-sm">
           <el-option v-for="item in items" :key="item.skill_name" :label="item.skill_name" :value="item.skill_name" />
         </el-select>
       </div>
@@ -191,7 +191,7 @@ onMounted(fetchTrends)
         <!-- CII 仪表盘 -->
         <el-card class="gauge-card" shadow="hover">
           <template #header>CII 仪表盘</template>
-          <VChart v-if="items.length" :option="ciiGaugeOption" autoresize style="height: 240px" />
+          <VChart v-if="items.length" :option="ciiGaugeOption" autoresize class="chart-h-gauge" />
           <el-empty v-else description="暂无数据" />
         </el-card>
 
@@ -199,7 +199,7 @@ onMounted(fetchTrends)
         <el-card class="emerging-card" shadow="hover">
           <template #header>
             <span>新兴技能</span>
-            <el-tag type="success" size="small" effect="plain" style="margin-left: 8px">rising</el-tag>
+            <el-tag type="success" size="small" effect="plain" class="ml-2">rising</el-tag>
           </template>
           <div class="emerging-grid">
             <div v-for="skill in emergingSkills" :key="skill.skill_name" class="emerging-item" @click="fetchChangelog(skill.skill_name)">
@@ -217,7 +217,7 @@ onMounted(fetchTrends)
       <!-- 曲线图 -->
       <el-card v-loading="loading" class="chart-card">
         <template #header>CII 时序趋势</template>
-        <VChart v-if="items.length" :option="chartOption" autoresize style="height: 420px" />
+        <VChart v-if="items.length" :option="chartOption" autoresize class="chart-h-lg" />
         <el-empty v-else description="暂无演化数据" />
       </el-card>
 
@@ -225,15 +225,15 @@ onMounted(fetchTrends)
       <el-card class="compare-card" shadow="hover">
         <template #header>技能对比</template>
         <div class="compare-selectors">
-          <el-select v-model="compareSkillA" placeholder="选择技能 A" clearable size="small" style="width: 180px">
+          <el-select v-model="compareSkillA" placeholder="选择技能 A" clearable size="small" class="select-md">
             <el-option v-for="item in items" :key="'A_' + item.skill_name" :label="item.skill_name" :value="item.skill_name" />
           </el-select>
           <span class="compare-vs">VS</span>
-          <el-select v-model="compareSkillB" placeholder="选择技能 B" clearable size="small" style="width: 180px">
+          <el-select v-model="compareSkillB" placeholder="选择技能 B" clearable size="small" class="select-md">
             <el-option v-for="item in items" :key="'B_' + item.skill_name" :label="item.skill_name" :value="item.skill_name" />
           </el-select>
         </div>
-        <VChart v-if="compareOption" :option="compareOption" autoresize style="height: 300px; margin-top: 12px" />
+        <VChart v-if="compareOption" :option="compareOption" autoresize class="chart-h-md mt-3" />
         <div v-else class="compare-placeholder">选择两个技能进行对比分析</div>
       </el-card>
 
@@ -444,4 +444,13 @@ onMounted(fetchTrends)
 .cii-up { color: var(--success); font-weight: 600; }
 .cii-down { color: var(--destructive); font-weight: 600; }
 .trust-meta { color: var(--muted-foreground); font-size: var(--font-size-xs); }
+
+/* Layout utilities */
+.select-sm { width: 160px; }
+.select-md { width: 180px; }
+.chart-h-gauge { height: 240px; }
+.chart-h-lg { height: 420px; }
+.chart-h-md { height: 300px; }
+.ml-2 { margin-left: var(--space-2); }
+.mt-3 { margin-top: var(--space-3); }
 </style>

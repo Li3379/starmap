@@ -404,100 +404,98 @@ function exportReport() {
   max-width: 960px;
   margin: 0 auto;
 }
-
 .page-header {
   margin-bottom: var(--space-6);
 }
-
 .page-title {
-  font-size: var(--font-size-2xl);
-  font-weight: 700;
+  font-size: var(--font-size-3xl);
+  font-weight: 800;
   color: var(--foreground);
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--tracking-tight);
 }
-
 .page-desc {
   font-size: var(--font-size-sm);
   color: var(--muted-foreground);
   margin: var(--space-1) 0 0;
+  line-height: var(--leading-relaxed);
 }
-
 .steps-bar {
   margin-bottom: var(--space-6);
 }
-
 .step-content {
-  animation: fade-in-up 0.3s var(--ease-out);
+  animation: fade-in-up 0.35s var(--ease-out);
 }
-
 @keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 .step-card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: var(--space-6);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-xs);
+  position: relative;
+  overflow: hidden;
 }
-
+.step-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), color-mix(in srgb, var(--primary) 60%, var(--chart-2)));
+  opacity: 0.8;
+}
 .sc-header {
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
 }
-
 .sc-header-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
 }
-
 .sc-title {
   font-size: var(--font-size-xl);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--foreground);
   margin: 0;
+  letter-spacing: var(--tracking-tight);
 }
-
 .sc-desc {
   font-size: var(--font-size-sm);
   color: var(--muted-foreground);
   margin: var(--space-1) 0 0;
 }
-
 .input-section {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 }
-
 .is-title {
   font-size: var(--font-size-base);
   font-weight: 600;
   color: var(--foreground);
   margin: 0;
 }
-
 .manual-input {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 }
-
 .skill-tags {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
 }
-
 .step-actions {
   display: flex;
   gap: var(--space-3);
   justify-content: center;
   margin-top: var(--space-6);
 }
-
 .step-empty {
   text-align: center;
   color: var(--muted-foreground);
@@ -509,73 +507,79 @@ function exportReport() {
 .report-summary {
   display: flex;
   gap: var(--space-6);
-  padding: var(--space-5);
-  background: var(--muted);
-  border-radius: var(--radius-lg);
-  margin-bottom: var(--space-5);
+  padding: var(--space-6);
+  background: linear-gradient(135deg, var(--primary-ghost), var(--muted));
+  border: 1px solid color-mix(in srgb, var(--primary) 12%, var(--border));
+  border-radius: var(--radius-2xl);
+  margin-bottom: var(--space-6);
+  position: relative;
 }
-
+.report-summary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--chart-2));
+  border-radius: 2px 2px 0 0;
+}
 .rs-score {
   display: flex;
   align-items: baseline;
   flex-shrink: 0;
 }
-
 .rs-value {
-  font-size: 3rem;
-  font-weight: 800;
+  font-size: 3.5rem;
+  font-weight: 900;
   color: var(--primary);
   line-height: 1;
   letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
 }
-
 .rs-unit {
   font-size: var(--font-size-xl);
   color: var(--muted-foreground);
   margin-left: var(--space-1);
+  font-weight: 600;
 }
-
 .rs-detail {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-2-5);
 }
-
 .rs-row {
   display: flex;
   align-items: flex-start;
   gap: var(--space-3);
   font-size: var(--font-size-sm);
 }
-
 .rs-label {
   color: var(--muted-foreground);
   min-width: 80px;
   flex-shrink: 0;
+  font-weight: 500;
 }
-
 .rs-text {
   color: var(--foreground);
+  line-height: var(--leading-relaxed);
 }
-
 .rs-tags {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1);
 }
-
 .rs-empty {
   color: var(--muted-foreground);
 }
-
 .table-title {
   font-size: var(--font-size-base);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--foreground);
-  margin: var(--space-5) 0 var(--space-3);
+  margin: var(--space-6) 0 var(--space-3);
+  letter-spacing: var(--tracking-tight);
 }
-
 .skill-confirm-action { margin-top: var(--space-4); }
 .full-width-table { width: 100%; }
 </style>

@@ -143,7 +143,7 @@ onMounted(fetchPositions)
       <div v-else class="empty-guide">
         <el-empty description="暂无岗位数据">
           <template #image>
-            <div class="empty-icon">📭</div>
+            <div class="empty-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
           </template>
           <div class="empty-actions">
             <p class="empty-hint-text">请先执行数据采集，或从 JD 中抽取岗位信息</p>

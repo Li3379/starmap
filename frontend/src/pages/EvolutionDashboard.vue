@@ -294,13 +294,12 @@ onMounted(fetchTrends)
 .evolution-page {
   min-height: 400px;
 }
-
 .page-title {
-  font-size: var(--font-size-2xl);
-  font-weight: 700;
+  font-size: var(--font-size-3xl);
+  font-weight: 800;
   color: var(--foreground);
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--tracking-tight);
 }
 .page-subtitle {
   font-size: var(--font-size-sm);
@@ -311,15 +310,15 @@ onMounted(fetchTrends)
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
 }
-
 .page-header h2 {
   margin: 0 0 4px;
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   color: var(--foreground);
+  font-weight: 800;
+  letter-spacing: var(--tracking-tight);
 }
-
 .subtitle {
   margin: 0;
   font-size: var(--font-size-base);
@@ -332,120 +331,109 @@ onMounted(fetchTrends)
   gap: var(--space-4);
   margin-bottom: var(--space-5);
 }
-
 .gauge-card {
   flex: 0 0 320px;
 }
-
 .emerging-card {
   flex: 1;
   min-width: 0;
 }
-
 .emerging-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 10px;
+  gap: var(--space-3);
 }
-
 .emerging-item {
   padding: var(--space-3) var(--space-4);
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: all var(--duration-normal) var(--ease-out);
+  position: relative;
+  overflow: hidden;
 }
-
+.emerging-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--success);
+  border-radius: 0 2px 2px 0;
+  opacity: 0;
+  transition: opacity var(--duration-fast);
+}
 .emerging-item:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md); border-color: var(--success);
+  box-shadow: var(--shadow-md);
+  border-color: color-mix(in srgb, var(--success) 40%, var(--border));
 }
-
+.emerging-item:hover::before { opacity: 1; }
 .emerging-name {
   font-size: var(--font-size-base);
   font-weight: 600;
   color: var(--foreground);
   margin-bottom: var(--space-1);
+  letter-spacing: var(--tracking-tight);
 }
-
 .emerging-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
 .emerging-cii {
   font-size: var(--font-size-xs);
   color: var(--success);
-  font-weight: 500;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
-
-/* 脉冲动画标签 */
 .pulse-tag {
   animation: pulse 2s ease-in-out infinite;
 }
-
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.6; }
 }
-
 .chart-card {
   margin-bottom: var(--space-5);
 }
-
-/* 技能对比 */
 .compare-card {
   margin-bottom: var(--space-5);
 }
-
 .compare-selectors {
   display: flex;
   align-items: center;
   gap: var(--space-3);
 }
-
 .compare-vs {
   font-size: var(--font-size-lg);
-  font-weight: 700;
+  font-weight: 800;
   color: var(--muted-foreground);
+  letter-spacing: var(--tracking-tight);
 }
-
 .compare-placeholder {
   text-align: center;
-  padding: 40px;
+  padding: var(--space-10);
   color: var(--muted-foreground);
   font-size: var(--font-size-base);
 }
-
 .table-card {
   margin-bottom: var(--space-5);
 }
-
 .related-tag {
   margin-right: var(--space-2);
   margin-bottom: var(--space-1);
 }
-
 @media (max-width: 768px) {
-  .kpi-row {
-    flex-direction: column;
-  }
-  .gauge-card {
-    flex: 1;
-  }
-  .compare-selectors {
-    flex-direction: column;
-    align-items: stretch;
-  }
+  .kpi-row { flex-direction: column; }
+  .gauge-card { flex: 1; }
+  .compare-selectors { flex-direction: column; align-items: stretch; }
 }
-
-.cii-up { color: var(--success); font-weight: 600; }
-.cii-down { color: var(--destructive); font-weight: 600; }
+.cii-up { color: var(--success); font-weight: 600; font-variant-numeric: tabular-nums; }
+.cii-down { color: var(--destructive); font-weight: 600; font-variant-numeric: tabular-nums; }
 .trust-meta { color: var(--muted-foreground); font-size: var(--font-size-xs); }
-
-/* Layout utilities */
 .select-sm { width: 160px; }
 .select-md { width: 180px; }
 .chart-h-gauge { height: 240px; }

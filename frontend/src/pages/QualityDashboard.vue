@@ -435,57 +435,62 @@ const sourceChartOption = computed(() => {
   max-width: 1200px;
   margin: 0 auto;
 }
-
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
   flex-wrap: wrap;
   gap: var(--space-3);
 }
-
 .page-header h2 {
   font-size: var(--font-size-3xl);
-  font-weight: 600;
+  font-weight: 800;
   color: var(--foreground);
   margin: 0 0 var(--space-1);
+  letter-spacing: var(--tracking-tight);
 }
-
 .page-desc {
   color: var(--muted-foreground);
   font-size: var(--font-size-sm);
   margin: 0;
 }
-
 .header-actions {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   flex-wrap: wrap;
 }
-
 .last-refresh {
   font-size: var(--font-size-xs);
   color: var(--muted-foreground);
 }
-
-/* ── KPI 卡片 ── */
 .kpi-card {
   cursor: default;
   transition: all var(--duration-normal) var(--ease-out);
+  position: relative;
+  overflow: hidden;
 }
-
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 4%, transparent), transparent);
+  transition: opacity var(--duration-normal);
+}
 .kpi-card:hover {
   transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
-
+.kpi-card:hover::before { opacity: 1; }
 .kpi-inner {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  position: relative;
+  z-index: 1;
 }
-
 .kpi-icon {
   width: 48px;
   height: 48px;
@@ -495,56 +500,40 @@ const sourceChartOption = computed(() => {
   justify-content: center;
   flex-shrink: 0;
 }
-
 .kpi-body {
   flex: 1;
   min-width: 0;
 }
-
 .kpi-label {
   font-size: var(--font-size-sm);
   color: var(--muted-foreground);
+  font-weight: 500;
 }
-
 .kpi-value {
   font-size: var(--font-size-3xl);
-  font-weight: 700;
-  line-height: 1.3;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: var(--tracking-tight);
+  font-variant-numeric: tabular-nums;
 }
-
 .kpi-sub {
   font-size: var(--font-size-xs);
   color: var(--muted-foreground);
   margin-top: var(--space-1);
 }
-
 .trend-up {
   color: var(--success);
-  font-weight: bold;
+  font-weight: 600;
 }
-
 .trend-down {
   color: var(--destructive);
-  font-weight: bold;
+  font-weight: 600;
 }
-
-/* ── 响应式 ── */
 @media (max-width: 768px) {
-  .page-header {
-    flex-direction: column;
-  }
-
-  .header-actions {
-    width: 100%;
-    justify-content: flex-start;
-  }
-
-  .kpi-value {
-    font-size: var(--font-size-2xl);
-  }
+  .page-header { flex-direction: column; }
+  .header-actions { width: 100%; justify-content: flex-start; }
+  .kpi-value { font-size: var(--font-size-2xl); }
 }
-
-/* Layout utilities */
 .mb-4 { margin-bottom: var(--space-4); }
 .chart-h-md { height: 330px; }
 .chart-h-sm { height: 310px; }

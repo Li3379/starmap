@@ -132,7 +132,7 @@ async function handleReset() {
   try {
     await ElMessageBox.confirm(
       '确认重置为演示数据？当前所有数据将被清空并重新加载种子数据，此操作不可撤销。',
-      '⚠️ 重置演示数据',
+      '重置演示数据',
       { confirmButtonText: '确认重置', cancelButtonText: '取消', type: 'warning' }
     )
     await admin.resetToDemo()
@@ -422,7 +422,7 @@ async function handleReset() {
             style="margin-top: 16px"
           >
             <template #header>
-              <span style="font-weight: 600">🔄 演示数据管理</span>
+              <span style="font-weight: 600">演示数据管理</span>
             </template>
             <p style="color: #606266; font-size: 13px; line-height: 1.8; margin: 0">
               重置为演示种子数据将覆盖当前所有数据，包括岗位、技能、图谱节点与关系。此功能用于演示场景重置（§16.5）。

@@ -349,17 +349,17 @@ onMounted(fetchTrends)
 }
 
 .emerging-item {
-  padding: 10px 12px;
-  background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%);
-  border: 1px solid #c8e6c9;
+  padding: var(--space-3) var(--space-4);
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--duration-fast) var(--ease-out);
 }
 
 .emerging-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(103, 194, 58, 0.2);
+  box-shadow: var(--shadow-md); border-color: var(--success);
 }
 
 .emerging-name {

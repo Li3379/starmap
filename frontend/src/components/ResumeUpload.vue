@@ -123,7 +123,7 @@ function handleRemove() {
       <!-- 已选文件 -->
       <template v-else-if="file">
         <div class="file-info">
-          <span style="font-size: 36px">📄</span>
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
           <div class="file-name">
             {{ fileName }}
           </div>
@@ -147,8 +147,8 @@ function handleRemove() {
 
       <!-- 空状态 -->
       <template v-else>
-        <div style="font-size: 48px; color: #c0c4cc">
-          📂
+        <div style="color: var(--muted-foreground)">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/><path d="M12 10v6"/><path d="m9 13 3-3 3 3"/></svg>
         </div>
         <div class="upload-text">
           将简历文件拖到此处
@@ -178,15 +178,15 @@ function handleRemove() {
 .upload-zone {
   border: 2px dashed var(--border);
   border-radius: var(--radius-lg);
-  padding: 48px 24px;
+  padding: var(--space-12) var(--space-6);
   text-align: center;
-  transition: border-color 0.3s, background 0.3s;
+  transition: border-color var(--duration-normal) var(--ease-in-out), background var(--duration-normal) var(--ease-in-out);
   cursor: pointer;
 }
 
 .upload-zone.is-dragover {
   border-color: var(--primary);
-  background: rgba(64, 158, 255, 0.05);
+  background: var(--primary-ghost);
 }
 
 .upload-zone.has-file {
@@ -208,14 +208,14 @@ function handleRemove() {
 
 .upload-btn {
   display: inline-block;
-  margin-top: 16px;
-  padding: 8px 20px;
+  margin-top: var(--space-4);
+  padding: var(--space-2) var(--space-5);
   background: var(--primary);
-  color: #fff;
-  border-radius: 4px;
+  color: var(--primary-foreground);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  font-size: 14px;
-  transition: background 0.3s;
+  font-size: var(--font-size-sm);
+  transition: background var(--duration-normal) var(--ease-in-out);
 }
 
 .upload-btn:hover {

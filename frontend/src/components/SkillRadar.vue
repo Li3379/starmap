@@ -6,6 +6,7 @@
 import { computed } from 'vue'
 import VChart from 'vue-echarts'
 import { use } from 'echarts/core'
+import { chartColors } from '@/utils/chartTheme'
 import { RadarChart } from 'echarts/charts'
 import { TooltipComponent, LegendComponent, RadarComponent } from 'echarts/components'
 
@@ -114,6 +115,6 @@ const radarOption = computed(() => {
   font-size: 16px;
   font-weight: 500;
   color: var(--foreground);
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
 }
 </style>

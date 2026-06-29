@@ -72,7 +72,7 @@ function handleClear() {
         <el-col :span="12">
           <el-card>
             <template #header>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div class="card-header-row">
                 <span>JD 原文</span>
                 <el-button size="small" @click="handleClear">清空</el-button>
               </div>
@@ -90,16 +90,16 @@ function handleClear() {
                 {{ charCount }} / {{ charLimit }} 字
               </span>
             </div>
-            <div style="margin-top: 12px; text-align: right;">
+            <div class="extract-action">
               <el-button type="primary" :loading="loading" @click="handleExtract">
                 开始抽取
               </el-button>
             </div>
           
             <!-- Progress indicator for long LLM wait -->
-            <div v-if="loading" style="margin-top: 16px;">
+            <div v-if="loading" class="extract-progress">
               <el-progress :percentage="Math.round(extractProgress)" :stroke-width="8" :color="extractProgress >= 100 ? '#67c23a' : '#409eff'" />
-              <p style="text-align: center; color: #909399; font-size: 13px; margin-top: 8px;">{{ extractPhase }}</p>
+              <p class="extract-phase">{{ extractPhase }}</p>
             </div>
             </el-card>
         </el-col>
@@ -123,23 +123,23 @@ function handleClear() {
                 </el-descriptions-item>
               </el-descriptions>
 
-              <h4 style="margin-top: 16px;">必备技能</h4>
-              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+              <h4 class="result-section-title">必备技能</h4>
+              <div class="skill-tags-row">
                 <el-tag v-for="s in (result.required_skills ?? [])" :key="s.skill ?? s.name ?? s" type="danger" effect="plain">
                   {{ s.skill ?? s.name ?? s }}
                 </el-tag>
-                <span v-if="!(result.required_skills?.length)" style="color: #909399;">无</span>
+                <span v-if="!(result.required_skills?.length)" class="empty-text">无</span>
               </div>
 
-              <h4 style="margin-top: 12px;">加分技能</h4>
-              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+              <h4 class="result-section-title">加分技能</h4>
+              <div class="skill-tags-row">
                 <el-tag v-for="s in (result.preferred_skills ?? [])" :key="s.skill ?? s.name ?? s" type="warning" effect="plain">
                   {{ s.skill ?? s.name ?? s }}
                 </el-tag>
-                <span v-if="!(result.preferred_skills?.length)" style="color: #909399;">无</span>
+                <span v-if="!(result.preferred_skills?.length)" class="empty-text">无</span>
               </div>
 
-              <h4 style="margin-top: 12px;">标准化结果</h4>
+              <h4 class="result-section-title">标准化结果</h4>
               <el-table :data="result.normalized_skills ?? []" size="small" stripe max-height="200">
                 <el-table-column prop="original" label="原始" />
                 <el-table-column prop="normalized" label="标准化" />
@@ -167,4 +167,13 @@ function handleClear() {
 .input-footer { display: flex; justify-content: flex-end; margin-top: 4px; }
 .char-count { font-size: 12px; color: var(--muted-foreground); }
 .char-warn { color: var(--warning); }
+
+.card-header-row { display: flex; justify-content: space-between; align-items: center; }
+.extract-action { margin-top: var(--space-3); text-align: right; }
+.extract-progress { margin-top: var(--space-4); }
+.extract-phase { text-align: center; color: var(--muted-foreground); font-size: var(--font-size-sm); margin-top: var(--space-2); }
+.result-section-title { font-size: var(--font-size-base); font-weight: 600; color: var(--foreground); margin: var(--space-4) 0 var(--space-2); }
+.result-section-title:not(:first-child) { margin-top: var(--space-3); }
+.skill-tags-row { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.empty-text { color: var(--muted-foreground); font-size: var(--font-size-sm); }
 </style>

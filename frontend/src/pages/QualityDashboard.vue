@@ -439,40 +439,40 @@ const sourceChartOption = computed(() => {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   flex-wrap: wrap;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .page-header h2 {
-  font-size: 24px;
+  font-size: var(--font-size-3xl);
   font-weight: 600;
   color: var(--foreground);
-  margin: 0 0 4px;
+  margin: 0 0 var(--space-1);
 }
 
 .page-desc {
   color: var(--muted-foreground);
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   margin: 0;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
   flex-wrap: wrap;
 }
 
 .last-refresh {
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   color: var(--muted-foreground);
 }
 
 /* ── KPI 卡片 ── */
 .kpi-card {
   cursor: default;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all var(--duration-normal) var(--ease-out);
 }
 
 .kpi-card:hover {
@@ -482,7 +482,7 @@ const sourceChartOption = computed(() => {
 .kpi-inner {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: var(--space-3);
 }
 
 .kpi-icon {
@@ -501,20 +501,20 @@ const sourceChartOption = computed(() => {
 }
 
 .kpi-label {
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   color: var(--muted-foreground);
 }
 
 .kpi-value {
-  font-size: 26px;
+  font-size: var(--font-size-3xl);
   font-weight: 700;
   line-height: 1.3;
 }
 
 .kpi-sub {
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   color: var(--muted-foreground);
-  margin-top: 2px;
+  margin-top: var(--space-1);
 }
 
 .trend-up {
@@ -539,7 +539,7 @@ const sourceChartOption = computed(() => {
   }
 
   .kpi-value {
-    font-size: 22px;
+    font-size: var(--font-size-2xl);
   }
 }
 </style>

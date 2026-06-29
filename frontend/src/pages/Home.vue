@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue"
 import { useRouter } from "vue-router"
 import { Graph } from "@antv/g6"

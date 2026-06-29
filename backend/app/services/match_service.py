@@ -5,10 +5,10 @@ from __future__ import annotations
 from copy import deepcopy
 from difflib import SequenceMatcher
 from math import ceil
-
-from loguru import logger
 from typing import Any
 from uuid import uuid4
+
+from loguru import logger
 
 from app.core.extraction.normalize import normalize_skill
 from app.services.graph_service import fetch_position_graph
@@ -484,10 +484,13 @@ async def get_match_result(match_id: str) -> dict[str, Any] | None:
 
     # Try PostgreSQL
     from sqlalchemy import text
-    from app.services.resources import AppResources
+
+    from app.services.resources import resources
 
     try:
-        async with AppResources.pg_sessionmaker() as session:
+        if resources.pg_sessionmaker is None:
+            return None
+        async with resources.pg_sessionmaker() as session:
             row = await session.execute(
                 text("SELECT * FROM match_results WHERE match_id = :match_id"),
                 {"match_id": match_id},

@@ -65,7 +65,9 @@ function handleClear() {
     <div class="extract-page">
       <div class="page-header">
         <h2>JD 智能抽取</h2>
-        <p class="subtitle">粘贴职位描述文本，AI 自动提取技能要求</p>
+        <p class="subtitle">
+          粘贴职位描述文本，AI 自动提取技能要求
+        </p>
       </div>
 
       <el-row :gutter="20">
@@ -74,7 +76,12 @@ function handleClear() {
             <template #header>
               <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span>JD 原文</span>
-                <el-button size="small" @click="handleClear">清空</el-button>
+                <el-button
+                  size="small"
+                  @click="handleClear"
+                >
+                  清空
+                </el-button>
               </div>
             </template>
             <el-input
@@ -91,24 +98,43 @@ function handleClear() {
               </span>
             </div>
             <div style="margin-top: 12px; text-align: right;">
-              <el-button type="primary" :loading="loading" @click="handleExtract">
+              <el-button
+                type="primary"
+                :loading="loading"
+                @click="handleExtract"
+              >
                 开始抽取
               </el-button>
             </div>
           
             <!-- Progress indicator for long LLM wait -->
-            <div v-if="loading" style="margin-top: 16px;">
-              <el-progress :percentage="Math.round(extractProgress)" :stroke-width="8" :color="extractProgress >= 100 ? '#67c23a' : '#409eff'" />
-              <p style="text-align: center; color: #909399; font-size: 13px; margin-top: 8px;">{{ extractPhase }}</p>
+            <div
+              v-if="loading"
+              style="margin-top: 16px;"
+            >
+              <el-progress
+                :percentage="Math.round(extractProgress)"
+                :stroke-width="8"
+                :color="extractProgress >= 100 ? '#67c23a' : '#409eff'"
+              />
+              <p style="text-align: center; color: #909399; font-size: 13px; margin-top: 8px;">
+                {{ extractPhase }}
+              </p>
             </div>
-            </el-card>
+          </el-card>
         </el-col>
 
         <el-col :span="12">
           <el-card v-loading="loading">
-            <template #header>抽取结果</template>
+            <template #header>
+              抽取结果
+            </template>
             <div v-if="result">
-              <el-descriptions :column="1" border size="small">
+              <el-descriptions
+                :column="1"
+                border
+                size="small"
+              >
                 <el-descriptions-item label="职位名称">
                   {{ result.position_name ?? result.job_title ?? '-' }}
                 </el-descriptions-item>
@@ -119,39 +145,85 @@ function handleClear() {
                   {{ result.education_required ?? result.education ?? '-' }}
                 </el-descriptions-item>
                 <el-descriptions-item label="置信度">
-                  <el-progress :percentage="Math.round((result.confidence ?? 0) * 100)" :stroke-width="10" />
+                  <el-progress
+                    :percentage="Math.round((result.confidence ?? 0) * 100)"
+                    :stroke-width="10"
+                  />
                 </el-descriptions-item>
               </el-descriptions>
 
-              <h4 style="margin-top: 16px;">必备技能</h4>
+              <h4 style="margin-top: 16px;">
+                必备技能
+              </h4>
               <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-                <el-tag v-for="s in (result.required_skills ?? [])" :key="s.skill ?? s.name ?? s" type="danger" effect="plain">
+                <el-tag
+                  v-for="s in (result.required_skills ?? [])"
+                  :key="s.skill ?? s.name ?? s"
+                  type="danger"
+                  effect="plain"
+                >
                   {{ s.skill ?? s.name ?? s }}
                 </el-tag>
-                <span v-if="!(result.required_skills?.length)" style="color: #909399;">无</span>
+                <span
+                  v-if="!(result.required_skills?.length)"
+                  style="color: #909399;"
+                >无</span>
               </div>
 
-              <h4 style="margin-top: 12px;">加分技能</h4>
+              <h4 style="margin-top: 12px;">
+                加分技能
+              </h4>
               <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-                <el-tag v-for="s in (result.preferred_skills ?? [])" :key="s.skill ?? s.name ?? s" type="warning" effect="plain">
+                <el-tag
+                  v-for="s in (result.preferred_skills ?? [])"
+                  :key="s.skill ?? s.name ?? s"
+                  type="warning"
+                  effect="plain"
+                >
                   {{ s.skill ?? s.name ?? s }}
                 </el-tag>
-                <span v-if="!(result.preferred_skills?.length)" style="color: #909399;">无</span>
+                <span
+                  v-if="!(result.preferred_skills?.length)"
+                  style="color: #909399;"
+                >无</span>
               </div>
 
-              <h4 style="margin-top: 12px;">标准化结果</h4>
-              <el-table :data="result.normalized_skills ?? []" size="small" stripe max-height="200">
-                <el-table-column prop="original" label="原始" />
-                <el-table-column prop="normalized" label="标准化" />
-                <el-table-column prop="method" label="方法" width="100" />
-                <el-table-column label="置信度" width="80">
+              <h4 style="margin-top: 12px;">
+                标准化结果
+              </h4>
+              <el-table
+                :data="result.normalized_skills ?? []"
+                size="small"
+                stripe
+                max-height="200"
+              >
+                <el-table-column
+                  prop="original"
+                  label="原始"
+                />
+                <el-table-column
+                  prop="normalized"
+                  label="标准化"
+                />
+                <el-table-column
+                  prop="method"
+                  label="方法"
+                  width="100"
+                />
+                <el-table-column
+                  label="置信度"
+                  width="80"
+                >
                   <template #default="{ row }">
                     {{ ((row.confidence ?? 0) * 100).toFixed(0) }}%
                   </template>
                 </el-table-column>
               </el-table>
             </div>
-            <el-empty v-else description="请在左侧输入 JD 文本并点击抽取" />
+            <el-empty
+              v-else
+              description="请在左侧输入 JD 文本并点击抽取"
+            />
           </el-card>
         </el-col>
       </el-row>

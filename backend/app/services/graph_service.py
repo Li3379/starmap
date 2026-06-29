@@ -578,7 +578,7 @@ async def fetch_overview_by_tech_stack(driver: Any) -> dict[str, Any]:
                 s1 = _classify_tech_stack(record["i1"] or "", record["n1"] or "")
                 s2 = _classify_tech_stack(record["i2"] or "", record["n2"] or "")
                 if s1 != s2:
-                    key = tuple(sorted([s1, s2]))
+                    key = (s1, s2) if s1 < s2 else (s2, s1)
                     stack_connections[key] += record["shared"] or 0
     except Exception as exc:
         from loguru import logger
@@ -692,8 +692,10 @@ async def fetch_overview_by_level(driver: Any) -> dict[str, Any]:
 
     connections = []
     for conn in level_connections:
-        id1 = hashlib.md5(conn["source"].encode()).hexdigest()[:16]
-        id2 = hashlib.md5(conn["target"].encode()).hexdigest()[:16]
+        source = str(conn["source"])
+        target = str(conn["target"])
+        id1 = hashlib.md5(source.encode()).hexdigest()[:16]
+        id2 = hashlib.md5(target.encode()).hexdigest()[:16]
         connections.append({
             "source_id": id1,
             "target_id": id2,

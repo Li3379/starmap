@@ -219,8 +219,7 @@ async def get_graph_overview(
         from app.services.graph_service import fetch_overview_by_level
         data = await fetch_overview_by_level(driver)
         return DomainOverviewResponse(**data)
-    from app.services.graph_service import serialize_node, serialize_relationship
-    DOMAIN_COLORS = {
+    domain_colors = {
         "人工智能": "#9B59B6", "AI/机器学习": "#9B59B6",
         "数据科学": "#E6A23C", "数据工程": "#E6A23C",
         "前端工程": "#409EFF", "前端开发": "#409EFF",
@@ -249,8 +248,8 @@ async def get_graph_overview(
             pc = record["pos_count"]
             total_skill += sc
             total_pos += pc
-            color = DOMAIN_COLORS.get(name, "#909399")
-            for key, val in DOMAIN_COLORS.items():
+            color = domain_colors.get(name, "#909399")
+            for key, val in domain_colors.items():
                 if key in name:
                     color = val
                     break
@@ -310,21 +309,23 @@ async def get_domain_detail(
         RETURN DISTINCT p, r, s
         """
         result = await session.run(query, name=domain_name)
-        positions = {}
-        edges = []
+        positions: dict[str, GraphNode] = {}
+        edges: list[GraphEdge] = []
         async for record in result:
             p = record["p"]
             if p and p.element_id not in positions:
-                positions[p.element_id] = serialize_node(p)
+                positions[p.element_id] = GraphNode(**serialize_node(p))
             r = record["r"]
             if r:
-                edges.append(serialize_relationship(r))
+                edges.append(GraphEdge(**serialize_relationship(r)))
 
     return DomainDetailResponse(
         domain_name=domain_name,
         positions=list(positions.values()),
         edges=edges,
     )
+
+
 class KAPositionsResponse(BaseModel):
     """单个 KA 下的 Position 列表 + 关联 Skill 边。"""
     ka_id: str = ""
@@ -365,15 +366,15 @@ async def get_ka_positions(
         RETURN DISTINCT p, r, s
         """
         result = await session.run(query, ka_id=ka_id)
-        positions: dict[str, dict[str, Any]] = {}
-        edges: list[dict[str, Any]] = []
+        positions: dict[str, GraphNode] = {}
+        edges: list[GraphEdge] = []
         async for record in result:
             p = record["p"]
             if p and p.element_id not in positions:
-                positions[p.element_id] = serialize_node(p)
+                positions[p.element_id] = GraphNode(**serialize_node(p))
             r = record["r"]
             if r:
-                edges.append(serialize_relationship(r))
+                edges.append(GraphEdge(**serialize_relationship(r)))
 
     return KAPositionsResponse(
         ka_id=ka_id,

@@ -13,7 +13,7 @@ from app.models.extraction_models import PositionRecord, PositionSkillRelation, 
 
 router = APIRouter(prefix="/positions", tags=["岗位管理"])
 
-DEMO_POSITIONS = [
+DEMO_POSITIONS: list[dict[str, Any]] = [
     {
         "position_id": "pos_backend",
         "name": "后端开发工程师",
@@ -136,7 +136,7 @@ async def list_positions(
         demo_items = [item for item in demo_items if lowered in item["name"].lower()]
     start = (page - 1) * page_size
     return PositionListResponse(
-        items=demo_items[start:start + page_size],
+        items=[PositionNode(**item) for item in demo_items[start:start + page_size]],
         total=len(demo_items),
         page=page,
         page_size=page_size,

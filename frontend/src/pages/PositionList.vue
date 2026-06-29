@@ -84,7 +84,9 @@ onMounted(fetchPositions)
           :effect="selectedIndustry === '' ? 'dark' : 'plain'"
           style="cursor: pointer;"
           @click="selectedIndustry = ''"
-        >全部</el-tag>
+        >
+          全部
+        </el-tag>
         <el-tag
           v-for="ind in industries"
           :key="ind"
@@ -92,13 +94,15 @@ onMounted(fetchPositions)
           :effect="selectedIndustry === ind ? 'dark' : 'plain'"
           style="cursor: pointer;"
           @click="selectedIndustry = selectedIndustry === ind ? '' : ind"
-        >{{ ind }}</el-tag>
+        >
+          {{ ind }}
+        </el-tag>
       </div>
       <div style="margin-bottom: 16px; color: #909399; font-size: 13px;">
         共 {{ filteredPositions.length }} 个岗位
       </div>
 
-            <!-- 有数据时 -->
+      <!-- 有数据时 -->
       <el-row
         v-if="filteredPositions.length || loading"
         v-loading="loading"
@@ -140,14 +144,25 @@ onMounted(fetchPositions)
       </el-row>
 
       <!-- 空状态引导 -->
-      <div v-else class="empty-guide">
+      <div
+        v-else
+        class="empty-guide"
+      >
         <el-empty description="暂无岗位数据">
           <template #image>
-            <div class="empty-icon">📭</div>
+            <div class="empty-icon">
+              📭
+            </div>
           </template>
           <div class="empty-actions">
-            <p class="empty-hint-text">请先执行数据采集，或从 JD 中抽取岗位信息</p>
-            <el-button type="primary" :icon="Plus" @click="goExtract">
+            <p class="empty-hint-text">
+              请先执行数据采集，或从 JD 中抽取岗位信息
+            </p>
+            <el-button
+              type="primary"
+              :icon="Plus"
+              @click="goExtract"
+            >
               前往 JD 抽取
             </el-button>
           </div>

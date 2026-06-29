@@ -26,24 +26,6 @@ const pagedAuditQueue = computed(() => {
   return filteredAuditQueue.value.slice(start, start + pageSize.value)
 })
 
-// ── 数据源编辑 ──
-const editDialogVisible = ref(false)
-const editingSource = ref<{ id: number; name: string; authority_score: number } | null>(null)
-function handleEditSource(row: any) {
-  editingSource.value = { id: row.id, name: row.name, authority_score: row.authority_score }
-  editDialogVisible.value = true
-}
-function handleSaveSource() {
-  if (!editingSource.value) return
-  // Find and update in local state
-  const idx = admin.sources.findIndex(s => s.id === editingSource.value!.id)
-  if (idx !== -1) {
-    admin.sources[idx] = { ...admin.sources[idx], name: editingSource.value.name, authority_score: editingSource.value.authority_score }
-  }
-  editDialogVisible.value = false
-  ElMessage.success('数据源已更新')
-}
-
 const filteredAuditQueue = computed(() => {
   let list = admin.auditQueue
   if (searchKeyword.value) {
@@ -345,7 +327,10 @@ async function handleReset() {
             >
               暂无匹配的审核项
             </div>
-            <div v-if="filteredAuditQueue.length" style="margin-top: 16px; display: flex; justify-content: center;">
+            <div
+              v-if="filteredAuditQueue.length"
+              style="margin-top: 16px; display: flex; justify-content: center;"
+            >
               <el-pagination
                 v-model:current-page="currentPage"
                 v-model:page-size="pageSize"

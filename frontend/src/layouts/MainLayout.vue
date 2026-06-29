@@ -7,12 +7,11 @@ import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import {
   Monitor, Connection, DataAnalysis, TrendCharts,
-  Setting, Document, User, Fold, Expand, Sunny, MoonNight,
+  Setting, Document, User, Sunny, MoonNight,
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const mobileMenuOpen = ref(false)
-const sidebarCollapsed = ref(false)
 const isDark = ref(localStorage.getItem('theme') === 'dark')
 
 // Apply dark mode on mount
@@ -54,9 +53,6 @@ function closeMobileMenu() {
   mobileMenuOpen.value = false
 }
 
-function toggleSidebar() {
-  sidebarCollapsed.value = !sidebarCollapsed.value
-}
 </script>
 
 <template>
@@ -98,9 +94,18 @@ function toggleSidebar() {
         </el-menu>
 
         <!-- 暗色模式切换 -->
-        <el-tooltip :content="isDark ? '切换亮色模式' : '切换暗色模式'" placement="bottom">
-          <button class="theme-toggle" @click="toggleDarkMode" :aria-label="isDark ? '亮色' : '暗色'">
-            <el-icon :size="18"><component :is="isDark ? Sunny : MoonNight" /></el-icon>
+        <el-tooltip
+          :content="isDark ? '切换亮色模式' : '切换暗色模式'"
+          placement="bottom"
+        >
+          <button
+            class="theme-toggle"
+            :aria-label="isDark ? '亮色' : '暗色'"
+            @click="toggleDarkMode"
+          >
+            <el-icon :size="18">
+              <component :is="isDark ? Sunny : MoonNight" />
+            </el-icon>
           </button>
         </el-tooltip>
 

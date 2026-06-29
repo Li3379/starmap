@@ -36,6 +36,18 @@ router = APIRouter(prefix="/evolution", tags=["演化分析"])
 # ─── Response Models ───
 
 
+def _string_list(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [str(item) for item in value]
+    return []
+
+
+def _dict_list(value: Any) -> list[dict[str, Any]]:
+    if isinstance(value, list):
+        return [item for item in value if isinstance(item, dict)]
+    return []
+
+
 class EvolutionTrend(BaseModel):
     """技能趋势条目。"""
 
@@ -264,8 +276,8 @@ async def get_evolution_paths(
             target_position=r.target_position,
             similarity=r.similarity,
             evidence_count=r.evidence_count,
-            skill_overlap=r.skill_overlap or [],
-            key_gaps=r.key_gaps or [],
+            skill_overlap=_string_list(r.skill_overlap),
+            key_gaps=_string_list(r.key_gaps),
             trust_score=r.trust_score,
         )
         for r in records
@@ -354,8 +366,8 @@ async def get_snapshots(
             id=str(r.id),
             position_name=r.position_name,
             snapshot_date=r.snapshot_date,
-            required_skills=r.required_skills or [],
-            preferred_skills=r.preferred_skills or [],
+            required_skills=_dict_list(r.required_skills),
+            preferred_skills=_dict_list(r.preferred_skills),
             source_count=r.source_count or 0,
         )
         for r in records
@@ -408,7 +420,7 @@ async def get_cii_history(
 
     history: list[dict[str, Any]] = []
     for r in records:
-        required = r.required_skills or []
+        required = _dict_list(r.required_skills)
         total = len(required)
         inflated = sum(1 for s in required if isinstance(s, dict) and s.get("source_count", 0) > 7)
         cii = inflated / total if total > 0 else 0.0

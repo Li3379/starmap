@@ -64,6 +64,7 @@ class EvolutionOrchestrator:
     async def _get_previous_trust(self, skill_name: str) -> float | None:
         """Retrieve the previous trust score for a skill from the changelog."""
         from sqlalchemy import select as sa_select
+
         from app.models.evolution_models import EvolutionChangelog
         stmt = (
             sa_select(EvolutionChangelog)
@@ -345,9 +346,9 @@ class EvolutionOrchestrator:
     async def _write_evolves_to_neo4j(self, paths: list) -> None:
         """Write EVOLVES_TO relationships to Neo4j graph."""
         try:
-            from app.services.resources import AppResources
+            from app.services.resources import resources
 
-            driver = AppResources.neo4j_driver
+            driver = resources.neo4j_driver
             if driver is None:
                 logger.warning("Neo4j driver not available, skipping EVOLVES_TO write")
                 return
@@ -362,7 +363,7 @@ class EvolutionOrchestrator:
                         r.evidence_count = ,
                         r.trust_score = ,
                         r.skill_overlap = ,
-                        r.key_gaps = 
+                        r.key_gaps =
                     """
                     await session.run(
                         query,

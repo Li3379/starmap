@@ -329,7 +329,7 @@ async def create_prompt_version(
 ) -> dict[str, Any]:
     """Register a new prompt version."""
     version = register_prompt_version(
-        prompt_name=name,
+        name=name,
         template=req.template,
         version=req.version,
         activate=req.activate,

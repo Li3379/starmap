@@ -340,7 +340,7 @@ function renderDomainLayer() {
         stroke: color,
         lineWidth: importance > 100 ? 3 : 2,
         labelText: n.properties.name + "\n" + posCount + "岗 " + skillCount + "技",
-        labelFill: "#ffffff",
+        labelFill: "var(--primary-foreground)",
         labelFontSize: importance > 100 ? 15 : 13,
         labelFontWeight: "bold" as const,
         labelPlacement: "center" as const,
@@ -381,7 +381,7 @@ function renderDomainLayer() {
 function renderPositionLayer() {
   if (!graph) return
   const kaId = graphStore.expandedKAId
-  const kaColor = kaId ? (KA_COLOR_MAP.value.get(kaId) ?? "#9B59B6") : "#9B59B6"
+  const kaColor = kaId ? (KA_COLOR_MAP.value.get(kaId) ?? "var(--chart-3)") : "var(--chart-3)"
   const positions = graphStore.positionsByKA.get(kaId ?? "") ?? []
   const maxSkillCount = Math.max(...positions.map(p => {
     let count = 0
@@ -403,7 +403,7 @@ function renderPositionLayer() {
         stroke: kaColor,
         lineWidth: 3,
         labelText: graphStore.expandedKAName,
-        labelFill: "#ffffff",
+        labelFill: "var(--primary-foreground)",
         labelFontSize: 13,
         labelFontWeight: "bold" as const,
         labelPlacement: "center" as const,
@@ -465,7 +465,7 @@ function renderPositionLayer() {
           source: sourceNode.id,
           target: targetNode.id,
           style: {
-            stroke: '#F56C6C',
+            stroke: "var(--destructive)",
             lineWidth: 2 + ev.similarity * 3,
             opacity: 0.8,
             lineDash: [12, 6],
@@ -488,7 +488,7 @@ function renderPositionLayer() {
           source: src.id,
           target: tgt.id,
           style: {
-            stroke: '#F56C6C',
+            stroke: "var(--destructive)",
             lineWidth: 2 + ev.similarity * 3,
             opacity: 0.8,
             lineDash: [12, 6],
@@ -514,7 +514,7 @@ function renderDetailLayer() {
   const graphNodes: any[] = []
   const graphEdges: any[] = []
   const kaId = graphStore.expandedKAId
-  const kaColor = kaId ? (KA_COLOR_MAP.value.get(kaId) ?? "#9B59B6") : "#9B59B6"
+  const kaColor = kaId ? (KA_COLOR_MAP.value.get(kaId) ?? "var(--chart-3)") : "var(--chart-3)"
 
   // KA 节点（远处，更小）
   if (kaId) {
@@ -546,7 +546,7 @@ function renderDetailLayer() {
       stroke: "var(--primary-hover)",
       lineWidth: 3,
       labelText: posNode?.properties.name ?? "岗位",
-      labelFill: "#ffffff",
+      labelFill: "var(--primary-foreground)",
       labelFontSize: 13,
       labelFontWeight: "bold" as const,
       labelPlacement: "center" as const,
